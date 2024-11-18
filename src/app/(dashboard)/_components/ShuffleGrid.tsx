@@ -1,15 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { useGetPhotos } from "@/features/photos/api/use-get-photos";
-import { InferResponseType } from "hono";
-import { client } from "@/lib/hono";
-import { Icons } from "@/components/icons";
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-export type Photo = InferResponseType<
-  typeof client.api.photos.$get,
-  200
->["data"][0];
+import Image from 'next/image';
+
+import { motion } from 'framer-motion';
+import { InferResponseType } from 'hono';
+
+import { Icons } from '@/components/icons';
+import { useGetPhotos } from '@/features/photos/api/use-get-photos';
+import { client } from '@/lib/hono';
+
+export type Photo = InferResponseType<typeof client.api.photos.$get, 200>['data'][0];
 
 const shuffle = (array: Photo[]) => {
   let currentIndex = array.length,
@@ -19,10 +19,7 @@ const shuffle = (array: Photo[]) => {
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
 
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
-    ];
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
   }
 
   return array;
@@ -33,8 +30,8 @@ const generateSquares = (squareData: Photo[]) => {
     <motion.div
       key={sq.id}
       layout
-      transition={{ duration: 1.5, type: "spring" }}
-      className="w-full h-full overflow-hidden"
+      transition={{ duration: 1.5, type: 'spring' }}
+      className="h-full w-full overflow-hidden"
     >
       <Image
         src={sq.url}
@@ -43,7 +40,7 @@ const generateSquares = (squareData: Photo[]) => {
         height={256}
         placeholder="blur"
         blurDataURL={sq.blurData}
-        className="object-cover w-full h-full"
+        className="h-full w-full object-cover"
       />
     </motion.div>
   ));
@@ -53,9 +50,7 @@ const ShuffleGrid = () => {
   const photosQuery = useGetPhotos();
   const squareData = useMemo(() => {
     if (!photosQuery.data || photosQuery.data.length === 0) return [];
-    return photosQuery.data?.length <= 16
-      ? photosQuery.data
-      : photosQuery.data?.slice(0, 16);
+    return photosQuery.data?.length <= 16 ? photosQuery.data : photosQuery.data?.slice(0, 16);
   }, [photosQuery.data]);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -78,13 +73,11 @@ const ShuffleGrid = () => {
   }, [squareData]);
 
   return photosQuery.isPending ? (
-    <div className="w-full h-[450px] flex items-center justify-center">
+    <div className="flex h-[450px] w-full items-center justify-center">
       <Icons.loader className="animate-spin" />
     </div>
   ) : (
-    <div className="grid grid-cols-4 grid-rows-4 h-[450px] gap-1">
-      {squares.map((sq) => sq)}
-    </div>
+    <div className="grid h-[450px] grid-cols-4 grid-rows-4 gap-1">{squares.map((sq) => sq)}</div>
   );
 };
 

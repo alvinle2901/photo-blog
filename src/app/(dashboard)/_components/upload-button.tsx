@@ -1,14 +1,9 @@
-"use client";
+'use client';
 
-import { useModal } from "@/hooks/use-modal";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Icons } from "@/components/icons";
-import { Button } from "@/components/ui/button";
+import { Icons } from '@/components/icons';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useModal } from '@/hooks/use-modal';
 
 const UploadButton = () => {
   const { onOpen } = useModal();
@@ -21,7 +16,7 @@ const UploadButton = () => {
             onClick={() => onOpen()}
             variant="outline"
             size="icon"
-            className="rounded-full size-8"
+            className="size-8 rounded-full"
           >
             <Icons.upload size={16} />
           </Button>

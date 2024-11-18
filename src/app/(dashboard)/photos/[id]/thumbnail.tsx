@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import {
   Dialog,
   DialogContent,
@@ -5,9 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { cn } from "@/utils/cn";
-import Image from "next/image";
+} from '@/components/ui/dialog';
+import { cn } from '@/utils/cn';
 
 interface ThumbnailProps {
   title: string;
@@ -20,7 +21,6 @@ interface ThumbnailProps {
 }
 
 const Thumbnail = ({
-  title,
   url,
   description,
   width,
@@ -31,7 +31,7 @@ const Thumbnail = ({
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="relative overflow-hidden w-full max-h-[500px] cursor-zoom-in">
+        <div className="relative max-h-[500px] w-full cursor-zoom-in overflow-hidden">
           <Image
             src={url}
             alt={description}
@@ -45,8 +45,8 @@ const Thumbnail = ({
 
       <DialogContent
         className={cn(
-          "aspect-ratio-square border-none bg-transparent p-0 shadow-none",
-          aspectRatio > 1 ? "max-w-[70vw]" : ""
+          'aspect-ratio-square border-none bg-transparent p-0 shadow-none',
+          aspectRatio > 1 ? 'max-w-[70vw]' : '',
         )}
       >
         <DialogHeader>

@@ -1,7 +1,7 @@
-import PageClient from "./page.client";
+import PageClient from './page.client';
 
 export const metadata = {
-  title: "Photos",
+  title: 'Photos',
 };
 
 const PhotosPage = () => {

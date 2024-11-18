@@ -1,10 +1,12 @@
-import { client } from "@/lib/hono";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InferRequestType, InferResponseType } from "hono";
-import { toast } from "sonner";
+import { InferRequestType, InferResponseType } from 'hono';
+import { toast } from 'sonner';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { client } from '@/lib/hono';
 
 type ResponseType = InferResponseType<typeof client.api.photos.$post>;
-type RequestType = InferRequestType<typeof client.api.photos.$post>["json"];
+type RequestType = InferRequestType<typeof client.api.photos.$post>['json'];
 
 export const useCreatePhoto = () => {
   const queryClient = useQueryClient();
@@ -16,13 +18,13 @@ export const useCreatePhoto = () => {
       return await res.json();
     },
     onSuccess: () => {
-      toast.success("Photo created");
+      toast.success('Photo created');
       queryClient.invalidateQueries({
-        queryKey: ["photos"],
+        queryKey: ['photos'],
       });
     },
     onError: () => {
-      toast.error("Failed to create photo");
+      toast.error('Failed to create photo');
     },
   });
 

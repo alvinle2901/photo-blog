@@ -1,10 +1,14 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { useForm } from 'react-hook-form';
 
-import { Button } from "@/components/ui/button";
+import { useRouter } from 'next/navigation';
+
+import { z } from 'zod';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -13,11 +17,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import AvatarUpload from "./AvatarUpload";
-import { useEditUser } from "@/features/user/use-edit-user";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useEditUser } from '@/features/user/use-edit-user';
+
+import AvatarUpload from './AvatarUpload';
 
 interface UserFormProps {
   name: string | null | undefined;
@@ -37,8 +41,8 @@ export function UserForm({ name, image, email }: UserFormProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: name || "",
-      image: image || "https://github.com/shadcn.png",
+      name: name || '',
+      image: image || 'https://github.com/shadcn.png',
     },
   });
 
@@ -62,7 +66,7 @@ export function UserForm({ name, image, email }: UserFormProps) {
           />
           <div className="space-y-1">
             <h1 className="text-2xl font-semibold">{name}</h1>
-            <p className="text-muted-foreground text-sm">{email}</p>
+            <p className="text-sm text-muted-foreground">{email}</p>
           </div>
         </div>
         <FormField
@@ -75,15 +79,13 @@ export function UserForm({ name, image, email }: UserFormProps) {
               <FormControl>
                 <Input className="max-w-[500px]" {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+              <FormDescription>This is your public display name.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button type="submit" variant="primary" disabled={mutation.isPending}>
-          {mutation.isPending ? "Updating..." : "Update"}
+          {mutation.isPending ? 'Updating...' : 'Update'}
         </Button>
       </form>
     </Form>

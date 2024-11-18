@@ -1,13 +1,15 @@
-import ModalProvider from "@/components/providers/modal-provider";
-import Navbar from "./_components/Navbar";
-import { Metadata } from "next";
-import FloatingDockMobile from "./_components/floating-dock-mobile";
-import { QueryProvider } from "@/components/providers/QueryClientProvider";
+import { Metadata } from 'next';
+
+import { QueryProvider } from '@/components/providers/QueryClientProvider';
+import ModalProvider from '@/components/providers/modal-provider';
+
+import Navbar from './_components/Navbar';
+import FloatingDockMobile from './_components/floating-dock-mobile';
 
 export const metadata: Metadata = {
   title: {
-    template: "%s - Dashboard",
-    default: "Dashboard",
+    template: '%s - Dashboard',
+    default: 'Dashboard',
   },
 };
 

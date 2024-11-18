@@ -1,3 +1,6 @@
+import Link from 'next/link';
+
+import { Icons } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -6,12 +9,11 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Icons } from '@/components/icons';
-import LogoutButton from './logout-button';
-import Link from 'next/link';
 import { auth } from '@/lib/auth';
+
+import LogoutButton from './logout-button';
 
 const UserButton = async () => {
   const session = await auth();
@@ -30,9 +32,7 @@ const UserButton = async () => {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel>
           <h1 className="text-lg">{session?.user?.name}</h1>
-          <p className="text-xs text-muted-foreground">
-            {session?.user?.email}
-          </p>
+          <p className="text-xs text-muted-foreground">{session?.user?.email}</p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

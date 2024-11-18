@@ -1,15 +1,19 @@
-import NextAuth, { DefaultSession } from "next-auth";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { eq } from "drizzle-orm";
-import { users } from "@/db/schema";
-import { db } from "@/db/drizzle";
-import authConfig from "../../auth.config";
+import NextAuth, { DefaultSession } from 'next-auth';
 
-declare module "next-auth" {
+import { eq } from 'drizzle-orm';
+
+import { DrizzleAdapter } from '@auth/drizzle-adapter';
+
+import { db } from '@/db/drizzle';
+import { users } from '@/db/schema';
+
+import authConfig from '../../auth.config';
+
+declare module 'next-auth' {
   interface Session {
     user: {
       id: string;
-    } & DefaultSession["user"];
+    } & DefaultSession['user'];
   }
 }
 
@@ -41,8 +45,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   adapter: DrizzleAdapter(db),
   pages: {
-    signIn: "/auth/login",
+    signIn: '/auth/login',
   },
-  session: { strategy: "jwt" },
+  session: { strategy: 'jwt' },
   ...authConfig,
 });

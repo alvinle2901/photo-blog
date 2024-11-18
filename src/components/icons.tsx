@@ -1,31 +1,32 @@
+import { BiPhotoAlbum } from 'react-icons/bi';
+
 import {
-  type Icon as LucidIcon,
   ArrowUpRight,
-  Home,
-  Settings,
-  Upload,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  Circle,
   Cloud,
   Github,
-  LogOut,
-  User,
   Heart,
-  MapPin,
-  Loader2,
-  Search,
+  Home,
   LayoutGrid,
   List,
+  Loader2,
+  LogOut,
+  type Icon as LucidIcon,
+  MapPin,
   Save,
-  Trash,
-  TimerIcon,
-  Check,
-  X,
-  ChevronDown,
-  ChevronUp,
-  ChevronRight,
-  Circle,
+  Search,
+  Settings,
   Share,
-} from "lucide-react";
-import { BiPhotoAlbum } from "react-icons/bi";
+  TimerIcon,
+  Trash,
+  Upload,
+  User,
+  X,
+} from 'lucide-react';
 
 export type Icon = typeof LucidIcon;
 

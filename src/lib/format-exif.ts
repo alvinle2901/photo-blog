@@ -1,5 +1,5 @@
-import { ExifData } from 'ts-exif-parser';
 import { fromUnixTime } from 'date-fns';
+import { ExifData } from 'ts-exif-parser';
 
 function formatTimestamp(timestamp: number): string {
   return fromUnixTime(timestamp).toISOString();
@@ -26,7 +26,7 @@ export const formatExif = (exif?: ExifData) => {
     GPSLatitude: exif.tags.GPSLatitude,
     GPSLatitudeRef: exif.tags.GPSLatitudeRef,
     GPSLongitude: exif.tags.GPSLongitude,
-    GPSLongitudeRef: exif.tags.GPSLongitudeRef
+    GPSLongitudeRef: exif.tags.GPSLongitudeRef,
   });
 
   const data = {
@@ -40,10 +40,8 @@ export const formatExif = (exif?: ExifData) => {
     exposureTime: exif.tags.ExposureTime,
     exposureCompensation: exif.tags.ExposureCompensation?.toString(),
     gpsAltitude: exif.tags.GPSAltitude,
-    takeAt: exif.tags.DateTimeOriginal
-      ? formatTimestamp(exif.tags.DateTimeOriginal)
-      : undefined,
-    ...gps
+    takeAt: exif.tags.DateTimeOriginal ? formatTimestamp(exif.tags.DateTimeOriginal) : undefined,
+    ...gps,
   };
 
   return data;
@@ -68,8 +66,7 @@ function convertGPSToDecimal(gpsData: GPSData): {
   latitude: number;
   longitude: number;
 } | null {
-  const { GPSLatitude, GPSLatitudeRef, GPSLongitude, GPSLongitudeRef } =
-    gpsData;
+  const { GPSLatitude, GPSLatitudeRef, GPSLongitude, GPSLongitudeRef } = gpsData;
 
   if (
     typeof GPSLatitude !== 'number' ||
@@ -92,7 +89,7 @@ function convertGPSToDecimal(gpsData: GPSData): {
 
   return {
     latitude,
-    longitude
+    longitude,
   };
 }
 

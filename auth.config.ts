@@ -1,17 +1,19 @@
-import * as z from "zod";
-import bcrypt from "bcryptjs";
-import { eq } from "drizzle-orm";
-import { db } from "@/db/drizzle";
-import { users } from "@/db/schema";
-import type { NextAuthConfig } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
+import type { NextAuthConfig } from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+
+import bcrypt from 'bcryptjs';
+import { eq } from 'drizzle-orm';
+import * as z from 'zod';
+
+import { db } from '@/db/drizzle';
+import { users } from '@/db/schema';
 
 const LoginSchema = z.object({
   email: z.string().min(1, {
-    message: "Email must be required.",
+    message: 'Email must be required.',
   }),
   password: z.string().min(1, {
-    message: "Password must be required.",
+    message: 'Password must be required.',
   }),
 });
 
@@ -29,10 +31,7 @@ export default {
           });
           if (!existingUser || !existingUser.password) return null;
 
-          const passwordsMatch = await bcrypt.compare(
-            password,
-            existingUser.password
-          );
+          const passwordsMatch = await bcrypt.compare(password, existingUser.password);
 
           if (passwordsMatch) return existingUser;
         }

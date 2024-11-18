@@ -1,17 +1,18 @@
-import { client } from "@/lib/hono";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
+
+import { client } from '@/lib/hono';
 
 export const useGetPhoto = (id: string) => {
   const query = useQuery({
     enabled: !!id,
-    queryKey: ["photo", { id }],
+    queryKey: ['photo', { id }],
     queryFn: async () => {
-      const res = await client.api.photos[":id"].$get({
+      const res = await client.api.photos[':id'].$get({
         param: { id },
       });
 
       if (!res.ok) {
-        throw new Error("Get photo wrong");
+        throw new Error('Get photo wrong');
       }
 
       const { data } = await res.json();

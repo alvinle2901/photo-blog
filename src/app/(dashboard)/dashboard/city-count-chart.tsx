@@ -1,28 +1,21 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Label, Pie, PieChart } from "recharts";
+import * as React from 'react';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Label, Pie, PieChart } from 'recharts';
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
-import { useGetSummary } from "@/features/summary/api/use-get-summary";
+} from '@/components/ui/chart';
+import { useGetSummary } from '@/features/summary/api/use-get-summary';
 
 function getYearRange(array: { year: string; count: number }[]) {
   if (array.length === 0) {
-    return "";
+    return '';
   }
 
   const firstYear = array[0].year;
@@ -33,15 +26,7 @@ function getYearRange(array: { year: string; count: number }[]) {
 
 const chartConfig = {} satisfies ChartConfig;
 
-const COLORS = [
-  "#8884d8",
-  "#82ca9d",
-  "#ffc658",
-  "#ff8042",
-  "#8dd1e1",
-  "#a4de6c",
-  "#d0ed57",
-];
+const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#8dd1e1', '#a4de6c', '#d0ed57'];
 
 export function CityCountChart() {
   const summaryQuery = useGetSummary();
@@ -65,25 +50,13 @@ export function CityCountChart() {
         <CardDescription>{getYearRange(yearData)}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[350px]"
-        >
+        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[350px]">
           <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Pie
-              data={coloredData}
-              dataKey="count"
-              nameKey="city"
-              innerRadius={60}
-              strokeWidth={5}
-            >
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            <Pie data={coloredData} dataKey="count" nameKey="city" innerRadius={60} strokeWidth={5}>
               <Label
                 content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
                     return (
                       <text
                         x={viewBox.cx}

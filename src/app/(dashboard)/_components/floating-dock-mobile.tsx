@@ -1,19 +1,20 @@
-"use client";
+'use client';
 
-import { FloatingDock } from "@/components/floating-dock";
-import { House, Images, User2 } from "lucide-react";
+import { House, Images } from 'lucide-react';
+
+import { FloatingDock } from '@/components/floating-dock';
 
 const links = [
   {
-    href: "/dashboard",
+    href: '/dashboard',
     icon: House,
-    title: "Overview",
+    title: 'Overview',
   },
   {
-    href: "/photos",
+    href: '/photos',
     icon: Images,
-    title: "Photos",
-  }
+    title: 'Photos',
+  },
 ];
 
 const FloatingDockMobile = () => {

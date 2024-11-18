@@ -1,19 +1,19 @@
 'use client';
 
-import ShuffleGrid from './ShuffleGrid';
 import { CityCountChart } from '../dashboard/city-count-chart';
+import ShuffleGrid from './ShuffleGrid';
 import GeoMap from './geoMap';
 
 const ShuffleHero = () => {
   return (
-    <section className="w-full h-full py-4 md:py-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-11 items-center gap-8 mx-auto overflow-x-hidden">
+    <section className="mx-auto grid h-full w-full grid-cols-1 items-center gap-8 overflow-x-hidden py-4 md:grid-cols-2 md:py-8 xl:grid-cols-11">
       <div className="xl:col-span-2">
         <CityCountChart />
       </div>
       <div className="xl:col-span-4">
         <ShuffleGrid />
       </div>
-      <div className="xl:col-span-5 rounded-lg shadow-sm h-[450px] xl:h-full overflow-hidden border">
+      <div className="h-[450px] overflow-hidden rounded-lg border shadow-sm xl:col-span-5 xl:h-full">
         <GeoMap />
       </div>
     </section>

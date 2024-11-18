@@ -1,5 +1,5 @@
 export const getImageDimensionsFromFile = (
-  file: File
+  file: File,
 ): Promise<{ width: number; height: number }> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

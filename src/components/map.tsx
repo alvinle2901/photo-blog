@@ -1,8 +1,9 @@
-"use client";
+'use client';
 
-import { useGetPhotos } from "@/features/photos/api/use-get-photos";
-import { useEffect, useState } from "react";
-import Map, { NavigationControl, Marker, useMap } from "react-map-gl";
+import { useEffect, useState } from 'react';
+import Map, { Marker, NavigationControl, useMap } from 'react-map-gl';
+
+import { useGetPhotos } from '@/features/photos/api/use-get-photos';
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -24,7 +25,7 @@ const Mapbox = ({ showLocal = true }: Props) => {
   useEffect(() => {
     if (!showLocal) return;
     if (!navigator.geolocation) {
-      console.log("Geolocation is not supported by your browser");
+      console.log('Geolocation is not supported by your browser');
       return;
     }
 
@@ -41,8 +42,8 @@ const Mapbox = ({ showLocal = true }: Props) => {
         });
       },
       (error) => {
-        console.error("Error getting geolocation:", error);
-      }
+        console.error('Error getting geolocation:', error);
+      },
     );
   }, [map, showLocal]);
 
@@ -51,21 +52,17 @@ const Mapbox = ({ showLocal = true }: Props) => {
       id="map"
       mapboxAccessToken={TOKEN}
       style={{
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
       }}
       mapStyle="mapbox://styles/ecarry/cldmhu6tr000001n33ujbxf7j"
     >
       <NavigationControl />
       {coords.latitude && coords.longitude && (
-        <Marker
-          longitude={coords.longitude}
-          latitude={coords.latitude}
-          anchor="bottom"
-        >
+        <Marker longitude={coords.longitude} latitude={coords.latitude} anchor="bottom">
           <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75"></span>
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-rose-500"></span>
           </span>
         </Marker>
       )}
@@ -79,8 +76,8 @@ const Mapbox = ({ showLocal = true }: Props) => {
             anchor="bottom"
           >
             <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-sky-500"></span>
             </span>
           </Marker>
         );

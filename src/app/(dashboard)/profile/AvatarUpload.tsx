@@ -1,6 +1,7 @@
-import { Icons } from "@/components/icons";
-import { UploadButton } from "@/lib/uploadthing";
-import Image from "next/image";
+import Image from 'next/image';
+
+import { Icons } from '@/components/icons';
+import { UploadButton } from '@/lib/uploadthing';
 
 interface AvatarUploadProps {
   onChange: (url?: string) => void;
@@ -13,18 +14,9 @@ const AvatarUpload = ({ value, onChange }: AvatarUploadProps) => {
       <div className="relative h-20 w-20">
         <Image src={value} fill alt="upload" className="rounded-full" />
         <button
-          onClick={() => onChange("")}
+          onClick={() => onChange('')}
           type="button"
-          className="
-          absolute 
-          top-0 
-          right-0 
-          bg-rose-500 
-          text-white 
-          rounded-full 
-          p-1 
-          shadow-sm
-          "
+          className="absolute right-0 top-0 rounded-full bg-rose-500 p-1 text-white shadow-sm"
         >
           <Icons.x className="h-4 w-4" />
         </button>

@@ -1,21 +1,22 @@
-import HomeButton from "./home-button";
-import Navigation from "./navigation";
-import UploadButton from "./upload-button";
-import UserButton from "./user-button";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from '@/components/ui/separator';
+
+import HomeButton from './home-button';
+import Navigation from './navigation';
+import UploadButton from './upload-button';
+import UserButton from './user-button';
 
 const Navbar = () => {
   return (
     <header
       style={{
-        backgroundColor: "transparent",
-        backgroundImage: "radial-gradient(transparent 1px, #ffffff 1px)",
-        backgroundSize: "4px 4px",
-        backdropFilter: "saturate(50%) blur(4px)",
+        backgroundColor: 'transparent',
+        backgroundImage: 'radial-gradient(transparent 1px, #ffffff 1px)',
+        backgroundSize: '4px 4px',
+        backdropFilter: 'saturate(50%) blur(4px)',
       }}
-      className="border-b sticky top-0 z-50"
+      className="sticky top-0 z-50 border-b"
     >
-      <div className="px-4 flex items-center h-[60px] ">
+      <div className="flex h-[60px] items-center px-4">
         <div className="flex items-center gap-x-8">
           <Navigation />
         </div>

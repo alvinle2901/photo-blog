@@ -1,17 +1,15 @@
-import { Hono } from "hono";
-import { handle } from "hono/vercel";
-import photos from "./photos";
-import summary from "./summary";
-import user from "./user";
+import { Hono } from 'hono';
+import { handle } from 'hono/vercel';
 
-export const runtime = "edge";
+import photos from './photos';
+import summary from './summary';
+import user from './user';
 
-const app = new Hono().basePath("/api");
+export const runtime = 'edge';
 
-const routes = app
-  .route("/photos", photos)
-  .route("/summary", summary)
-  .route("/user", user);
+const app = new Hono().basePath('/api');
+
+const routes = app.route('/photos', photos).route('/summary', summary).route('/user', user);
 
 export const GET = handle(app);
 export const POST = handle(app);

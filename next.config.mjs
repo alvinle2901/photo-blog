@@ -8,19 +8,19 @@ const config = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'utfs.io'
+        hostname: 'utfs.io',
       },
       {
         protocol: 'https',
-        hostname: 'github.com'
-      }
-    ]
+        hostname: 'github.com',
+      },
+    ],
   },
   experimental: {
     turbo: {
       // ...
-    }
-  }
+    },
+  },
 };
 
 export default withPlaiceholder(config);

@@ -1,18 +1,19 @@
-"use client";
+'use client';
 
-import { MapProvider } from "react-map-gl";
-import FilterBar from "../_components/filter";
-import Mapbox from "../../../components/map";
-import PhotoList from "../_components/photo-list";
+import { MapProvider } from 'react-map-gl';
+
+import Mapbox from '../../../components/map';
+import FilterBar from '../_components/filter';
+import PhotoList from '../_components/photo-list';
 
 const page = () => {
   return (
     <MapProvider>
       <div className="flex">
         {/* Left content */}
-        <div className="lg:w-7/12 w-full">
+        <div className="w-full lg:w-7/12">
           {/* Filter */}
-          <div className="flex items-center h-[68px] border-b px-4">
+          <div className="flex h-[68px] items-center border-b px-4">
             <FilterBar />
           </div>
 
@@ -20,7 +21,7 @@ const page = () => {
         </div>
 
         {/* Right Content */}
-        <div className="lg:w-5/12 w-full h-[calc(100vh-61px)] hidden lg:block bg-muted sticky top-[61px]">
+        <div className="sticky top-[61px] hidden h-[calc(100vh-61px)] w-full bg-muted lg:block lg:w-5/12">
           <Mapbox />
         </div>
       </div>

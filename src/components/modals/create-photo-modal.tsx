@@ -1,41 +1,39 @@
-"use client";
+'use client';
 
-import { ExifData, ExifParserFactory } from "ts-exif-parser";
-import { imageToBuffer } from "@/utils/image";
-import { UploadDropzone } from "@/lib/uploadthing";
-import { useState } from "react";
-import Image from "next/image";
-import { insertPhotoSchema } from "@/db/schema";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-import { Button } from "@/components/ui/button";
+import Image from 'next/image';
+
+import { toast } from 'sonner';
+import { ExifData, ExifParserFactory } from 'ts-exif-parser';
+import { z } from 'zod';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { getImageBlur } from '@/actions/photos';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useCreatePhoto } from "@/features/photos/api/use-create-photo";
-import { formatExif } from "@/lib/format-exif";
-import { cn } from "@/utils/cn";
-import { getImageBlur } from "@/actions/photos";
-import { toast } from "sonner";
-import { getImageDimensionsFromFile } from "@/utils/get-image-size";
-import { useModal } from "@/hooks/use-modal";
-import { getReverseGeocoding } from "@/lib/map";
-import { Icons } from "../icons";
+} from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { insertPhotoSchema } from '@/db/schema';
+import { useCreatePhoto } from '@/features/photos/api/use-create-photo';
+import { useModal } from '@/hooks/use-modal';
+import { formatExif } from '@/lib/format-exif';
+import { getReverseGeocoding } from '@/lib/map';
+import { UploadDropzone } from '@/lib/uploadthing';
+import { cn } from '@/utils/cn';
+import { getImageDimensionsFromFile } from '@/utils/get-image-size';
+import { imageToBuffer } from '@/utils/image';
+
+import { Icons } from '../icons';
 
 type UploadData = {
   key: string;
@@ -55,8 +53,8 @@ const CreatePhotoModal = () => {
   const [size, setSize] = useState<{ width: number; height: number }>();
   const [isReady, setIsReady] = useState(false);
   const [status, setStatus] = useState<
-    "Waiting for update photo" | "Generate blur data" | "Creating" | "Retry"
-  >("Waiting for update photo");
+    'Waiting for update photo' | 'Generate blur data' | 'Creating' | 'Retry'
+  >('Waiting for update photo');
 
   const { isOpen, onClose } = useModal();
 
@@ -65,8 +63,8 @@ const CreatePhotoModal = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      title: "",
-      description: "",
+      title: '',
+      description: '',
     },
   });
 
@@ -92,33 +90,29 @@ const CreatePhotoModal = () => {
     setIsReady(false);
 
     if (!res?.url) {
-      toast.error("Please upload a photo");
+      toast.error('Please upload a photo');
       return;
     }
-    console.log(exif)
+    console.log(exif);
     const exifData = formatExif(exif);
     if (!exif?.imageSize && !size) return;
 
-    const address = await getReverseGeocoding(
-      exifData?.longitude,
-      exifData?.latitude
-    );
+    const address = await getReverseGeocoding(exifData?.longitude, exifData?.latitude);
 
-    const { width, height } = exif?.imageSize ||
-      size || { width: 200, height: 200 };
+    const { width, height } = exif?.imageSize || size || { width: 200, height: 200 };
     const aspectRatio = width / height;
 
     const blur = await getImageBlur(res?.url);
 
     if (!blur) {
-      toast.error("Generated blur data fail");
-      console.log("Generated blur data fail");
-      setStatus("Retry");
+      toast.error('Generated blur data fail');
+      console.log('Generated blur data fail');
+      setStatus('Retry');
       setIsReady(true);
       return;
     }
 
-    setStatus("Creating");
+    setStatus('Creating');
 
     const data = {
       url: res.url,
@@ -136,7 +130,7 @@ const CreatePhotoModal = () => {
         handleClose();
         setRes(null);
         form.reset();
-        setStatus("Waiting for update photo");
+        setStatus('Waiting for update photo');
       },
     });
   };
@@ -149,23 +143,21 @@ const CreatePhotoModal = () => {
           <DialogDescription></DialogDescription>
         </DialogHeader>
         {res ? (
-          <div className="relative w-full h-[300px] bg-muted">
+          <div className="relative h-[300px] w-full bg-muted">
             <Image
               src={res.url}
               alt={res.name}
               width={200}
               height={200}
               className={cn(
-                "object-cover duration-700 ease-in-out w-full h-full",
-                !res.url
-                  ? "grayscale blur-xl scale-110"
-                  : "grayscale-0 blur-0 scale-100"
+                'h-full w-full object-cover duration-700 ease-in-out',
+                !res.url ? 'scale-110 blur-xl grayscale' : 'scale-100 blur-0 grayscale-0',
               )}
             />
             <button
               disabled={!isReady}
               onClick={() => setRes(null)}
-              className="bg-rose-500 text-white p-1 rounded-full absolute -top-2 -right-2 shadow-sm"
+              className="absolute -right-2 -top-2 rounded-full bg-rose-500 p-1 text-white shadow-sm"
               type="button"
             >
               <Icons.x className="size-4" />
@@ -173,13 +165,13 @@ const CreatePhotoModal = () => {
           </div>
         ) : (
           <UploadDropzone
-            className="ut-button:bg-sky-500 ut-button:ut-uploading:after:bg-sky-600 ut-label:text-sky-500"
+            className="ut-button:bg-sky-500 ut-label:text-sky-500 ut-button:ut-uploading:after:bg-sky-600"
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
               setRes(res[0]);
-              toast.success("Photo uploaded!");
+              toast.success('Photo uploaded!');
               setIsReady(true);
-              setStatus("Generate blur data");
+              setStatus('Generate blur data');
             }}
             onUploadError={(error: Error) => {
               console.log(`ERROR! ${error.message}`);
@@ -196,10 +188,7 @@ const CreatePhotoModal = () => {
         )}
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handSubmit)}
-            className="space-y-4 pt-4"
-          >
+          <form onSubmit={form.handleSubmit(handSubmit)} className="space-y-4 pt-4">
             <FormField
               control={form.control}
               name="title"
@@ -230,24 +219,19 @@ const CreatePhotoModal = () => {
 
             <div className="flex items-center">
               {!res?.url ? (
-                <p className={cn("text-xs text-muted-foreground")}>
-                  <Icons.loader className="inline-block mr-2 animate-spin size-2" />
+                <p className={cn('text-xs text-muted-foreground')}>
+                  <Icons.loader className="mr-2 inline-block size-2 animate-spin" />
                   Photo upload
                 </p>
               ) : (
-                <p className={cn("text-xs text-green-500")}>
-                  <Icons.check className="inline-block mr-2 size-2" />
+                <p className={cn('text-xs text-green-500')}>
+                  <Icons.check className="mr-2 inline-block size-2" />
                   Photo upload
                 </p>
               )}
             </div>
 
-            <Button
-              type="submit"
-              variant="primary"
-              className="w-full"
-              disabled={!isReady}
-            >
+            <Button type="submit" variant="primary" className="w-full" disabled={!isReady}>
               {status}
             </Button>
           </form>

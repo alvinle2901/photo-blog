@@ -1,10 +1,13 @@
-"use client";
+'use client';
 
-import { cn } from "@/utils/cn";
-import { AnimatePresence, motion } from "framer-motion";
-import { LucideIcon, Menu } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
+import { useState } from 'react';
+
+import Link from 'next/link';
+
+import { AnimatePresence, motion } from 'framer-motion';
+import { LucideIcon, Menu } from 'lucide-react';
+
+import { cn } from '@/utils/cn';
 
 export const FloatingDock = ({
   items,
@@ -15,12 +18,12 @@ export const FloatingDock = ({
 }) => {
   const [open, setOpen] = useState(false);
   return (
-    <div className={cn("relative block md:hidden", className)}>
+    <div className={cn('relative block md:hidden', className)}>
       <AnimatePresence>
         {open && (
           <motion.div
             layoutId="nav"
-            className="absolute bottom-full mb-2 inset-x-0 flex flex-col gap-2"
+            className="absolute inset-x-0 bottom-full mb-2 flex flex-col gap-2"
           >
             {items.map((item, idx) => (
               <motion.div
@@ -42,7 +45,7 @@ export const FloatingDock = ({
                 <Link
                   href={item.href}
                   key={item.title}
-                  className="h-10 w-10 rounded-full bg-neutral-900 flex items-center justify-center"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-900"
                 >
                   <item.icon className="h-5 w-5 text-neutral-400" />
                 </Link>
@@ -53,7 +56,7 @@ export const FloatingDock = ({
       </AnimatePresence>
       <button
         onClick={() => setOpen(!open)}
-        className="h-10 w-10 rounded-full bg-neutral-800 flex items-center justify-center"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-800"
       >
         <Menu className="size-5 text-neutral-400" />
       </button>

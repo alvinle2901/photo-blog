@@ -1,14 +1,13 @@
-"use server";
+'use server';
 
-import { getPlaiceholder } from "plaiceholder";
-import { utapi } from "./uploadthing";
+import { getPlaiceholder } from 'plaiceholder';
+
+import { utapi } from './uploadthing';
 
 export const getImageBlur = async (url?: string) => {
   if (!url) return null;
   try {
-    const buffer = await fetch(url).then(async (res) =>
-      Buffer.from(await res.arrayBuffer())
-    );
+    const buffer = await fetch(url).then(async (res) => Buffer.from(await res.arrayBuffer()));
 
     const { base64 } = await getPlaiceholder(buffer, { size: 10 });
 
@@ -20,7 +19,7 @@ export const getImageBlur = async (url?: string) => {
 
 export const deleteCloudPhoto = async (url: string) => {
   try {
-    const key = url.split("/").pop();
+    const key = url.split('/').pop();
 
     if (!key) {
       return;

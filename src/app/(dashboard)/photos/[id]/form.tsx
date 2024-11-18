@@ -1,24 +1,21 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import React from 'react';
+import { useForm } from 'react-hook-form';
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { useEditPhoto } from "@/features/photos/api/use-edit-photo";
-import { useDeletePhoto } from "@/features/photos/api/use-delete-photo";
-import { useRouter } from "next/navigation";
-import { useConfirm } from "@/hooks/use-confirm";
-import { deleteCloudPhoto } from "@/actions/photos";
-import { Icons } from "@/components/icons";
+import { useRouter } from 'next/navigation';
+
+import { z } from 'zod';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { deleteCloudPhoto } from '@/actions/photos';
+import { Icons } from '@/components/icons';
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useDeletePhoto } from '@/features/photos/api/use-delete-photo';
+import { useEditPhoto } from '@/features/photos/api/use-edit-photo';
+import { useConfirm } from '@/hooks/use-confirm';
 
 const FormSchema = z.object({
   title: z.string(),
@@ -38,10 +35,7 @@ const PhotoForm = ({ id, defaultValues, url }: Props) => {
   const editMutation = useEditPhoto(id);
   const deleteMutation = useDeletePhoto(id);
 
-  const [ConfirmDialog, confirm] = useConfirm(
-    "Are you sure?",
-    "This action cannot be undone."
-  );
+  const [ConfirmDialog, confirm] = useConfirm('Are you sure?', 'This action cannot be undone.');
 
   const isPending = editMutation.isPending || deleteMutation.isPending;
 
@@ -65,7 +59,7 @@ const PhotoForm = ({ id, defaultValues, url }: Props) => {
       await deleteCloudPhoto(url);
       deleteMutation.mutate(undefined, {
         onSuccess: async () => {
-          router.push("/photos");
+          router.push('/photos');
         },
       });
     }

@@ -1,20 +1,22 @@
-import type { Metadata } from "next";
-import { Readex_Pro } from "next/font/google";
-import "mapbox-gl/dist/mapbox-gl.css";
-import "@/styles/globals.css";
-import { Suspense } from "react";
-import { Toaster } from "@/components/ui/sonner";
+import { Suspense } from 'react';
 
-import { TailwindIndicator } from "@/components/tailwind-indicator";
+import type { Metadata } from 'next';
+import { Readex_Pro } from 'next/font/google';
 
-const readex = Readex_Pro({ subsets: ["latin"] });
+import 'mapbox-gl/dist/mapbox-gl.css';
+
+import { TailwindIndicator } from '@/components/tailwind-indicator';
+import { Toaster } from '@/components/ui/sonner';
+import '@/styles/globals.css';
+
+const readex = Readex_Pro({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
-    template: "%s - Alvin Photography",
-    default: "Alvin Photography",
+    template: '%s - Alvin Photography',
+    default: 'Alvin Photography',
   },
-  description: "Alvin Photography",
+  description: 'Alvin Photography',
 };
 
 export default function RootLayout({
