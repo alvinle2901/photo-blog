@@ -20,14 +20,7 @@ export default function IconFeed({
       xmlns="http://www.w3.org/2000/svg"
     >
       {includeTitle && <title>Full Frame</title>}
-      <rect
-        x="5.625"
-        y="6.625"
-        width="16.75"
-        height="10.75"
-        rx="1"
-        strokeWidth="1.25"
-      />
+      <rect x="5.625" y="6.625" width="16.75" height="10.75" rx="1" strokeWidth="1.25" />
       <line x1="5" y1="3.875" x2="23" y2="3.875" strokeWidth="1.25" />
       <line x1="23" y1="20.125" x2="5" y2="20.125" strokeWidth="1.25" />
     </svg>

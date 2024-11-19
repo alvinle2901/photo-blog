@@ -1,10 +1,12 @@
-"use client";
+'use client';
 
-import { RowsPhotoAlbum } from "react-photo-album";
-import "react-photo-album/rows.css";
-import { useGetPhotos } from "@/features/photos/api/use-get-photos";
-import { Icons } from "./icons";
-import renderNextImage from "./render-next-image";
+import { RowsPhotoAlbum } from 'react-photo-album';
+import 'react-photo-album/rows.css';
+
+import { useGetPhotos } from '@/features/photos/api/use-get-photos';
+
+import { Icons } from './icons';
+import renderNextImage from './render-next-image';
 
 export default function PhotoGallery() {
   const photosQuery = useGetPhotos();
@@ -30,10 +32,8 @@ export default function PhotoGallery() {
       defaultContainerWidth={1200}
       spacing={6}
       sizes={{
-        size: "1168px",
-        sizes: [
-          { viewport: "(max-width: 1200px)", size: "calc(100vw - 32px)" },
-        ],
+        size: '1168px',
+        sizes: [{ viewport: '(max-width: 1200px)', size: 'calc(100vw - 32px)' }],
       }}
     />
   );

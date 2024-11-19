@@ -1,23 +1,22 @@
-import { ReactNode } from "react";
-import { clsx } from "clsx/lite";
+import { ReactNode } from 'react';
+
+import { cn } from '@/utils/cn';
 
 export default function Switcher({
   children,
-  type = "regular",
+  type = 'regular',
 }: {
   children: ReactNode;
-  type?: "regular" | "borderless";
+  type?: 'regular' | 'borderless';
 }) {
   return (
     <div
-      className={clsx(
-        "flex divide-x overflow-hidden",
-        "divide-gray-300 dark:divide-gray-800",
-        "border rounded-md",
-        type === "regular"
-          ? "border-gray-300 dark:border-gray-800"
-          : "border-transparent",
-        type === "regular" && "shadow-sm",
+      className={cn(
+        'flex divide-x overflow-hidden',
+        'divide-gray-300 dark:divide-gray-800',
+        'border rounded-md',
+        type === 'regular' ? 'border-gray-300 dark:border-gray-800' : 'border-transparent',
+        type === 'regular' && 'shadow-sm',
       )}
     >
       {children}

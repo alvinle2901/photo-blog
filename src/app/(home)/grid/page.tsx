@@ -1,8 +1,8 @@
-import PhotoGallery from "@/components/photo-gallery";
+import PhotoGallery from '@/components/photo-gallery';
 
 // meta
 export const metadata = {
-  title: "Grid",
+  title: 'Grid',
 };
 
 const GridPage = () => {
