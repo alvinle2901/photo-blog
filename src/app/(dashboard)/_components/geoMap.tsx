@@ -58,7 +58,7 @@ const GeoMap = () => {
         width: '100%',
         height: '100%',
       }}
-      mapStyle="mapbox://styles/alvinle29/cm3otl9c5009e01s7cb1zck1i"
+      mapStyle="mapbox://styles/alvinle29/cm3ou99fu007y01qw10b1dnv7"
     >
       {countryCoordinates && (
         <Source id="my-data" type="geojson" data={countryCoordinates}>
