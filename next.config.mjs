@@ -4,6 +4,7 @@ import withPlaiceholder from '@plaiceholder/next';
  * @type {import('next').NextConfig}
  */
 const config = {
+  transpilePackages: ['@plaiceholder/next'],
   images: {
     remotePatterns: [
       {
