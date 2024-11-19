@@ -48,7 +48,7 @@ const GeoMap = () => {
       id="map"
       mapboxAccessToken={TOKEN}
       initialViewState={{
-        zoom: 0,
+        zoom: 1,
       }}
       doubleClickZoom={false}
       scrollZoom={true}
@@ -58,7 +58,7 @@ const GeoMap = () => {
         width: '100%',
         height: '100%',
       }}
-      mapStyle="mapbox://styles/ecarry/cldmhu6tr000001n33ujbxf7j"
+      mapStyle="mapbox://styles/alvinle29/cm3otl9c5009e01s7cb1zck1i"
     >
       {countryCoordinates && (
         <Source id="my-data" type="geojson" data={countryCoordinates}>
