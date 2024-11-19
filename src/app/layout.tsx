@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: {
     template: '%s - momento of alvin',
     default: 'momento of alvin',
-  }
+  },
 };
 
 export default function RootLayout({

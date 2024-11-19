@@ -4,12 +4,17 @@ import Map, { Layer, Source } from 'react-map-gl';
 import type { FillLayer } from 'react-map-gl';
 
 import type { Feature, FeatureCollection } from 'geojson';
+import type { Projection } from 'mapbox-gl';
 
 import { useGetSummary } from '@/features/summary/api/use-get-summary';
 
 import geoData from '../../../../public/geo.json';
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+
+const mercator: Projection = {
+  name: 'mercator',
+};
 
 const geojson: FeatureCollection = geoData as FeatureCollection;
 
@@ -48,7 +53,7 @@ const GeoMap = () => {
       id="map"
       mapboxAccessToken={TOKEN}
       initialViewState={{
-        zoom: 1,
+        zoom: 0,
       }}
       doubleClickZoom={false}
       scrollZoom={true}
@@ -58,7 +63,8 @@ const GeoMap = () => {
         width: '100%',
         height: '100%',
       }}
-      mapStyle="mapbox://styles/alvinle29/cm3ou99fu007y01qw10b1dnv7"
+      mapStyle="mapbox://styles/mapbox/light-v11"
+      projection={mercator}
     >
       {countryCoordinates && (
         <Source id="my-data" type="geojson" data={countryCoordinates}>
