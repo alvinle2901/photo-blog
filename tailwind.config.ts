@@ -10,6 +10,10 @@ export default withUt({
   ],
   prefix: '',
   theme: {
+    fontFamily: {
+      helveticaNeue: ['Helvetica Neue', 'sans-serif'],
+      ibmMono: ['IBM Flex Mono', 'monospace'],
+    },
     container: {
       center: true,
       padding: '2rem',

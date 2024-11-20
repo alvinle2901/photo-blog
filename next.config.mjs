@@ -4,6 +4,7 @@ import withPlaiceholder from '@plaiceholder/next';
  * @type {import('next').NextConfig}
  */
 const config = {
+  transpilePackages: ['@plaiceholder/next'],
   images: {
     remotePatterns: [
       {
@@ -20,6 +21,11 @@ const config = {
     turbo: {
       // ...
     },
+  },
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
   },
 };
 

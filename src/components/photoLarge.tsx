@@ -2,12 +2,13 @@ import React from 'react';
 
 import Link from 'next/link';
 
+import { Icons } from '@/components/icons';
 import ImageLarge from '@/components/imageLarge';
 import SiteGrid from '@/components/siteGrid';
 import { formatExposureTime } from '@/lib/format-exif';
 import { cn } from '@/utils/cn';
-import { convertToCoordination } from '@/utils/convert-coordination';
 import { formatDate } from '@/utils/date';
+import { getShortenLocation } from '@/utils/string';
 
 const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => {
   const renderMiniGrid = (children: JSX.Element) => (
@@ -53,26 +54,32 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
                 {photo.title}
               </Link>
               {/* CAMERA  */}
-              <div className="uppercase">
-                {photo.make} {photo.model}
+              <div className="flex items-center">
+                <Icons.camera className="h-4 w-4" />
+                <div className="uppercase font-ibmMono font-medium pl-1">
+                  {photo.make} {photo.model}
+                </div>
               </div>
             </>,
           )}
           {renderMiniGrid(
             <>
-              <ul className={cn('text-gray-500', 'dark:text-gray-400')}>
+              <ul className={cn('text-gray-500', 'dark:text-gray-400 font-ibmMono')}>
                 <li>
                   {photo.focalLength ? photo.focalLength + 'mm' : '-'}{' '}
-                  <span className={cn('text-gray-400/80', 'dark:text-gray-400/50')}>
+                  <span className={cn('text-gray-400/80', 'dark:text-gray-400/50 font-ibmMono')}>
                     {photo.focalLength35mm ? photo.focalLength35mm + 'mm' : '-'}
                   </span>
                 </li>
                 <li>{photo.fNumber ? 'ƒ' + photo.fNumber : '-'}</li>
                 <li>ISO {photo.iso}</li>
                 <li>{formatExposureTime(photo.exposureTime || 0)}</li>
-                <li className="hidden lg:block">
+                {/* <li className="hidden lg:block">
                   {convertToCoordination(photo.longitude, photo.latitude)}
-                </li>
+                </li> */}
+                {photo.locationName !== 'unknown' ? (
+                  <li className="hidden lg:block">{getShortenLocation(photo.locationName)}</li>
+                ) : null}
                 {photo.gpsAltitude ? (
                   <li className="hidden lg:block">{photo.gpsAltitude + 'm'}</li>
                 ) : null}

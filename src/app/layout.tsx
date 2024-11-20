@@ -13,10 +13,9 @@ const readex = Readex_Pro({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - Alvin Photography',
-    default: 'Alvin Photography',
+    template: '%s - momento of alvin',
+    default: 'momento of alvin',
   },
-  description: 'Alvin Photography',
 };
 
 export default function RootLayout({
