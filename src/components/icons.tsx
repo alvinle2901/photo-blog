@@ -2,6 +2,7 @@ import { BiPhotoAlbum } from 'react-icons/bi';
 
 import {
   ArrowUpRight,
+  Camera,
   Check,
   ChevronDown,
   ChevronRight,
@@ -57,4 +58,5 @@ export const Icons = {
   chevronRight: ChevronRight,
   share: Share,
   close: X,
+  camera: Camera,
 };

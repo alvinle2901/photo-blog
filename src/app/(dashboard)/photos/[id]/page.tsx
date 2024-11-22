@@ -13,13 +13,13 @@ import { useGetPhoto } from '@/features/photos/api/use-get-photo';
 import { usePhotoId } from '@/hooks/use-photo-id';
 import { formatExposureTime } from '@/lib/format-exif';
 import { getReverseGeocoding } from '@/lib/map';
-import AltitudeIcon from '@/public/aerial.png';
-import FocalLengthIcon from '@/public/eye.png';
 import { formatDate } from '@/utils/date';
 
 import PhotoForm from './form';
 import Mapbox from './map';
 import Thumbnail from './thumbnail';
+import AltitudeIcon from '/public/aerial.png';
+import FocalLengthIcon from '/public/eye.png';
 
 const PhotoIdPage = () => {
   const photoId = usePhotoId();

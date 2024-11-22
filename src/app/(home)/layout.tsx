@@ -1,13 +1,13 @@
 import { QueryProvider } from '@/components/providers/QueryClientProvider';
 
+import Sidebar from './_components/Sidebar';
 import FloatingDockMobile from './_components/floating-dock-mobile';
-import Nav from './_components/nav';
 
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <main className="px-5">
+    <main>
       <QueryProvider>
-        <Nav siteDomainOrTitle={'123.com'} />
+        <Sidebar />
         {children}
         <FloatingDockMobile />
       </QueryProvider>

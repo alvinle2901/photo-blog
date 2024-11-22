@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import Map, { Marker, NavigationControl, useMap } from 'react-map-gl';
 
+import type { Projection } from 'mapbox-gl';
+
 import { useGetPhotos } from '@/features/photos/api/use-get-photos';
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -21,6 +23,10 @@ const Mapbox = ({ showLocal = true }: Props) => {
   const photosQuery = useGetPhotos();
 
   const photos = photosQuery.data || [];
+
+  const mercator: Projection = {
+    name: 'mercator',
+  };
 
   useEffect(() => {
     if (!showLocal) return;
@@ -55,7 +61,8 @@ const Mapbox = ({ showLocal = true }: Props) => {
         width: '100%',
         height: '100%',
       }}
-      mapStyle="mapbox://styles/ecarry/cldmhu6tr000001n33ujbxf7j"
+      projection={mercator}
+      mapStyle="mapbox://styles/mapbox/light-v11"
     >
       <NavigationControl />
       {coords.latitude && coords.longitude && (
