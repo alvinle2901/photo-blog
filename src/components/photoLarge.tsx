@@ -74,9 +74,6 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
                 <li>{photo.fNumber ? 'ƒ' + photo.fNumber : '-'}</li>
                 <li>ISO {photo.iso}</li>
                 <li>{formatExposureTime(photo.exposureTime || 0)}</li>
-                {/* <li className="hidden lg:block">
-                  {convertToCoordination(photo.longitude, photo.latitude)}
-                </li> */}
                 {photo.locationName !== 'unknown' ? (
                   <li className="hidden lg:block">{getShortenLocation(photo.locationName)}</li>
                 ) : null}

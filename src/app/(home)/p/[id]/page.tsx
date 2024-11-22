@@ -69,7 +69,7 @@ const PhotoPage = () => {
                     : null}
               </p>
             </div>
-            <div className="flex items-center gap-2 ml-2">
+            <div className="flex items-center gap-2 ml-3">
               <BrandLogo brandName={photo.make} small={photo.aspectRatio < 1 ? true : false} />
               <Separator orientation="vertical" className="hidden sm:block h-10" />
               <div className="hidden sm:flex flex-col gap-[2px]">
@@ -77,7 +77,7 @@ const PhotoPage = () => {
                   <span>{photo.focalLength35mm + 'mm'}</span>
                   <span>{'ƒ/' + photo.fNumber}</span>
                   <span>{formatExposureTime(photo.exposureTime ?? 0)}</span>
-                  <span>{'ISO' + photo.iso}</span>
+                  <span>{'ISO ' + photo.iso}</span>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">{formatDate(photo.takeAt)}</p>
