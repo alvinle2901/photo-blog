@@ -12,6 +12,7 @@ import NIKON from '/public/nikon.svg';
 import OLYMPUS from '/public/olympus.svg';
 import PANASONIC from '/public/panasonic.svg';
 import SONY from '/public/sony.svg';
+import SAMSUNG from '/public/samsung.svg'
 
 interface Props {
   brandName: string | null;
@@ -29,6 +30,7 @@ const brandLogos: { [key: string]: any } = {
   hasselblad: HASSELBLAD,
   olympus: OLYMPUS,
   apple: APPLE,
+  samsung: SAMSUNG
 };
 
 const BrandLogo = ({ brandName, small }: Props) => {

@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TbPhotoShare } from 'react-icons/tb';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { motion } from 'framer-motion';
 
@@ -22,12 +23,27 @@ import { getShortenLocation } from '@/utils/string';
 /* eslint-disable @next/next/no-img-element */
 
 const PhotoPage = () => {
+  const router = useRouter();
   const photoId = usePhotoId();
+  const { onOpen } = useShareModal();
   const [isLoaded, setIsLoaded] = useState(false);
   const photoQuery = useGetPhoto(photoId);
-  const { onOpen } = useShareModal();
 
   const photo = photoQuery.data;
+
+  // Using ESC key to navigate back
+  useEffect(() => {
+    const handleEscapeKey = (event: any) => {
+      if (event.key === 'Escape') {
+        window.history.back();
+      }
+    };
+    window.addEventListener('keydown', handleEscapeKey);
+
+    return () => {
+      window.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, []);
 
   if (!photo) {
     return (
@@ -106,8 +122,19 @@ const PhotoPage = () => {
         )}
       </motion.div>
 
+      {/* Blur background image */}
       <div className="md:left-[320px] fixed inset-0 blur-lg">
         <Image src={photo.blurData} alt={`${photo.title} blur`} fill />
+      </div>
+
+      {/* Close button */}
+      <div
+        className="absolute top-0 right-0 p-2 cursor-pointer"
+        onClick={() => {
+          router.back();
+        }}
+      >
+        <Icons.x />
       </div>
     </section>
   );

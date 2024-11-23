@@ -4,9 +4,9 @@ import { BiCopy } from 'react-icons/bi';
 import { PiFacebookLogo, PiXLogo } from 'react-icons/pi';
 import { TbPhotoShare } from 'react-icons/tb';
 
-import { toast } from 'sonner';
-
 import Image from 'next/image';
+
+import { toast } from 'sonner';
 
 import { useShareModal } from '@/hooks/use-share-modal';
 import { cn } from '@/utils/cn';
@@ -78,7 +78,7 @@ export default function PhotoShareModal() {
                 <BiCopy size={18} />,
                 () => {
                   navigator.clipboard.writeText(pathShare);
-                  toast.success('Copied!')
+                  toast.success('Copied!');
                 },
                 true,
               )}
