@@ -1,10 +1,12 @@
 import React from 'react';
+import { TbPhotoShare } from 'react-icons/tb';
 
 import Link from 'next/link';
 
 import { Icons } from '@/components/icons';
 import ImageLarge from '@/components/imageLarge';
 import SiteGrid from '@/components/siteGrid';
+import { useShareModal } from '@/hooks/use-share-modal';
 import { formatExposureTime } from '@/lib/format-exif';
 import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/date';
@@ -23,6 +25,8 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
       {children}
     </div>
   );
+
+  const { onOpen } = useShareModal();
 
   return (
     <SiteGrid
@@ -88,6 +92,18 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
               </div>
             </>,
           )}
+          {/* Share button */}
+          <div
+            className="hover:text-gray-500 cursor-pointer"
+            onClick={() =>
+              onOpen({
+                socialText: 'Check out this photo',
+                photo: photo,
+              })
+            }
+          >
+            <TbPhotoShare size={18} />
+          </div>
         </div>
       }
     />

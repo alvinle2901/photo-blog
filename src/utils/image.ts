@@ -18,3 +18,11 @@ export const imageToBuffer = (image: File) => {
     reader.readAsArrayBuffer(image);
   });
 };
+
+export const checkImageOrientation = (width: number, height: number) => {
+  if (width > height) {
+    return 'landscape';
+  } else {
+    return 'portrait';
+  }
+};

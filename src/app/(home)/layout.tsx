@@ -1,4 +1,5 @@
 import { QueryProvider } from '@/components/providers/QueryClientProvider';
+import PhotoShareModalProvider from '@/components/providers/photo-share-modal-provider';
 
 import Sidebar from './_components/Sidebar';
 import FloatingDockMobile from './_components/floating-dock-mobile';
@@ -10,6 +11,7 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
         <Sidebar />
         {children}
         <FloatingDockMobile />
+        <PhotoShareModalProvider />
       </QueryProvider>
     </main>
   );
