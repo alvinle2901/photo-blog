@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import { TbPhotoShare } from 'react-icons/tb';
 
 import Image from 'next/image';
 
@@ -12,15 +13,19 @@ import { Icons } from '@/components/icons';
 import { Separator } from '@/components/ui/separator';
 import { useGetPhoto } from '@/features/photos/api/use-get-photo';
 import { usePhotoId } from '@/hooks/use-photo-id';
+import { useShareModal } from '@/hooks/use-share-modal';
 import { formatExposureTime } from '@/lib/format-exif';
 import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/date';
 import { getShortenLocation } from '@/utils/string';
 
+/* eslint-disable @next/next/no-img-element */
+
 const PhotoPage = () => {
   const photoId = usePhotoId();
   const [isLoaded, setIsLoaded] = useState(false);
   const photoQuery = useGetPhoto(photoId);
+  const { onOpen } = useShareModal();
 
   const photo = photoQuery.data;
 
@@ -82,6 +87,19 @@ const PhotoPage = () => {
                 <div>
                   <p className="text-xs text-muted-foreground">{formatDate(photo.takeAt)}</p>
                 </div>
+              </div>
+              <Separator orientation="vertical" className="hidden sm:block h-10" />
+              {/* Share button */}
+              <div
+                className="hover:text-gray-500 cursor-pointer"
+                onClick={() =>
+                  onOpen({
+                    socialText: 'Check out this photo',
+                    photo: photo,
+                  })
+                }
+              >
+                <TbPhotoShare size={18} />
               </div>
             </div>
           </div>

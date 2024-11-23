@@ -58,9 +58,9 @@ const Mapbox = ({ showLocal = true }: Props) => {
       id="map"
       mapboxAccessToken={TOKEN}
       initialViewState={{
-        longitude: 28.979530,
+        longitude: 28.97953,
         latitude: 41.015137,
-        zoom: 2
+        zoom: 2,
       }}
       style={{
         width: '100%',
