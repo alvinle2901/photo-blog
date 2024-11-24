@@ -107,7 +107,7 @@ const PhotoPage = () => {
               <Separator orientation="vertical" className="hidden sm:block h-10" />
               {/* Share button */}
               <div
-                className="hover:text-gray-500 cursor-pointer"
+                className="hover:text-gray-500 cursor-pointer text-xs md:text-lg"
                 onClick={() =>
                   onOpen({
                     socialText: 'Check out this photo',
@@ -115,7 +115,7 @@ const PhotoPage = () => {
                   })
                 }
               >
-                <TbPhotoShare size={18} />
+                <TbPhotoShare />
               </div>
             </div>
           </div>

@@ -54,8 +54,8 @@ export default function PhotoShareModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[625px]">
-        <div className="space-y-3 md:space-y-4 flex flex-col justify-center items-center">
+      <DialogContent className="min-[320px]:w-screen md:max-w-[625px]">
+        <div className="space-y-3 md:space-y-4 flex flex-col justify-center items-center mt-2">
           <Image
             src={photo.url}
             alt={photo.title}
@@ -73,7 +73,7 @@ export default function PhotoShareModal() {
                 'border border-gray-200 dark:border-gray-800',
               )}
             >
-              <div className="truncate p-2 w-full">{shortenUrl(pathShare)}</div>
+              <div className="truncate p-2 w-[200px] md:w-full">{shortenUrl(pathShare)}</div>
               {renderIcon(
                 <BiCopy size={18} />,
                 () => {
