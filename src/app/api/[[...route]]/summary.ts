@@ -15,7 +15,6 @@ const app = new Hono().use('*', initAuthConfig(getAuthConfig)).get('/', verifyAu
     return c.json({ error: 'Unauthorized' }, 401);
   }
 
-  // 1. 获取年份统计
   const yearRes = await db
     .select({
       year: sql`EXTRACT(YEAR FROM TO_TIMESTAMP(${photos.takeAt}, 'YYYY-MM-DD"T"HH24:MI:SS"Z"'))`.as<string>(),
@@ -28,7 +27,6 @@ const app = new Hono().use('*', initAuthConfig(getAuthConfig)).get('/', verifyAu
     )
     .execute();
 
-  // 2. 提取城市并统计
   const extractCity = () =>
     sql<string>`
       TRIM(SPLIT_PART(${photos.locationName}, ',', 1))
@@ -44,7 +42,6 @@ const app = new Hono().use('*', initAuthConfig(getAuthConfig)).get('/', verifyAu
     .orderBy(extractCity())
     .execute();
 
-  // 3. 提取国家并去重
   const extractCountry = () =>
     sql<string>`
       TRIM(SPLIT_PART(${photos.locationName}, ',', array_length(string_to_array(${photos.locationName}, ','), 1)))
@@ -58,7 +55,6 @@ const app = new Hono().use('*', initAuthConfig(getAuthConfig)).get('/', verifyAu
     .groupBy(extractCountry())
     .execute();
 
-  // 4. 返回的国家数组
   const countryArray = countryRes.map((row) => row.country);
 
   return c.json({
