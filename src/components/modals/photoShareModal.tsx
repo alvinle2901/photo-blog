@@ -2,7 +2,6 @@
 
 import { BiCopy } from 'react-icons/bi';
 import { PiFacebookLogo, PiXLogo } from 'react-icons/pi';
-import { TbPhotoShare } from 'react-icons/tb';
 
 import Image from 'next/image';
 
@@ -38,7 +37,6 @@ export default function PhotoShareModal() {
   );
 
   const handleClose = () => {
-    // setRes(null);
     onClose();
   };
 
@@ -82,13 +80,13 @@ export default function PhotoShareModal() {
                 },
                 true,
               )}
-            </div>
-            {/* {renderIcon(<PiXLogo size={18} />, () =>
+              {/* {renderIcon(<PiXLogo size={18} />, () =>
               window.open(generateXPostText(pathShare, photoShareData.socialText), '_blank'),
-            )} */}
-            {renderIcon(<PiFacebookLogo size={18} />, () =>
-              window.open(createFacebookShareLink(pathShare), '_blank'),
-            )}
+              )} */}
+              {renderIcon(<PiFacebookLogo size={18} />, () =>
+                window.open(createFacebookShareLink(pathShare), '_blank'),
+              )}
+            </div>
           </div>
         </div>
       </DialogContent>

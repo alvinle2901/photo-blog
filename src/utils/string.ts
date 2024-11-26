@@ -27,5 +27,6 @@ export const generateXPostText = (path: string, text: string) => {
 
 export const createFacebookShareLink = (url: string) => {
   const link = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+  console.log(link)
   return link;
 };
