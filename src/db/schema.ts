@@ -124,3 +124,14 @@ export const photos = pgTable('photos', {
 });
 
 export const insertPhotoSchema = createInsertSchema(photos);
+
+export const photos_35mm = pgTable('photos_35mm', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  url: text('url').notNull(),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+});
+
+export const insert35mmPhotoSchema = createInsertSchema(photos_35mm);
