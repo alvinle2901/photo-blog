@@ -147,6 +147,11 @@ const CreatePhotoModal = () => {
       return;
     }
 
+    // const exifData = formatExif(exif);
+    if (!exif?.imageSize && !size) return;
+
+    const { width, height } = exif?.imageSize || size || { width: 200, height: 200 };
+
     const blur = await getImageBlur(res?.url);
 
     if (!blur) {
@@ -161,6 +166,8 @@ const CreatePhotoModal = () => {
 
     const data = {
       url: res.url,
+      width: width,
+      height: height,
       blurData: blur,
       ...values,
     };

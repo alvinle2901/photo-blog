@@ -15,6 +15,13 @@
       "when": 1732666815846,
       "tag": "0001_oval_tyger_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1732743580511,
+      "tag": "0002_keen_sleepwalker",
+      "breakpoints": true
     }
   ]
 }
