@@ -33,9 +33,7 @@ const PhotoTabs = () => {
       <TabContent value="tab2">
         <PhotoList type={'35mm'} />
       </TabContent>
-      <TabContent value="tab3">
-        {/* <PhotoList /> */}
-      </TabContent>
+      <TabContent value="tab3">{/* <PhotoList /> */}</TabContent>
     </Tabs>
   );
 };

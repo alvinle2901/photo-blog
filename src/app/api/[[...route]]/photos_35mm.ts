@@ -12,18 +12,15 @@ import authConfig from '../../../../auth.config';
 
 const app = new Hono()
   .use('*', initAuthConfig(getAuthConfig))
-  .get(
-    '/',
-    async (c) => {
-      const query = db.select().from(photos_35mm);
+  .get('/', async (c) => {
+    const query = db.select().from(photos_35mm);
 
-      const data = await query;
+    const data = await query;
 
-      return c.json({
-        data,
-      });
-    },
-  )
+    return c.json({
+      data,
+    });
+  })
   .post('/', verifyAuth(), zValidator('json', insert35mmPhotoSchema), async (c) => {
     const auth = c.get('authUser');
     const values = c.req.valid('json');
@@ -94,7 +91,11 @@ const app = new Hono()
         return c.json({ error: 'Unauthorized' }, 401);
       }
 
-      const [data] = await db.update(photos_35mm).set(values).where(eq(photos_35mm.id, id)).returning();
+      const [data] = await db
+        .update(photos_35mm)
+        .set(values)
+        .where(eq(photos_35mm.id, id))
+        .returning();
 
       if (!data) {
         return c.json({ error: 'Not found' }, 404);

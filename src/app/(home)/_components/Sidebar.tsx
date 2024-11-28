@@ -36,7 +36,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-screen w-[19%] pt-12 pl-3 fixed md:flex flex-col items-end gap-4 z-50 hidden">
+    <div className="h-[95dvh] w-[19%] pt-12 pl-3 fixed md:flex flex-col items-end gap-4 z-50 hidden">
       <Link href={'/'}>
         <Image src="/momento.svg" width={200} height={200} alt="Logo" />
       </Link>

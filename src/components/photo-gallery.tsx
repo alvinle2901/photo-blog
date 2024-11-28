@@ -1,8 +1,8 @@
 'use client';
 
 import { MasonryPhotoAlbum, RowsPhotoAlbum } from 'react-photo-album';
+import 'react-photo-album/masonry.css';
 import 'react-photo-album/rows.css';
-import "react-photo-album/masonry.css";
 
 import { useGetPhotos } from '@/features/photos/api/use-get-photos';
 
@@ -27,7 +27,7 @@ export default function PhotoGallery() {
       <Icons.loader className="animate-spin" />
     </div>
   ) : (
-    <RowsPhotoAlbum 
+    <RowsPhotoAlbum
       photos={photos}
       render={{ image: renderNextImage }}
       defaultContainerWidth={1200}

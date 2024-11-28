@@ -20,9 +20,5 @@ export const imageToBuffer = (image: File) => {
 };
 
 export const checkImageOrientation = (width: number, height: number) => {
-  if (width > height) {
-    return 'landscape';
-  } else {
-    return 'portrait';
-  }
+  return width > height ? 'landscape' : 'portrait';
 };
