@@ -1,6 +1,7 @@
 'use client';
 
-import { RowsPhotoAlbum } from 'react-photo-album';
+import { MasonryPhotoAlbum, RowsPhotoAlbum } from 'react-photo-album';
+import 'react-photo-album/masonry.css';
 import 'react-photo-album/rows.css';
 
 import { useGetPhotos } from '@/features/photos/api/use-get-photos';

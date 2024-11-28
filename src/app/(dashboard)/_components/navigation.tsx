@@ -15,6 +15,7 @@ const routes = [
     label: 'Collections',
   },
 ];
+
 const Navigation = () => {
   const pathname = usePathname();
 

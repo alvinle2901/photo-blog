@@ -2,9 +2,10 @@
 
 import { MapProvider } from 'react-map-gl';
 
-import Mapbox from '../../../components/map';
+import Mapbox from '@/components/map';
+
 import FilterBar from '../_components/filter';
-import PhotoList from '../_components/photo-list';
+import PhotoTabs from '../_components/photo-tabs';
 
 const page = () => {
   return (
@@ -16,8 +17,7 @@ const page = () => {
           <div className="flex h-[68px] items-center border-b px-4">
             <FilterBar />
           </div>
-
-          <PhotoList />
+          <PhotoTabs />
         </div>
 
         {/* Right Content */}

@@ -25,6 +25,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { insertPhotoSchema } from '@/db/schema';
 import { useCreatePhoto } from '@/features/photos/api/use-create-photo';
+import { useCreate35mmPhoto } from '@/features/photos_35mm/api/use-create-photo';
 import { useModal } from '@/hooks/use-modal';
 import { formatExif } from '@/lib/format-exif';
 import { getReverseGeocoding } from '@/lib/map';
@@ -34,6 +35,7 @@ import { getImageDimensionsFromFile } from '@/utils/get-image-size';
 import { imageToBuffer } from '@/utils/image';
 
 import { Icons } from '../icons';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 
 type UploadData = {
   key: string;
@@ -48,6 +50,7 @@ const FormSchema = insertPhotoSchema.pick({
 });
 
 const CreatePhotoModal = () => {
+  const [mode, setMode] = useState('digital');
   const [exif, setExif] = useState<ExifData>();
   const [res, setRes] = useState<UploadData | null>();
   const [size, setSize] = useState<{ width: number; height: number }>();
@@ -59,6 +62,7 @@ const CreatePhotoModal = () => {
   const { isOpen, onClose } = useModal();
 
   const mutation = useCreatePhoto();
+  const mutation35mm = useCreate35mmPhoto();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -135,6 +139,49 @@ const CreatePhotoModal = () => {
     });
   };
 
+  const hand35mmSubmit = async (values: z.infer<typeof FormSchema>) => {
+    setIsReady(false);
+
+    if (!res?.url) {
+      toast.error('Please upload a photo');
+      return;
+    }
+
+    // const exifData = formatExif(exif);
+    if (!exif?.imageSize && !size) return;
+
+    const { width, height } = exif?.imageSize || size || { width: 200, height: 200 };
+
+    const blur = await getImageBlur(res?.url);
+
+    if (!blur) {
+      toast.error('Generated blur data fail');
+      console.log('Generated blur data fail');
+      setStatus('Retry');
+      setIsReady(true);
+      return;
+    }
+
+    setStatus('Creating');
+
+    const data = {
+      url: res.url,
+      width: width,
+      height: height,
+      blurData: blur,
+      ...values,
+    };
+
+    mutation35mm.mutate(data, {
+      onSuccess: () => {
+        handleClose();
+        setRes(null);
+        form.reset();
+        setStatus('Waiting for update photo');
+      },
+    });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
@@ -143,7 +190,7 @@ const CreatePhotoModal = () => {
           <DialogDescription></DialogDescription>
         </DialogHeader>
         {res ? (
-          <div className="relative h-[300px] w-full bg-muted">
+          <div className="relative h-[280px] w-full bg-muted">
             <Image
               src={res.url}
               alt={res.name}
@@ -187,8 +234,26 @@ const CreatePhotoModal = () => {
           />
         )}
 
+        {/* Radio group */}
+        <RadioGroup
+          defaultValue={mode}
+          className="mt-1 flex justify-between"
+          onValueChange={(value) => {
+            setMode(value);
+          }}
+        >
+          <RadioGroupItem value={'digital'}>Digital</RadioGroupItem>
+          <RadioGroupItem value={'35mm'}>35mm</RadioGroupItem>
+          <RadioGroupItem value={'polaroid'}>Polaroid</RadioGroupItem>
+        </RadioGroup>
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handSubmit)} className="space-y-4 pt-4">
+          <form
+            onSubmit={
+              mode === 'digital' ? form.handleSubmit(handSubmit) : form.handleSubmit(hand35mmSubmit)
+            }
+            className="space-y-4 pt-2"
+          >
             <FormField
               control={form.control}
               name="title"
