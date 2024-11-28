@@ -46,7 +46,6 @@ const GeoMap = () => {
   const data = query.data?.countryArray ?? [];
 
   const countryCoordinates = getCountryCoordinates(data);
-  console.log(countryCoordinates);
 
   return (
     <Map

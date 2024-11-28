@@ -1,9 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { TbPhotoShare } from 'react-icons/tb';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { motion } from 'framer-motion';
 
@@ -12,17 +14,36 @@ import { Icons } from '@/components/icons';
 import { Separator } from '@/components/ui/separator';
 import { useGetPhoto } from '@/features/photos/api/use-get-photo';
 import { usePhotoId } from '@/hooks/use-photo-id';
+import { useShareModal } from '@/hooks/use-share-modal';
 import { formatExposureTime } from '@/lib/format-exif';
 import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/date';
 import { getShortenLocation } from '@/utils/string';
 
+/* eslint-disable @next/next/no-img-element */
+
 const PhotoPage = () => {
+  const router = useRouter();
   const photoId = usePhotoId();
+  const { onOpen } = useShareModal();
   const [isLoaded, setIsLoaded] = useState(false);
   const photoQuery = useGetPhoto(photoId);
 
   const photo = photoQuery.data;
+
+  // Using ESC key to navigate back
+  useEffect(() => {
+    const handleEscapeKey = (event: any) => {
+      if (event.key === 'Escape') {
+        window.history.back();
+      }
+    };
+    window.addEventListener('keydown', handleEscapeKey);
+
+    return () => {
+      window.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, []);
 
   if (!photo) {
     return (
@@ -69,7 +90,7 @@ const PhotoPage = () => {
                     : null}
               </p>
             </div>
-            <div className="flex items-center gap-2 ml-2">
+            <div className="flex items-center gap-2 ml-3">
               <BrandLogo brandName={photo.make} small={photo.aspectRatio < 1 ? true : false} />
               <Separator orientation="vertical" className="hidden sm:block h-10" />
               <div className="hidden sm:flex flex-col gap-[2px]">
@@ -77,19 +98,43 @@ const PhotoPage = () => {
                   <span>{photo.focalLength35mm + 'mm'}</span>
                   <span>{'ƒ/' + photo.fNumber}</span>
                   <span>{formatExposureTime(photo.exposureTime ?? 0)}</span>
-                  <span>{'ISO' + photo.iso}</span>
+                  <span>{'ISO ' + photo.iso}</span>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">{formatDate(photo.takeAt)}</p>
                 </div>
+              </div>
+              <Separator orientation="vertical" className="hidden sm:block h-10" />
+              {/* Share button */}
+              <div
+                className="hover:text-gray-500 cursor-pointer text-xs md:text-lg"
+                onClick={() =>
+                  onOpen({
+                    socialText: 'Check out this photo',
+                    photo: photo,
+                  })
+                }
+              >
+                <TbPhotoShare />
               </div>
             </div>
           </div>
         )}
       </motion.div>
 
+      {/* Blur background image */}
       <div className="md:left-[320px] fixed inset-0 blur-lg">
         <Image src={photo.blurData} alt={`${photo.title} blur`} fill />
+      </div>
+
+      {/* Close button */}
+      <div
+        className="absolute top-0 right-0 p-2 cursor-pointer"
+        onClick={() => {
+          router.back();
+        }}
+      >
+        <Icons.x />
       </div>
     </section>
   );

@@ -1,15 +1,18 @@
-import Image from "next/image";
-import DJI from "/public/dji.svg";
-import SONY from "/public/sony.svg";
-import CANON from "/public/canon.svg";
-import NIKON from "/public/nikon.svg";
-import FUJIFILM from "/public/fujifilm.svg";
-import PANASONIC from "/public/panasonic.svg";
-import LEICA from "/public/leica.svg";
-import HASSELBLAD from "/public/hasselblad.svg";
-import OLYMPUS from "/public/olympus.svg";
-import APPLE from "/public/Apple.svg";
-import { cn } from "@/utils/cn";
+import Image from 'next/image';
+
+import { cn } from '@/utils/cn';
+
+import APPLE from '/public/Apple.svg';
+import CANON from '/public/canon.svg';
+import DJI from '/public/dji.svg';
+import FUJIFILM from '/public/fujifilm.svg';
+import HASSELBLAD from '/public/hasselblad.svg';
+import LEICA from '/public/leica.svg';
+import NIKON from '/public/nikon.svg';
+import OLYMPUS from '/public/olympus.svg';
+import PANASONIC from '/public/panasonic.svg';
+import SONY from '/public/sony.svg';
+import SAMSUNG from '/public/samsung.svg'
 
 interface Props {
   brandName: string | null;
@@ -27,6 +30,7 @@ const brandLogos: { [key: string]: any } = {
   hasselblad: HASSELBLAD,
   olympus: OLYMPUS,
   apple: APPLE,
+  samsung: SAMSUNG
 };
 
 const BrandLogo = ({ brandName, small }: Props) => {
@@ -45,8 +49,8 @@ const BrandLogo = ({ brandName, small }: Props) => {
       width={40}
       height={40}
       className={cn(
-        "h-[25px] lg:h-[40px] w-auto object-contain",
-        small && "h-[20px] lg:h-[30px] w-auto"
+        'h-[25px] lg:h-[40px] w-auto object-contain',
+        small && 'h-[20px] lg:h-[30px] w-auto',
       )}
     />
   );
