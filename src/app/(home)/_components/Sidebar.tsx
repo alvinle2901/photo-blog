@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { isPathGrid } from '@/utils/string';
 
 import LinksItem from './links-item';
+import SocialLinks from './social-links';
 import ViewSwitcher, { SwitcherSelection } from './view-switcher';
 
 const Sidebar = () => {
@@ -36,18 +37,23 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-[95dvh] w-[19%] pt-12 pl-3 fixed md:flex flex-col items-end gap-4 z-50 hidden">
-      <Link href={'/'}>
-        <Image src="/momento.svg" width={200} height={200} alt="Logo" />
-      </Link>
-      <ViewSwitcher currentSelection={switcherSelectionForPath()} />
-      <nav className="flex flex-col text-[#1F1F1F] gap-8 mt-4">
-        <ul className="text-[18px] text-right font-helveticaNeue uppercase space-y-[4px]">
-          {homeRoutes.map((route) => (
-            <LinksItem label={route.label} href={route.href}></LinksItem>
-          ))}
-        </ul>
-      </nav>
+    <div className="h-[95dvh] w-[19%] pt-12 pl-3 fixed md:flex flex-col items-end justify-between z-50 hidden">
+      <div className="flex flex-col items-end gap-4">
+        <Link href={'/'}>
+          <Image src="/momento.svg" width={200} height={200} alt="Logo" className='mb-4' />
+        </Link>
+        <ViewSwitcher currentSelection={switcherSelectionForPath()} />
+        {/* Navs */}
+        <nav className="flex flex-col text-[#1F1F1F] gap-8">
+          <ul className="text-[18px] text-right font-helveticaNeue uppercase space-y-[4px]">
+            {homeRoutes.map((route) => (
+              <LinksItem label={route.label} href={route.href}></LinksItem>
+            ))}
+          </ul>
+        </nav>
+      </div>
+      {/* Socials */}
+      <SocialLinks />
     </div>
   );
 };
