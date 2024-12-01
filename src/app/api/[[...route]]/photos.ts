@@ -13,7 +13,7 @@ import authConfig from '../../../../auth.config';
 const app = new Hono()
   .use('*', initAuthConfig(getAuthConfig))
   .get(
-    '/',
+    '/all',
     zValidator(
       'query',
       z.object({
@@ -28,6 +28,41 @@ const app = new Hono()
         .select()
         .from(photos)
         .orderBy(sortBy === 'tookAsc' ? asc(photos.takeAt) : desc(photos.takeAt));
+
+      if (year && year !== 'all') {
+        const startDate = new Date(`${year}-01-01T00:00:00.000Z`).toISOString();
+        const endDate = new Date(`${Number(year) + 1}-01-01T00:00:00.000Z`).toISOString();
+
+        query.where(and(gte(photos.takeAt, startDate), lt(photos.takeAt, endDate)));
+      }
+
+      const data = await query;
+
+      return c.json({
+        data,
+      });
+    },
+  )
+  .get(
+    '/',
+    zValidator(
+      'query',
+      z.object({
+        year: z.string().optional(),
+        sortBy: z.string().optional(),
+        page: z.string(),
+        pageSize: z.string(),
+      }),
+    ),
+    async (c) => {
+      const { year, sortBy, page, pageSize } = c.req.valid('query');
+
+      const query = db
+        .select()
+        .from(photos)
+        .orderBy(sortBy === 'tookAsc' ? asc(photos.takeAt) : desc(photos.takeAt))
+        .limit(parseInt(pageSize))
+        .offset((parseInt(page) - 1) * parseInt(pageSize));
 
       if (year && year !== 'all') {
         const startDate = new Date(`${year}-01-01T00:00:00.000Z`).toISOString();

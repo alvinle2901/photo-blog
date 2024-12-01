@@ -12,7 +12,7 @@ export const useGetPhotos = () => {
   const query = useQuery({
     queryKey: ['photos', year, sortBy],
     queryFn: async () => {
-      const res = await client.api.photos.$get({
+      const res = await client.api.photos['all'].$get({
         query: {
           year,
           sortBy,
@@ -30,4 +30,28 @@ export const useGetPhotos = () => {
   });
 
   return query;
+};
+
+export const useGetPhotosPagination = (page: string, pageSize: string) => {
+  return useQuery({
+    queryKey: ['photos'],
+    queryFn: async () => {
+      const res = await client.api.photos.$get({
+        query: {
+          year: '',
+          sortBy: '',
+          page,
+          pageSize,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error('Get photos wrong');
+      }
+
+      const { data } = await res.json();
+
+      return data;
+    },
+  });
 };

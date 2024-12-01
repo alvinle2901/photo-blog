@@ -77,6 +77,12 @@ const CreatePhotoModal = () => {
 
     const data = ExifParserFactory.create(buffer as Buffer).parse();
 
+    // TODO: get Fuji's film simulation data
+    const parser = ExifParserFactory.create(buffer as Buffer)
+    parser.enableBinaryFields(true);
+      const exifDataBinary = parser.parse();
+    console.log(exifDataBinary)
+
     if (!data.imageSize) {
       const size = await getImageDimensionsFromFile(file);
       setSize(size);
@@ -147,7 +153,6 @@ const CreatePhotoModal = () => {
       return;
     }
 
-    // const exifData = formatExif(exif);
     if (!exif?.imageSize && !size) return;
 
     const { width, height } = exif?.imageSize || size || { width: 200, height: 200 };
