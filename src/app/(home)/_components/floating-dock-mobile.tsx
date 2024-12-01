@@ -1,6 +1,6 @@
 'use client';
 
-import { House, LayoutDashboardIcon, MapPinned } from 'lucide-react';
+import { House, LayoutDashboardIcon, MapPinned, Film } from 'lucide-react';
 
 import { FloatingDock } from '@/components/floating-dock';
 
@@ -20,6 +20,11 @@ const links = [
     icon: MapPinned,
     href: '/map',
   },
+  {
+    href: '/35mm',
+    icon: Film,
+    title: 'Film'
+  }
 ];
 
 const FloatingDockMobile = () => {

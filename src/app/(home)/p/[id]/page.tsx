@@ -22,6 +22,8 @@ import { getShortenLocation } from '@/utils/string';
 
 /* eslint-disable @next/next/no-img-element */
 
+/* eslint-disable @next/next/no-img-element */
+
 const PhotoPage = () => {
   const router = useRouter();
   const photoId = usePhotoId();

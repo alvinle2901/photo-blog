@@ -1,15 +1,43 @@
 'use client';
 
+import { InferResponseType } from 'hono';
+
 import { Icons } from '@/components/icons';
 import { useGetPhotos } from '@/features/photos/api/use-get-photos';
+import { useGet35mmPhotos } from '@/features/photos_35mm/api/use-get-photos';
+import { client } from '@/lib/hono';
 
 import PhotoCard from './photo-card';
+import PhotoOtherCard from './photo-other-card';
 import SortBar from './sort';
 
-const PhotoList = () => {
-  const photosQuery = useGetPhotos();
+export type Photo = InferResponseType<typeof client.api.photos.$get, 200>['data'][0];
+export type Photo35mm = InferResponseType<typeof client.api.photos_35mm.$get, 200>['data'][0];
+
+const PhotoList = ({ type }: { type: string }) => {
+  const photosQuery = type === 'digital' ? useGetPhotos() : useGet35mmPhotos();
 
   const photos = photosQuery.data || [];
+
+  const renderPhotos = () => {
+    return (
+      <>
+        {photos.map((item) => (
+          <PhotoCard key={item.id} photo={item as Photo} />
+        ))}
+      </>
+    );
+  };
+
+  const renderOtherPhotos = () => {
+    return (
+      <>
+        {photos.map((item) => (
+          <PhotoOtherCard key={item.id} photo={item as Photo35mm} />
+        ))}
+      </>
+    );
+  };
 
   return (
     <div className="space-y-4 px-4 py-4">
@@ -28,9 +56,7 @@ const PhotoList = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {photos.map((item) => (
-            <PhotoCard key={item.id} photo={item} />
-          ))}
+          {type === 'digital' ? renderPhotos() : renderOtherPhotos()}
         </div>
       )}
     </div>
