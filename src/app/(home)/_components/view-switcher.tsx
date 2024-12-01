@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 
+import { Icons } from '@/components/icons';
+import { useAppState } from '@/state';
+
 import IconFeed from './iconFeed';
 import IconGrid from './iconGrid';
 import Switcher from './switcher';
@@ -12,6 +15,7 @@ export default function ViewSwitcher({
 }: {
   currentSelection?: SwitcherSelection;
 }) {
+  const { setIsCommandKOpen } = useAppState();
   const [selection, setSelection] = useState<SwitcherSelection>();
 
   useEffect(() => {
@@ -19,7 +23,15 @@ export default function ViewSwitcher({
   }, [currentSelection]);
 
   return (
-    <div className="flex gap-1 sm:gap-2">
+    <div className="flex gap-1 mt-2">
+      <Switcher type="borderless">
+        <SwitcherItem
+          icon={<Icons.search size={18} />}
+          onClick={() => {
+            setIsCommandKOpen?.(true);
+          }}
+        />
+      </Switcher>
       <Switcher>
         <SwitcherItem icon={<IconFeed />} href={'/'} active={selection === 'feed'} noPadding />
         <SwitcherItem icon={<IconGrid />} href={'/grid'} active={selection === 'grid'} noPadding />
