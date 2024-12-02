@@ -42,9 +42,7 @@ const layerStyle: FillLayer = {
 
 const GeoMap = () => {
   const query = useGetSummary();
-
   const data = query.data?.countryArray ?? [];
-
   const countryCoordinates = getCountryCoordinates(data);
 
   return (

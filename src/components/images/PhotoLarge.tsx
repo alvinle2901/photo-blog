@@ -3,7 +3,7 @@ import { TbPhotoShare } from 'react-icons/tb';
 
 import Link from 'next/link';
 
-import SiteGrid from '@/components/SiteGrid';
+import SiteGrid from '@/components/ui/SiteGrid';
 import { Icons } from '@/components/icons';
 import ImageLarge from '@/components/images/ImageLarge';
 
