@@ -1,6 +1,6 @@
 import { cn } from '@/utils/cn';
 
-export default function SiteGrid({
+const SiteGrid = ({
   className,
   contentMain,
   contentSide,
@@ -12,7 +12,7 @@ export default function SiteGrid({
   contentSide?: JSX.Element;
   sideFirstOnMobile?: boolean;
   sideHiddenOnMobile?: boolean;
-}) {
+}) => {
   return (
     <div
       className={cn(className, 'grid', 'grid-cols-1 lg:grid-cols-12 gap-x-6 gap-y-4', 'max-w-7xl')}
@@ -33,4 +33,6 @@ export default function SiteGrid({
       )}
     </div>
   );
-}
+};
+
+export default SiteGrid;
