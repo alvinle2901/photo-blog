@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
 import { Icons } from '@/components/icons';
+import IconFeed from '@/components/icons/IconFeed';
+import IconGrid from '@/components/icons/IconGrid';
 import { useAppState } from '@/state';
 
-import IconFeed from './iconFeed';
-import IconGrid from './iconGrid';
 import Switcher from './switcher';
 import SwitcherItem from './switcher-item';
 

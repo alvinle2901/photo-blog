@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 import { motion } from 'framer-motion';
 
-import BrandLogo from '@/components/brand-logo';
+import BrandLogo from '@/components/BrandLogo';
 import { Icons } from '@/components/icons';
 import { Separator } from '@/components/ui/Separator';
 import { useGetPhoto } from '@/features/photos/api/use-get-photo';

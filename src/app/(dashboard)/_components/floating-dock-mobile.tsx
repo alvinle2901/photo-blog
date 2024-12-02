@@ -2,7 +2,7 @@
 
 import { House, Images } from 'lucide-react';
 
-import { FloatingDock } from '@/components/floating-dock';
+import { FloatingDock } from '@/components/ui/FloatingDock';
 
 const links = [
   {
