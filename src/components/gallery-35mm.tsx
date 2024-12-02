@@ -7,7 +7,7 @@ import { useMediaQuery } from 'react-responsive';
 
 import { useRouter } from 'next/navigation';
 
-import { useGet35mmPhotos } from '@/features/photos_35mm/api/use-get-photos';
+import { useGet35mmPhotos } from '@/features/photos-35mm/api/use-get-photos';
 import { use35mmPhotos } from '@/hooks/use-35mm-photos';
 
 import { Icons } from './icons';

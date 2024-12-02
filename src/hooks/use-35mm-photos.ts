@@ -9,6 +9,7 @@ interface Photos35mmStore {
 }
 
 export const use35mmPhotos = create<Photos35mmStore>()(
+  // Save fetched 35mm photos to persist store
   persist(
     (set, get) => ({
       photos35mm: [],

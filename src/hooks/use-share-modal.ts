@@ -1,3 +1,4 @@
+// hooks for share photo modal
 import { create } from 'zustand';
 
 interface ModalStore {

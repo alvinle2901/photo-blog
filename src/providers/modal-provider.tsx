@@ -2,9 +2,9 @@
 
 import React from 'react';
 
-import PhotoShareModal from '../modals/photoShareModal';
+import CreatePhotoModal from '../components/modals/create-photo-modal';
 
-const PhotoShareModalProvider = () => {
+const ModalProvider = () => {
   const [isMounted, setIsMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -17,9 +17,9 @@ const PhotoShareModalProvider = () => {
 
   return (
     <>
-      <PhotoShareModal />
+      <CreatePhotoModal />
     </>
   );
 };
 
-export default PhotoShareModalProvider;
+export default ModalProvider;

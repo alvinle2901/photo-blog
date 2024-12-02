@@ -4,7 +4,7 @@ import { InferResponseType } from 'hono';
 
 import { Icons } from '@/components/icons';
 import { useGetPhotos } from '@/features/photos/api/use-get-photos';
-import { useGet35mmPhotos } from '@/features/photos_35mm/api/use-get-photos';
+import { useGet35mmPhotos } from '@/features/photos-35mm/api/use-get-photos';
 import { client } from '@/lib/hono';
 
 import PhotoCard from './photo-card';

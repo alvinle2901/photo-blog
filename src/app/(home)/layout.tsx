@@ -1,6 +1,6 @@
 import CommandK from '@/components/cmdk/CommandK';
-import { QueryProvider } from '@/components/providers/QueryClientProvider';
-import PhotoShareModalProvider from '@/components/providers/photo-share-modal-provider';
+import { QueryProvider } from '@/providers/QueryClientProvider';
+import PhotoShareModalProvider from '@/providers/photo-share-modal-provider';
 
 import Sidebar from './_components/Sidebar';
 import FloatingDockMobile from './_components/floating-dock-mobile';

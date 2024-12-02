@@ -10,7 +10,6 @@ export const useGetUser = async () => {
 };
 
 export const useLogout = async () => {
-  'use server';
   await signOut({
     redirectTo: '/auth/login',
   });
