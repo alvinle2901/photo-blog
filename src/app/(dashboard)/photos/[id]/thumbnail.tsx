@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/Dialog';
+
 import { cn } from '@/utils/cn';
 
 interface ThumbnailProps {

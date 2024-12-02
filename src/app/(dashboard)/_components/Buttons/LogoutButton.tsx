@@ -1,5 +1,6 @@
 import { Icons } from '@/components/icons';
 import { DropdownMenuItem, DropdownMenuShortcut } from '@/components/ui/DropdownMenu';
+
 import { signOut } from '@/lib/auth';
 
 const LogoutButton = () => {

@@ -7,7 +7,6 @@ import * as z from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { login } from '@/actions/login';
 import { Button } from '@/components/ui/Button';
 import { Checkbox } from '@/components/ui/Checkbox';
 import {
@@ -19,6 +18,8 @@ import {
   FormMessage,
 } from '@/components/ui/Form';
 import { Input } from '@/components/ui/Input';
+
+import { login } from '@/actions/login';
 import { cn } from '@/utils/cn';
 
 export const LoginSchema = z.object({

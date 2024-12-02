@@ -10,8 +10,12 @@ import { useRouter } from 'next/navigation';
 
 import { Icons } from '@/components/icons';
 import renderNextImage from '@/components/images/render-next-image';
+
 import { useGet35mmPhotos } from '@/features/photos-35mm/api/use-get-photos';
+
 import { use35mmPhotos } from '@/hooks/use-35mm-photos';
+
+// Gallery for 35mm images
 
 const Gallery35mm = () => {
   const router = useRouter();

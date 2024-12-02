@@ -11,7 +11,6 @@ import { z } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { getImageBlur } from '@/actions/photos';
 import { Button } from '@/components/ui/Button';
 import {
   Dialog,
@@ -23,9 +22,12 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/Form';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/TextArea';
-import { insertPhotoSchema } from '@/db/schema';
-import { useCreatePhoto } from '@/features/photos/api/use-create-photo';
+
 import { useCreate35mmPhoto } from '@/features/photos-35mm/api/use-create-photo';
+import { useCreatePhoto } from '@/features/photos/api/use-create-photo';
+
+import { getImageBlur } from '@/actions/photos';
+import { insertPhotoSchema } from '@/db/schema';
 import { useModal } from '@/hooks/use-create-modal';
 import { formatExif } from '@/lib/format-exif';
 import { getReverseGeocoding } from '@/lib/map';
@@ -78,10 +80,10 @@ const CreatePhotoModal = () => {
     const data = ExifParserFactory.create(buffer as Buffer).parse();
 
     // TODO: get Fuji's film simulation data
-    const parser = ExifParserFactory.create(buffer as Buffer)
+    const parser = ExifParserFactory.create(buffer as Buffer);
     parser.enableBinaryFields(true);
-      const exifDataBinary = parser.parse();
-    console.log(exifDataBinary)
+    const exifDataBinary = parser.parse();
+    console.log(exifDataBinary);
 
     if (!data.imageSize) {
       const size = await getImageDimensionsFromFile(file);

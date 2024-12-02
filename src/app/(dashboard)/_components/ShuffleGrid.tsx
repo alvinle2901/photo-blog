@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 import { Icons } from '@/components/icons';
+
 import { useGetPhotos } from '@/features/photos/api/use-get-photos';
 
 import { Photo } from './PhotoList';

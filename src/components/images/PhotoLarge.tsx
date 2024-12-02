@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { Icons } from '@/components/icons';
 import ImageLarge from '@/components/images/ImageLarge';
+
 import { useShareModal } from '@/hooks/use-share-modal';
 import { formatExposureTime } from '@/lib/format-exif';
 import { cn } from '@/utils/cn';

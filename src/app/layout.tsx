@@ -7,6 +7,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { TailwindIndicator } from '@/components/TailwindIndicator';
 import { Toaster } from '@/components/ui/Sonner';
+
 import AppStateProvider from '@/state/AppStateProvider';
 import '@/styles/globals.css';
 

@@ -3,18 +3,26 @@
 import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-import { Photo } from '@/app/(dashboard)/_components/PhotoList';
 import AnimateItems from '@/components/AnimateItems';
 import { Icons } from '@/components/icons';
 import PhotoLarge from '@/components/images/PhotoLarge';
+
 import { useGetPhotosPagination } from '@/features/photos/api/use-get-photos';
+
+import { Photo } from '@/app/(dashboard)/_components/PhotoList';
+
+const INITIAL_PHOTOS_NUMBER = '20';
+const PERPAGE_PHOTOS_NUMBER = '10';
 
 const PhotoList = () => {
   const [page, setPage] = useState(1);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [hasMore, setHasMore] = useState(true);
 
-  const { refetch, isPending } = useGetPhotosPagination(page.toString(), page === 1 ? '20' : '10');
+  const { refetch, isPending } = useGetPhotosPagination(
+    page.toString(),
+    page === 1 ? INITIAL_PHOTOS_NUMBER : PERPAGE_PHOTOS_NUMBER,
+  );
 
   const fetchMoreData = async () => {
     // Fetch more photos from the server

@@ -7,6 +7,7 @@ import 'react-photo-album/rows.css';
 
 import { Icons } from '@/components/icons';
 import renderNextImage from '@/components/images/render-next-image';
+
 import { useGetPhotos } from '@/features/photos/api/use-get-photos';
 
 // Grid photos gallery
@@ -40,6 +41,6 @@ const PhotoGallery = () => {
       }}
     />
   );
-}
+};
 
-export default PhotoGallery
+export default PhotoGallery;

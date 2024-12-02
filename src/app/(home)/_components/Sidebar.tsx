@@ -40,7 +40,7 @@ const Sidebar = () => {
     <div className="h-[95dvh] w-[19%] pt-12 pl-3 fixed md:flex flex-col items-end justify-between z-50 hidden">
       <div className="flex flex-col items-end gap-4">
         <Link href={'/'}>
-          <Image src="/momento.svg" width={200} height={200} alt="Logo" className='mb-4' />
+          <Image src="/momento.svg" width={200} height={200} alt="Logo" className="mb-4" />
         </Link>
         <ViewSwitcher currentSelection={switcherSelectionForPath()} />
         {/* Navs */}

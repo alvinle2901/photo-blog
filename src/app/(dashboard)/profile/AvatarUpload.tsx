@@ -1,6 +1,7 @@
 import Image from 'next/image';
 
 import { Icons } from '@/components/icons';
+
 import { UploadButton } from '@/lib/uploadthing';
 
 interface AvatarUploadProps {
