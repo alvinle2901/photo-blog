@@ -11,7 +11,7 @@ import { motion } from 'framer-motion';
 
 import BrandLogo from '@/components/brand-logo';
 import { Icons } from '@/components/icons';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@/components/ui/Separator';
 import { useGetPhoto } from '@/features/photos/api/use-get-photo';
 import { usePhotoId } from '@/hooks/use-photo-id';
 import { useShareModal } from '@/hooks/use-share-modal';

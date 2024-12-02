@@ -1,6 +1,6 @@
 'use client';
 
-import { TabContent, TabList, TabTrigger, Tabs } from '@/components/ui/tabs';
+import { TabContent, TabList, TabTrigger, Tabs } from '@/components/ui/Tabs';
 
 import PhotoList from './photo-list';
 

@@ -1,8 +1,8 @@
 'use client';
 
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/Button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/Tooltip';
 import { useModal } from '@/hooks/use-modal';
 
 const UploadButton = () => {

@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Toggle } from '@/components/ui/toggle';
+import { Toggle } from '@/components/ui/Toggle';
 
 const Sort = () => {
   const router = useRouter();

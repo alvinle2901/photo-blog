@@ -14,7 +14,7 @@ import { useAppState } from '@/state';
 import { cn } from '@/utils/cn';
 
 import { Icons } from '../icons';
-import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '../ui/Dialog';
 import CommandKItem from './CommandKItem';
 
 const LISTENER_KEYDOWN = 'keydown';

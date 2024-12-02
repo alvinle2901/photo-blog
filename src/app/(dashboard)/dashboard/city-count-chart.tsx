@@ -4,13 +4,13 @@ import * as React from 'react';
 
 import { Label, Pie, PieChart } from 'recharts';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart';
+} from '@/components/ui/Chart';
 import { useGetSummary } from '@/features/summary/api/use-get-summary';
 
 function getYearRange(array: { year: string; count: number }[]) {

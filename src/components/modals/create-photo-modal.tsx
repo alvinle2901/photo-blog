@@ -12,17 +12,17 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { getImageBlur } from '@/actions/photos';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+} from '@/components/ui/Dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/Form';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/TextArea';
 import { insertPhotoSchema } from '@/db/schema';
 import { useCreatePhoto } from '@/features/photos/api/use-create-photo';
 import { useCreate35mmPhoto } from '@/features/photos_35mm/api/use-create-photo';
@@ -35,7 +35,7 @@ import { getImageDimensionsFromFile } from '@/utils/get-image-size';
 import { imageToBuffer } from '@/utils/image';
 
 import { Icons } from '../icons';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { RadioGroup, RadioGroupItem } from '../ui/RadioGroup';
 
 type UploadData = {
   key: string;

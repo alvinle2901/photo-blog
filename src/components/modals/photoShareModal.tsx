@@ -17,7 +17,7 @@ import {
   shortenUrl,
 } from '@/utils/string';
 
-import { Dialog, DialogContent } from '../ui/dialog';
+import { Dialog, DialogContent } from '../ui/Dialog';
 
 export default function PhotoShareModal() {
   const { isOpen, onClose, photoShareData } = useShareModal();

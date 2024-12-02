@@ -1,4 +1,4 @@
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@/components/ui/Separator';
 
 import HomeButton from './home-button';
 import Navigation from './navigation';

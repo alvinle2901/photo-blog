@@ -4,7 +4,7 @@ import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
 
 import { cn } from '@/utils/cn';
 
-import { Label } from './label';
+import { Label } from '../Label';
 
 const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,

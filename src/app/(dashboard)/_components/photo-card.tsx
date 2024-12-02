@@ -8,8 +8,8 @@ import Link from 'next/link';
 import { InferResponseType } from 'hono';
 
 import { Icons } from '@/components/icons';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { Button } from '@/components/ui/button';
+import { AspectRatio } from '@/components/ui/AspectRatio';
+import { Button } from '@/components/ui/Button';
 import { useEditPhoto } from '@/features/photos/api/use-edit-photo';
 import { client } from '@/lib/hono';
 import { convertToCoordination } from '@/utils/convert-coordination';

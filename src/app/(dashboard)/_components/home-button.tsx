@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/Button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/Tooltip';
 
 const HomeButton = () => {
   return (

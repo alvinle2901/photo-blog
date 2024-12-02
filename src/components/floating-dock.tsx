@@ -9,7 +9,7 @@ import { LucideIcon, Menu } from 'lucide-react';
 
 import { cn } from '@/utils/cn';
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/Tooltip';
 
 export const FloatingDock = ({
   items,
