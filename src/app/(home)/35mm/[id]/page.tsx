@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { Icons } from '@/components/icons';
+
 import { use35mmPhotos } from '@/hooks/use-35mm-photos';
 import { usePhotoId } from '@/hooks/use-photo-id';
 

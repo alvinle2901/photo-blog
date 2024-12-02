@@ -1,4 +1,4 @@
-import PhotoGallery from '@/components/photo-gallery';
+import PhotoGallery from '@/app/(home)/_components/Gallery/PhotoGallery';
 
 // meta
 export const metadata = {

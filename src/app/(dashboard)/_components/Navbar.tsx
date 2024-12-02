@@ -1,9 +1,9 @@
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@/components/ui/Separator';
 
-import HomeButton from './home-button';
-import Navigation from './navigation';
-import UploadButton from './upload-button';
-import UserButton from './user-button';
+import HomeButton from './Buttons/HomeButton';
+import UploadButton from './Buttons/UploadButton';
+import UserButton from './Buttons/UserButton';
+import Navigation from './Navigation';
 
 const Navbar = () => {
   return (

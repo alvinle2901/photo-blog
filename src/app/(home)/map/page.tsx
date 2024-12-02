@@ -1,4 +1,4 @@
-import Mapbox from '@/components/map';
+import Mapbox from '@/components/Map';
 
 // meta
 export const metadata = {

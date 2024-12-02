@@ -1,4 +1,4 @@
-import Gallery35mm from '@/components/gallery-35mm';
+import Gallery35mm from '@/app/(home)/_components/Gallery/Gallery35mm';
 
 export const metadata = {
   title: '35mm',

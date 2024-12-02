@@ -7,14 +7,16 @@ import { z } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { deleteCloudPhoto } from '@/actions/photos';
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/Button';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/Form';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/TextArea';
+
 import { useDeletePhoto } from '@/features/photos/api/use-delete-photo';
 import { useEditPhoto } from '@/features/photos/api/use-edit-photo';
+
+import { deleteCloudPhoto } from '@/actions/photos';
 import { useConfirm } from '@/hooks/use-confirm';
 
 const FormSchema = z.object({

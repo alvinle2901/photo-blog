@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
 
-import { QueryProvider } from '@/components/providers/QueryClientProvider';
-import ModalProvider from '@/components/providers/modal-provider';
+import { QueryProvider } from '@/providers/QueryClientProvider';
+import ModalProvider from '@/providers/modal-provider';
 
+import FloatingDockMobile from './_components/FloatingDockDashboard';
 import Navbar from './_components/Navbar';
-import FloatingDockMobile from './_components/floating-dock-mobile';
 
 export const metadata: Metadata = {
   title: {

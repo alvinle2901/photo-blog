@@ -7,9 +7,8 @@ import * as z from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { login } from '@/actions/login';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/Button';
+import { Checkbox } from '@/components/ui/Checkbox';
 import {
   Form,
   FormControl,
@@ -17,8 +16,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@/components/ui/Form';
+import { Input } from '@/components/ui/Input';
+
+import { login } from '@/actions/login';
 import { cn } from '@/utils/cn';
 
 export const LoginSchema = z.object({

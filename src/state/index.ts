@@ -6,6 +6,10 @@ export interface AppStateContext {
   previousPathname?: string;
   hasLoaded?: boolean;
   setHasLoaded?: (hasLoaded: boolean) => void;
+  isUserLoggedIn?: boolean;
+  setIsUserLoggedIn?: (isUserLoggedIn: boolean) => void;
+  isCommandKOpen?: boolean;
+  setIsCommandKOpen?: (isCommandKOpen: boolean) => void;
   nextPhotoAnimation?: AnimationConfig;
   setNextPhotoAnimation?: (animation?: AnimationConfig) => void;
   clearNextPhotoAnimation?: () => void;

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { Photo35mm } from '@/app/(dashboard)/_components/photo-list';
+import { Photo35mm } from '@/app/(dashboard)/_components/PhotoList';
 
 interface Photos35mmStore {
   photos35mm: Photo35mm[];
@@ -9,6 +9,7 @@ interface Photos35mmStore {
 }
 
 export const use35mmPhotos = create<Photos35mmStore>()(
+  // Save fetched 35mm photos to persist store
   persist(
     (set, get) => ({
       photos35mm: [],
