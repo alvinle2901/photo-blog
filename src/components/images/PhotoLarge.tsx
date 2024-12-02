@@ -4,14 +4,14 @@ import { TbPhotoShare } from 'react-icons/tb';
 import Link from 'next/link';
 
 import { Icons } from '@/components/icons';
-import ImageLarge from '@/components/imageLarge';
+import ImageLarge from '@/components/images/ImageLarge';
 import { useShareModal } from '@/hooks/use-share-modal';
 import { formatExposureTime } from '@/lib/format-exif';
 import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/date';
 import { getShortenLocation } from '@/utils/string';
 
-import SiteGrid from './SiteGrid';
+import SiteGrid from '../SiteGrid';
 
 const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => {
   const renderMiniGrid = (children: JSX.Element) => (

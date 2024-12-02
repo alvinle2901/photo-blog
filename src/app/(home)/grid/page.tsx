@@ -1,4 +1,4 @@
-import PhotoGallery from '@/components/photo-gallery';
+import PhotoGallery from '@/components/images/PhotoGallery';
 
 // meta
 export const metadata = {

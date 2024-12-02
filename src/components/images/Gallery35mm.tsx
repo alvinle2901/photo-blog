@@ -1,3 +1,4 @@
+// Gallery for 35mm images
 'use client';
 
 import { Gallery } from 'react-grid-gallery';
@@ -10,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import { useGet35mmPhotos } from '@/features/photos-35mm/api/use-get-photos';
 import { use35mmPhotos } from '@/hooks/use-35mm-photos';
 
-import { Icons } from './icons';
+import { Icons } from '../icons';
 import renderNextImage from './render-next-image';
 
 const Gallery35mm = () => {

@@ -1,3 +1,4 @@
+// Gallery for normal images
 'use client';
 
 import { MasonryPhotoAlbum, RowsPhotoAlbum } from 'react-photo-album';
@@ -6,7 +7,7 @@ import 'react-photo-album/rows.css';
 
 import { useGetPhotos } from '@/features/photos/api/use-get-photos';
 
-import { Icons } from './icons';
+import { Icons } from '../icons';
 import renderNextImage from './render-next-image';
 
 export default function PhotoGallery() {

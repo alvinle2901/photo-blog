@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { Photo } from '@/app/(dashboard)/_components/photo-card';
 import AnimateItems from '@/components/AnimateItems';
 import { Icons } from '@/components/icons';
-import PhotoLarge from '@/components/photoLarge';
+import PhotoLarge from '@/components/images/PhotoLarge';
 import { useGetPhotosPagination } from '@/features/photos/api/use-get-photos';
 
 const PhotoList = () => {

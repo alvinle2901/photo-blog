@@ -1,3 +1,4 @@
+// image render for react-photo-album lib
 import { RenderImageContext, RenderImageProps } from 'react-photo-album';
 
 import Image from 'next/image';
