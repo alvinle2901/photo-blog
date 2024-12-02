@@ -21,6 +21,10 @@ const PhotoList = () => {
     const photosQuery = await refetch();
     const newPhotos = photosQuery.data ?? [];
 
+    // Set timeout to show loading state when scroll down
+    if (page !== 1) {
+      setTimeout(() => {}, 1000);
+    }
     setPhotos([...photos, ...newPhotos]);
     setHasMore(newPhotos.length > 0);
     setPage(page + 1);

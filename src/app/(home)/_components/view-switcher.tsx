@@ -23,7 +23,7 @@ export default function ViewSwitcher({
   }, [currentSelection]);
 
   return (
-    <div className="flex gap-1 mt-2">
+    <div className="flex gap-1 md:mt-2">
       <Switcher type="borderless">
         <SwitcherItem
           icon={<Icons.search size={18} />}

@@ -27,7 +27,6 @@ export default function PhotoShareModal() {
         'py-3 px-3.5',
         embedded ? 'border-l' : 'border rounded-md',
         'border-gray-200 bg-gray-50 active:bg-gray-100',
-        'dark:border-gray-800 dark:bg-gray-900/75 dark:hover:bg-gray-800/75 dark:active:bg-gray-900',
         'cursor-pointer',
       )}
       onClick={action}
@@ -52,7 +51,7 @@ export default function PhotoShareModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="min-[320px]:w-screen md:max-w-[625px]">
+      <DialogContent className="min-[320px]:w-[95%] md:max-w-[625px] rounded-xl">
         <div className="space-y-3 md:space-y-4 flex flex-col justify-center items-center mt-2">
           <Image
             src={photo.url}
@@ -68,7 +67,7 @@ export default function PhotoShareModal() {
                 'rounded-md',
                 'w-full overflow-hidden',
                 'flex items-center justify-stretch',
-                'border border-gray-200 dark:border-gray-800',
+                'border border-gray-200',
               )}
             >
               <div className="truncate p-2 w-[200px] md:w-full">{shortenUrl(pathShare)}</div>
@@ -80,13 +79,13 @@ export default function PhotoShareModal() {
                 },
                 true,
               )}
-              {/* {renderIcon(<PiXLogo size={18} />, () =>
+            </div>
+            {/* {renderIcon(<PiXLogo size={18} />, () =>
               window.open(generateXPostText(pathShare, photoShareData.socialText), '_blank'),
               )} */}
-              {renderIcon(<PiFacebookLogo size={18} />, () =>
-                window.open(createFacebookShareLink(pathShare), '_blank'),
-              )}
-            </div>
+            {renderIcon(<PiFacebookLogo size={18} />, () =>
+              window.open(createFacebookShareLink(pathShare), '_blank'),
+            )}
           </div>
         </div>
       </DialogContent>
