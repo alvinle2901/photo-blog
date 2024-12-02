@@ -9,7 +9,9 @@ import { SiLens } from 'react-icons/si';
 import Image from 'next/image';
 
 import { Icons } from '@/components/icons';
+
 import { useGetPhoto } from '@/features/photos/api/use-get-photo';
+
 import { usePhotoId } from '@/hooks/use-photo-id';
 import { formatExposureTime } from '@/lib/format-exif';
 import { getReverseGeocoding } from '@/lib/map';

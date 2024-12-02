@@ -11,22 +11,24 @@ import { z } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { getImageBlur } from '@/actions/photos';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { insertPhotoSchema } from '@/db/schema';
+} from '@/components/ui/Dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/Form';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/TextArea';
+
+import { useCreate35mmPhoto } from '@/features/photos-35mm/api/use-create-photo';
 import { useCreatePhoto } from '@/features/photos/api/use-create-photo';
-import { useCreate35mmPhoto } from '@/features/photos_35mm/api/use-create-photo';
-import { useModal } from '@/hooks/use-modal';
+
+import { getImageBlur } from '@/actions/photos';
+import { insertPhotoSchema } from '@/db/schema';
+import { useModal } from '@/hooks/use-create-modal';
 import { formatExif } from '@/lib/format-exif';
 import { getReverseGeocoding } from '@/lib/map';
 import { UploadDropzone } from '@/lib/uploadthing';
@@ -35,7 +37,7 @@ import { getImageDimensionsFromFile } from '@/utils/get-image-size';
 import { imageToBuffer } from '@/utils/image';
 
 import { Icons } from '../icons';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { RadioGroup, RadioGroupItem } from '../ui/RadioGroup';
 
 type UploadData = {
   key: string;
@@ -78,10 +80,10 @@ const CreatePhotoModal = () => {
     const data = ExifParserFactory.create(buffer as Buffer).parse();
 
     // TODO: get Fuji's film simulation data
-    const parser = ExifParserFactory.create(buffer as Buffer)
+    const parser = ExifParserFactory.create(buffer as Buffer);
     parser.enableBinaryFields(true);
-      const exifDataBinary = parser.parse();
-    console.log(exifDataBinary)
+    const exifDataBinary = parser.parse();
+    console.log(exifDataBinary);
 
     if (!data.imageSize) {
       const size = await getImageDimensionsFromFile(file);

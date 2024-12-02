@@ -9,16 +9,24 @@ import { useRouter } from 'next/navigation';
 
 import { motion } from 'framer-motion';
 
-import BrandLogo from '@/components/brand-logo';
+import BrandLogo from '@/components/BrandLogo';
 import { Icons } from '@/components/icons';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@/components/ui/Separator';
+
 import { useGetPhoto } from '@/features/photos/api/use-get-photo';
+
 import { usePhotoId } from '@/hooks/use-photo-id';
 import { useShareModal } from '@/hooks/use-share-modal';
 import { formatExposureTime } from '@/lib/format-exif';
 import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/date';
 import { getShortenLocation } from '@/utils/string';
+
+/* eslint-disable @next/next/no-img-element */
+
+/* eslint-disable @next/next/no-img-element */
+
+/* eslint-disable @next/next/no-img-element */
 
 /* eslint-disable @next/next/no-img-element */
 

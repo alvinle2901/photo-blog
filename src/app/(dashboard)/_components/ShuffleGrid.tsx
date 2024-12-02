@@ -1,15 +1,16 @@
+'use client';
+
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Image from 'next/image';
 
 import { motion } from 'framer-motion';
-import { InferResponseType } from 'hono';
 
 import { Icons } from '@/components/icons';
-import { useGetPhotos } from '@/features/photos/api/use-get-photos';
-import { client } from '@/lib/hono';
 
-export type Photo = InferResponseType<typeof client.api.photos.$get, 200>['data'][0];
+import { useGetPhotos } from '@/features/photos/api/use-get-photos';
+
+import { Photo } from './PhotoList';
 
 const shuffle = (array: Photo[]) => {
   let currentIndex = array.length,

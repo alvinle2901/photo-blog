@@ -3,6 +3,7 @@
 import Map, { FullscreenControl, Marker, NavigationControl } from 'react-map-gl';
 
 import { useEditPhoto } from '@/features/photos/api/use-edit-photo';
+
 import { getReverseGeocoding } from '@/lib/map';
 
 import GeocoderControl from './geocoder-control';

@@ -5,8 +5,9 @@ import { Readex_Pro } from 'next/font/google';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-import { TailwindIndicator } from '@/components/tailwind-indicator';
-import { Toaster } from '@/components/ui/sonner';
+import { TailwindIndicator } from '@/components/TailwindIndicator';
+import { Toaster } from '@/components/ui/Sonner';
+
 import AppStateProvider from '@/state/AppStateProvider';
 import '@/styles/globals.css';
 
