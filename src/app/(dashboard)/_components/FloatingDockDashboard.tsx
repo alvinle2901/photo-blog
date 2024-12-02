@@ -17,8 +17,8 @@ const links = [
   },
 ];
 
-const FloatingDockMobile = () => {
+const FloatingDockDashboard = () => {
   return <FloatingDock items={links} className="fixed bottom-4 right-4" />;
 };
 
-export default FloatingDockMobile;
+export default FloatingDockDashboard;

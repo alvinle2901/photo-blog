@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-import { Photo } from '@/app/(dashboard)/_components/photo-card';
+import { Photo } from '@/app/(dashboard)/_components/PhotoList';
 import AnimateItems from '@/components/AnimateItems';
 import { Icons } from '@/components/icons';
 import PhotoLarge from '@/components/images/PhotoLarge';

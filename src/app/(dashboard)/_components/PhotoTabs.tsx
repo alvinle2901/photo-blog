@@ -2,7 +2,7 @@
 
 import { TabContent, TabList, TabTrigger, Tabs } from '@/components/ui/Tabs';
 
-import PhotoList from './photo-list';
+import PhotoList from './PhotoList';
 
 const PhotoTabs = () => {
   return (
@@ -20,12 +20,12 @@ const PhotoTabs = () => {
         >
           35mm
         </TabTrigger>
-        <TabTrigger
+        {/* <TabTrigger
           className="flex h-[45px] flex-1 cursor-pointer select-none items-center justify-center bg-white px-5 text-[15px] leading-none outline-none first:rounded-tl-md last:rounded-tr-md hover:text-sky-500 data-[state=active]:text-sky-500 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current"
           value="tab3"
         >
           Polaroid
-        </TabTrigger>
+        </TabTrigger> */}
       </TabList>
       <TabContent value="tab1">
         <PhotoList type={'digital'} />
@@ -33,7 +33,7 @@ const PhotoTabs = () => {
       <TabContent value="tab2">
         <PhotoList type={'35mm'} />
       </TabContent>
-      <TabContent value="tab3">{/* <PhotoList /> */}</TabContent>
+      {/* <TabContent value="tab3"><PhotoList /></TabContent> */}
     </Tabs>
   );
 };

@@ -4,7 +4,7 @@ import { QueryProvider } from '@/providers/QueryClientProvider';
 import ModalProvider from '@/providers/modal-provider';
 
 import Navbar from './_components/Navbar';
-import FloatingDockMobile from './_components/floating-dock-mobile';
+import FloatingDockMobile from './_components/FloatingDockDashboard';
 
 export const metadata: Metadata = {
   title: {

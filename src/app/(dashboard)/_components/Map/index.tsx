@@ -8,7 +8,7 @@ import type { Projection } from 'mapbox-gl';
 
 import { useGetSummary } from '@/features/summary/api/use-get-summary';
 
-import geoData from '../../../../public/geo.json';
+import geoData from './geo.json';
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 

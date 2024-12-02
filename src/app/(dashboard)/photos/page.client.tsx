@@ -4,8 +4,8 @@ import { MapProvider } from 'react-map-gl';
 
 import Mapbox from '@/components/Map';
 
-import FilterBar from '../_components/filter';
-import PhotoTabs from '../_components/photo-tabs';
+import FilterBar from '../_components/Filter';
+import PhotoTabs from '../_components/PhotoTabs';
 
 const page = () => {
   return (

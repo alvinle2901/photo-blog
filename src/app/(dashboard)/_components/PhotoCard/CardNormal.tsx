@@ -5,17 +5,14 @@ import { useMap } from 'react-map-gl';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { InferResponseType } from 'hono';
-
 import { Icons } from '@/components/icons';
 import { AspectRatio } from '@/components/ui/AspectRatio';
 import { Button } from '@/components/ui/Button';
 import { useEditPhoto } from '@/features/photos/api/use-edit-photo';
-import { client } from '@/lib/hono';
 import { convertToCoordination } from '@/utils/convert-coordination';
 import { formatDate } from '@/utils/date';
 
-export type Photo = InferResponseType<typeof client.api.photos.$get, 200>['data'][0];
+import { Photo } from '../PhotoList';
 
 const PhotoCard = ({ photo }: { photo: Photo }) => {
   const { map } = useMap();

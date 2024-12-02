@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { auth } from '@/lib/auth';
 
-import LogoutButton from './logout-button';
+import LogoutButton from './LogoutButton';
 
 const UserButton = async () => {
   const session = await auth();

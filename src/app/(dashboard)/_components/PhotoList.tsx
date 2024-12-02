@@ -7,9 +7,9 @@ import { useGetPhotos } from '@/features/photos/api/use-get-photos';
 import { useGet35mmPhotos } from '@/features/photos-35mm/api/use-get-photos';
 import { client } from '@/lib/hono';
 
-import PhotoCard from './photo-card';
-import PhotoOtherCard from './photo-other-card';
-import SortBar from './sort';
+import PhotoCard from './PhotoCard/CardNormal';
+import PhotoOtherCard from './PhotoCard/Card35mm';
+import SortBar from './Sort';
 
 export type Photo = InferResponseType<typeof client.api.photos.$get, 200>['data'][0];
 export type Photo35mm = InferResponseType<typeof client.api.photos_35mm.$get, 200>['data'][0];
