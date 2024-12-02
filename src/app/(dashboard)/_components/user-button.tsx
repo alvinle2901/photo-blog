@@ -43,21 +43,6 @@ const UserButton = async () => {
             </DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
-        {/* <DropdownMenuSeparator />
-        <Link
-          href="https://github.com/ECarry/photography-website-nextjs14"
-          target="_blank"
-        >
-          <DropdownMenuItem className="cursor-pointer">
-            <Icons.github className="mr-2 h-4 w-4" />
-            <span>GitHub</span>
-          </DropdownMenuItem>
-        </Link>
-        <DropdownMenuItem disabled>
-          <Icons.cloud className="mr-2 h-4 w-4" />
-          <span>API</span>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator /> */}
         <LogoutButton />
       </DropdownMenuContent>
     </DropdownMenu>

@@ -8,6 +8,8 @@ import { AppStateContext } from '.';
 
 export default function StateProvider({ children }: { children: ReactNode }) {
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [isCommandKOpen, setIsCommandKOpen] = useState(false);
 
   const [nextPhotoAnimation, setNextPhotoAnimation] = useState<AnimationConfig>();
 
@@ -20,6 +22,10 @@ export default function StateProvider({ children }: { children: ReactNode }) {
       value={{
         hasLoaded,
         setHasLoaded,
+        isUserLoggedIn,
+        setIsUserLoggedIn,
+        isCommandKOpen,
+        setIsCommandKOpen,
         nextPhotoAnimation,
         setNextPhotoAnimation,
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),

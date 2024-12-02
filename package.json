@@ -70,6 +70,7 @@
     "tailwindcss-animate": "^1.0.7",
     "ts-exif-parser": "^0.2.2",
     "uploadthing": "^7.1.0",
+    "use-debounce": "^10.0.4",
     "zod": "^3.23.8",
     "zustand": "^5.0.1"
   },
@@ -80,6 +81,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "cmdk": "^1.0.4",
     "eslint": "^8.57.1",
     "eslint-config-next": "15.0.3",
     "eslint-config-prettier": "^9.1.0",

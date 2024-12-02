@@ -47,7 +47,7 @@ const Sidebar = () => {
         <nav className="flex flex-col text-[#1F1F1F] gap-8">
           <ul className="text-[18px] text-right font-helveticaNeue uppercase space-y-[4px]">
             {homeRoutes.map((route) => (
-              <LinksItem label={route.label} href={route.href}></LinksItem>
+              <LinksItem label={route.label} href={route.href} key={route.href}></LinksItem>
             ))}
           </ul>
         </nav>
