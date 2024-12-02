@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation';
 
 import { isPathGrid } from '@/utils/string';
 
-import LinksItem from './links-item';
-import SocialLinks from './social-links';
-import ViewSwitcher, { SwitcherSelection } from './view-switcher';
+import LinksItem from './LinksItem';
+import SocialLinks from './SocialLinks';
+import ViewSwitcher, { SwitcherSelection } from './ViewSwitcher';
 
 const Sidebar = () => {
   const pathname = usePathname();

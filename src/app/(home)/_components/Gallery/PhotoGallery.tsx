@@ -1,16 +1,17 @@
-// Gallery for normal images
+// Grid photos gallery
 'use client';
 
 import { MasonryPhotoAlbum, RowsPhotoAlbum } from 'react-photo-album';
 import 'react-photo-album/masonry.css';
 import 'react-photo-album/rows.css';
 
+import { Icons } from '@/components/icons';
+import renderNextImage from '@/components/images/render-next-image';
 import { useGetPhotos } from '@/features/photos/api/use-get-photos';
 
-import { Icons } from '../icons';
-import renderNextImage from './render-next-image';
+// Grid photos gallery
 
-export default function PhotoGallery() {
+const PhotoGallery = () => {
   const photosQuery = useGetPhotos();
 
   const photos =
@@ -40,3 +41,5 @@ export default function PhotoGallery() {
     />
   );
 }
+
+export default PhotoGallery

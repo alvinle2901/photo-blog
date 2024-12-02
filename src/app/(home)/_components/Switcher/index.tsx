@@ -2,13 +2,13 @@ import { ReactNode } from 'react';
 
 import { cn } from '@/utils/cn';
 
-export default function Switcher({
+const Switcher = ({
   children,
   type = 'regular',
 }: {
   children: ReactNode;
   type?: 'regular' | 'borderless';
-}) {
+}) => {
   return (
     <div
       className={cn(
@@ -22,4 +22,6 @@ export default function Switcher({
       {children}
     </div>
   );
-}
+};
+
+export default Switcher;

@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 
 import { isPathGrid } from '@/utils/string';
 
-import ViewSwitcher, { SwitcherSelection } from './view-switcher';
+import ViewSwitcher, { SwitcherSelection } from './ViewSwitcher';
 
 const Nav = () => {
   const pathname = usePathname();

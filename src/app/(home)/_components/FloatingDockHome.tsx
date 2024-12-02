@@ -1,6 +1,6 @@
 'use client';
 
-import { House, LayoutDashboardIcon, MapPinned, Film } from 'lucide-react';
+import { House, MapPinned, Film } from 'lucide-react';
 
 import { FloatingDock } from '@/components/ui/FloatingDock';
 
@@ -9,11 +9,6 @@ const links = [
     title: 'Home',
     icon: House,
     href: '/',
-  },
-  {
-    title: 'Grid',
-    icon: LayoutDashboardIcon,
-    href: '/grid',
   },
   {
     title: 'Map',

@@ -5,16 +5,12 @@ import IconFeed from '@/components/icons/IconFeed';
 import IconGrid from '@/components/icons/IconGrid';
 import { useAppState } from '@/state';
 
-import Switcher from './switcher';
-import SwitcherItem from './switcher-item';
+import Switcher from './Switcher';
+import SwitcherItem from './Switcher/SwitcherItem';
 
 export type SwitcherSelection = 'feed' | 'grid';
 
-export default function ViewSwitcher({
-  currentSelection,
-}: {
-  currentSelection?: SwitcherSelection;
-}) {
+const ViewSwitcher = ({ currentSelection }: { currentSelection?: SwitcherSelection }) => {
   const { setIsCommandKOpen } = useAppState();
   const [selection, setSelection] = useState<SwitcherSelection>();
 
@@ -38,4 +34,6 @@ export default function ViewSwitcher({
       </Switcher>
     </div>
   );
-}
+};
+
+export default ViewSwitcher;

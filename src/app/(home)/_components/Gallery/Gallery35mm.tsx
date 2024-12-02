@@ -8,18 +8,17 @@ import { useMediaQuery } from 'react-responsive';
 
 import { useRouter } from 'next/navigation';
 
+import { Icons } from '@/components/icons';
+import renderNextImage from '@/components/images/render-next-image';
 import { useGet35mmPhotos } from '@/features/photos-35mm/api/use-get-photos';
 import { use35mmPhotos } from '@/hooks/use-35mm-photos';
 
-import { Icons } from '../icons';
-import renderNextImage from './render-next-image';
-
 const Gallery35mm = () => {
   const router = useRouter();
-  const setPhotos35mm = use35mmPhotos((state) => state.setPhotos35mm);
-
   const photosQuery = useGet35mmPhotos();
   const isDesktopOrTablet = useMediaQuery({ query: '(min-width: 768px)' });
+
+  const setPhotos35mm = use35mmPhotos((state) => state.setPhotos35mm);
 
   const photos =
     photosQuery.data?.map((photo) => ({
@@ -29,6 +28,7 @@ const Gallery35mm = () => {
       height: photo.height,
     })) ?? [];
 
+  // Save 35mm photos to persist storage
   const photosToSaved =
     photosQuery.data?.map((photo) => ({
       id: photo.id,

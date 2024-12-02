@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { cn } from '@/utils/cn';
 
-export default function SwitcherItem({
+const SwitcherItem = ({
   icon,
   title,
   href,
@@ -18,16 +18,14 @@ export default function SwitcherItem({
   onClick?: () => void;
   active?: boolean;
   noPadding?: boolean;
-}) {
+}) => {
   const className = cn(
     classNameProp,
     'py-0.5 px-1.5',
     'cursor-pointer',
     'hover:bg-gray-100/60 active:bg-gray-100',
     active ? 'text-black' : 'text-gray-400',
-    active
-      ? 'hover:text-black'
-      : 'hover:text-gray-700',
+    active ? 'hover:text-black' : 'hover:text-gray-700',
   );
 
   const renderIcon = () =>
@@ -42,4 +40,6 @@ export default function SwitcherItem({
   ) : (
     <div {...{ title, onClick, className }}>{renderIcon()}</div>
   );
-}
+};
+
+export default SwitcherItem;

@@ -3,8 +3,8 @@ import { QueryProvider } from '@/providers/QueryClientProvider';
 import PhotoShareModalProvider from '@/providers/photo-share-modal-provider';
 
 import Sidebar from './_components/Sidebar';
-import FloatingDockMobile from './_components/floating-dock-mobile';
-import Nav from './_components/nav';
+import FloatingDockMobile from './_components/FloatingDockHome';
+import Nav from './_components/Navbar';
 
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
   return (
