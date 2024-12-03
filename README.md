@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📷 Momento - An Open-source Photo Blog
 
-## Getting Started
+An open-source photo blog to showcase my shots within my life journey. Buildt with Next.js 14, Auth.js v5, Hono.js, React Query, Tailwind CSS.
 
-First, run the development server:
+<img src="https://i.ibb.co/BsNFxR4/Screenshot-2024-12-03-115400.png" alt="Sample Image" width="100%">
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+[![Deploy with Vercel](https://vercel.com/button)]()
+Demo App
+
+- https://shot-by-alv.us.kg/
+
+## Features
+
+- Built-in auth
+- Admin panel (/dashboard)
+- Photo upload with EXIF extraction
+- Infinite scroll
+- A map to show where the photos are shot (also where have I been to as a traveler)
+- A showcase only for film photos (35mm)
+- CMD-K menu with photo search
+
+## Roadmap
+
+- [x] Authentication.
+- [x] Set up Drizzle & PostgreSQL database.
+- [x] Upload image using [Uploadthing]()
+- [x] Read and format EXIF data
+- [x] Build ui
+- [x] Add [Mapbox API]() and its layer
+
+- [ ] Implement search/filter for CMD-K menu & /dashboard
+- [ ] Implement page for polaroid photos
+- [ ] Upload photos to Cloudflare R2/ AWS S3
+- [ ] Implements tags based on the photos for filtering
+
+## Steps to reproduce:
+
+### Clone the repo
+
+```shell
+git clone https://github.com/alvinle2901/photo-blog.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Pre-requirements
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### DB
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+I used [Vercel Storage](https://vercel.com/) for your database. It's free and easy to setup. Once you have your database setup, you will need to add the connection string to your `.env.local` file.
 
-## Learn More
+```.env.local
+AUTH_DRIZZLE_URL="postgres://"
+POSTGRES_URL="postgres://"
+```
 
-To learn more about Next.js, take a look at the following resources:
+Generate the migration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+bun run db:generate
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Run the migrations
 
-## Deploy on Vercel
+```sh
+bun run db:migrate
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### Init User
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Add env variables
+
+```.env.local
+USER_EMAIL=
+USERNAME=
+USER_PASSWORD=
+```
+
+```sh
+bun run db:seed
+```
+
+#### Mapbox
+
+To get a Mapbox token, you will need to register on [their website](https://www.mapbox.com/). The token will be used to identify you and start serving up map tiles. The service is free until a certain level of traffic is exceeded.
+
+```.env.local
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=
+```
+
+### Install dependencies
+
+```shell
+npm install
+```
+
+### ESLint and Prettier fix
+
+```shell
+npm run format
+```
+
+### Start the app
+
+```shell
+npm run dev
+```

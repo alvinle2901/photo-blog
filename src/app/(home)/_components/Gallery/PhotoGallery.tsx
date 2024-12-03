@@ -1,19 +1,19 @@
-// Grid photos gallery
 'use client';
 
+// Grid photos gallery
 import { MasonryPhotoAlbum, RowsPhotoAlbum } from 'react-photo-album';
 import 'react-photo-album/masonry.css';
 import 'react-photo-album/rows.css';
+import { useMediaQuery } from 'react-responsive';
 
 import { Icons } from '@/components/icons';
 import renderNextImage from '@/components/images/render-next-image';
 
 import { useGetPhotos } from '@/features/photos/api/use-get-photos';
 
-// Grid photos gallery
-
 const PhotoGallery = () => {
   const photosQuery = useGetPhotos();
+  const isDesktopOrTablet = useMediaQuery({ query: '(min-width: 768px)' });
 
   const photos =
     photosQuery.data?.map((photo) => ({
@@ -39,6 +39,7 @@ const PhotoGallery = () => {
         size: '1168px',
         sizes: [{ viewport: '(max-width: 1200px)', size: 'calc(100vw - 32px)' }],
       }}
+      rowConstraints={{ maxPhotos: isDesktopOrTablet ? 6 : 2 }}
     />
   );
 };

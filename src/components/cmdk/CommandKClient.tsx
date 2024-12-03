@@ -9,7 +9,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
 import { useDebounce } from 'use-debounce';
 
-import { useLogout } from '@/hooks/use-user';
+import { useLogout } from '@/hooks/use-logout';
 import { useAppState } from '@/state';
 import { cn } from '@/utils/cn';
 
