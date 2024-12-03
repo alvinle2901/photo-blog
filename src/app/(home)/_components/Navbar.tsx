@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 
+import { cn } from '@/utils/cn';
 import { isPathGrid } from '@/utils/string';
 
 import ViewSwitcher, { SwitcherSelection } from './ViewSwitcher';
@@ -18,7 +19,7 @@ const Nav = () => {
   };
 
   return (
-    <div className="md:hidden ml-5 mt-5">
+    <div className={cn('md:hidden ml-5 mt-5', pathname === '/map' && 'mb-5')}>
       <ViewSwitcher currentSelection={switcherSelectionForPath()} />
     </div>
   );

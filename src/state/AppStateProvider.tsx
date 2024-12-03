@@ -4,6 +4,8 @@ import { ReactNode, useEffect, useState } from 'react';
 
 import { AnimationConfig } from '@/components/AnimateItems';
 
+import { useGetUser } from '@/hooks/use-user';
+
 import { AppStateContext } from '.';
 
 export default function StateProvider({ children }: { children: ReactNode }) {
@@ -12,6 +14,13 @@ export default function StateProvider({ children }: { children: ReactNode }) {
   const [isCommandKOpen, setIsCommandKOpen] = useState(false);
 
   const [nextPhotoAnimation, setNextPhotoAnimation] = useState<AnimationConfig>();
+
+  const user = useGetUser();
+  useEffect(() => {
+    user.then((res) => {
+      if (res) setIsUserLoggedIn?.(true);
+    });
+  }, [user]);
 
   useEffect(() => {
     setHasLoaded?.(true);
