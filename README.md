@@ -7,7 +7,7 @@ An open-source photo blog to showcase my shots within my life journey. Buildt wi
 [![Deploy with Vercel](https://vercel.com/button)]()
 Demo App
 
-- https://shot-by-alv.us.kg/
+https://shot-by-alv.us.kg/
 
 ## Features
 
@@ -19,16 +19,22 @@ Demo App
 - A showcase only for film photos (35mm)
 - CMD-K menu with photo search
 
+<img src="https://i.ibb.co/2sdQSK9/Screenshot-2024-12-03-130737.png" alt="Sample Image" width="80%">
+<img src="https://i.ibb.co/sgNNmKD/Screenshot-2024-12-03-131032.png" alt="Sample Image" width="80%">
+
 ## Roadmap
 
 - [x] Authentication.
 - [x] Set up Drizzle & PostgreSQL database.
-- [x] Upload image using [Uploadthing]()
+- [x] Upload image using [Uploadthing](https://uploadthing.com)
 - [x] Read and format EXIF data
 - [x] Build ui
-- [x] Add [Mapbox API]() and its layer
+- [x] Add [Mapbox API](https://www.mapbox.com) and its layer
+- [x] Implement Grid photo gallery
+- [x] Implement db & ui for 35mm film photo
 
 - [ ] Implement search/filter for CMD-K menu & /dashboard
+- [ ] Get film simulation from Fujifilm's photos
 - [ ] Implement page for polaroid photos
 - [ ] Upload photos to Cloudflare R2/ AWS S3
 - [ ] Implements tags based on the photos for filtering
@@ -103,3 +109,6 @@ npm run format
 ```shell
 npm run dev
 ```
+
+## Credits
+- This project is inspired from Sam Becker's [EXIF Photo Blog](https://github.com/sambecker/exif-photo-blog)
