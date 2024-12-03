@@ -48,13 +48,13 @@ const PhotoList = () => {
       <Icons.loader className="animate-spin" />
     </div>
   ) : (
-    <div className="space-y-4 p-8 md:ml-[310px] md:p-[50px] md:pl-0">
+    <div className="space-y-4 p-8 md:ml-[21%] md:p-[50px] md:pl-0">
       <InfiniteScroll
         dataLength={photos.length}
         next={fetchMoreData}
         hasMore={hasMore}
         loader={
-          <div className="flex justify-center border rounded-full mt-4 py-1 mx-[10%]">
+          <div className="flex justify-center border rounded-full mt-7 py-1 mx-[10%]">
             <Icons.loader className="animate-spin" size={18} />
           </div>
         }

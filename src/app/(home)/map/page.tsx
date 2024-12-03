@@ -7,7 +7,7 @@ export const metadata = {
 
 const MapPage = () => {
   return (
-    <section className="ml-0 md:ml-[320px] h-dvh">
+    <section className="ml-0 md:ml-[21%] h-dvh">
       <Mapbox showLocal={false} />
     </section>
   );

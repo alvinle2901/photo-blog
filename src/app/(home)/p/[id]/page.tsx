@@ -64,12 +64,12 @@ const PhotoPage = () => {
   }
 
   return (
-    <section className="overflow-hidden ml-0 md:ml-[320px] relative flex items-center justify-center h-dvh flex-col p-10">
+    <section className="overflow-hidden ml-0 md:ml-[21%] relative flex items-center justify-center h-dvh flex-col p-10">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: isLoaded ? 1 : 0 }}
         transition={{ duration: 1 }}
-        className="z-10 relative shadow-2xl shadow-black p-4 md:p-6 pb-0 md:pb-0 bg-white flex flex-col justify-center items-center"
+        className="z-10 relative shadow-2xl shadow-black p-4 md:p-6 pb-0 md:pb-0 bg-white flex flex-col justify-center items-center max-h-[95%]"
       >
         <Image
           src={photo.url}
@@ -79,7 +79,7 @@ const PhotoPage = () => {
           placeholder="blur"
           blurDataURL={photo.blurData}
           onLoad={() => setIsLoaded(true)}
-          className="z-10 w-auto max-h-[80dvh]"
+          className="z-10 w-auto max-h-[80%]"
         />
         {isLoaded && (
           <div className="z-50 flex justify-between items-center select-none h-14 md:h-20 bg-white w-full px-2 lg:px-4">
@@ -133,7 +133,7 @@ const PhotoPage = () => {
       </motion.div>
 
       {/* Blur background image */}
-      <div className="md:left-[320px] fixed inset-0 blur-lg">
+      <div className="md:ml-[21%] fixed inset-0 blur-lg">
         <Image src={photo.blurData} alt={`${photo.title} blur`} fill />
       </div>
 
