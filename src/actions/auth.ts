@@ -7,7 +7,7 @@ import * as z from 'zod';
 
 import { db } from '@/db/drizzle';
 import { users } from '@/db/schema';
-import { signIn } from '@/lib/auth';
+import { auth, signIn, signOut } from '@/lib/auth';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 
 const LoginSchema = z.object({
@@ -63,4 +63,12 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   }
 
   return { success: 'Login successful!' };
+};
+
+export const getAuthAction = () => auth();
+
+export const logout = async () => {
+  await signOut({
+    redirectTo: '/auth/login',
+  });
 };

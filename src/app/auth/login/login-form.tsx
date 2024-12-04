@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/Form';
 import { Input } from '@/components/ui/Input';
 
-import { login } from '@/actions/login';
+import { login } from '@/actions/auth';
 import { cn } from '@/utils/cn';
 
 export const LoginSchema = z.object({

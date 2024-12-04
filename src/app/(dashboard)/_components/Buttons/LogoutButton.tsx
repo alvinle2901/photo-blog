@@ -1,16 +1,13 @@
 import { Icons } from '@/components/icons';
 import { DropdownMenuItem, DropdownMenuShortcut } from '@/components/ui/DropdownMenu';
 
-import { signOut } from '@/lib/auth';
+import { logout } from '@/actions/auth';
 
 const LogoutButton = () => {
   return (
     <form
       action={async () => {
-        'use server';
-        await signOut({
-          redirectTo: '/auth/login',
-        });
+        logout();
       }}
     >
       <DropdownMenuItem>

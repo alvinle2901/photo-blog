@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link';
 
 import { Icons } from '@/components/icons';
@@ -12,28 +14,25 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 
-import { auth } from '@/lib/auth';
+import { useAppState } from '@/state';
 
 import LogoutButton from './LogoutButton';
 
-const UserButton = async () => {
-  const session = await auth();
+const UserButton = () => {
+  const { userData } = useAppState();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="size-8 cursor-pointer">
-          <AvatarImage
-            src={session?.user?.image ?? 'https://github.com/shadcn.png'}
-            alt="@shadcn"
-          />
-          <AvatarFallback>{session?.user.name?.slice(0, 2)}</AvatarFallback>
+          <AvatarImage src={userData?.image ?? 'https://github.com/shadcn.png'} alt="@shadcn" />
+          <AvatarFallback>{userData?.name?.slice(0, 2)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel>
-          <h1 className="text-lg">{session?.user?.name}</h1>
-          <p className="text-xs text-muted-foreground">{session?.user?.email}</p>
+          <h1 className="text-lg">{userData?.name}</h1>
+          <p className="text-xs text-muted-foreground">{userData?.email}</p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
