@@ -19,8 +19,8 @@ https://shot-by-alv.us.kg/
 - A showcase only for film photos (35mm)
 - CMD-K menu with photo search
 
-<img src="https://i.ibb.co/2sdQSK9/Screenshot-2024-12-03-130737.png" alt="Sample Image" width="80%">
-<img src="https://i.ibb.co/sgNNmKD/Screenshot-2024-12-03-131032.png" alt="Sample Image" width="80%">
+<img src="https://i.ibb.co/2sdQSK9/Screenshot-2024-12-03-130737.png" alt="Sample Image" width="90%">
+<img src="https://i.ibb.co/sgNNmKD/Screenshot-2024-12-03-131032.png" alt="Sample Image" width="90%">
 
 ## Roadmap
 
@@ -36,6 +36,7 @@ https://shot-by-alv.us.kg/
 - [ ] Implement search/filter for CMD-K menu & /dashboard
 - [ ] Get film simulation from Fujifilm's photos
 - [ ] Implement page for polaroid photos
+- [ ] Implement dark theme 
 - [ ] Upload photos to Cloudflare R2/ AWS S3
 - [ ] Implements tags based on the photos for filtering
 

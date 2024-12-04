@@ -19,7 +19,13 @@ const Nav = () => {
   };
 
   return (
-    <div className={cn('md:hidden ml-5 mt-5', pathname === '/map' && 'mb-5')}>
+    <div
+      className={cn(
+        'md:hidden ml-5 mt-5',
+        pathname === '/map' && 'mb-5',
+        pathname.startsWith('/p/') && 'hidden',
+      )}
+    >
       <ViewSwitcher currentSelection={switcherSelectionForPath()} />
     </div>
   );

@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { TbPhotoShare } from 'react-icons/tb';
+import { useMediaQuery } from 'react-responsive';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -24,17 +25,11 @@ import { getShortenLocation } from '@/utils/string';
 
 /* eslint-disable @next/next/no-img-element */
 
-/* eslint-disable @next/next/no-img-element */
-
-/* eslint-disable @next/next/no-img-element */
-
-/* eslint-disable @next/next/no-img-element */
-
-/* eslint-disable @next/next/no-img-element */
-
 const PhotoPage = () => {
   const router = useRouter();
   const photoId = usePhotoId();
+  const isDesktopOrTablet = useMediaQuery({ query: '(min-width: 768px)' });
+
   const { onOpen } = useShareModal();
   const [isLoaded, setIsLoaded] = useState(false);
   const photoQuery = useGetPhoto(photoId);
@@ -64,12 +59,17 @@ const PhotoPage = () => {
   }
 
   return (
-    <section className="overflow-hidden ml-0 md:ml-[21%] relative flex items-center justify-center h-dvh flex-col p-10">
+    <section className="overflow-hidden ml-0 md:ml-[21%] relative flex items-center justify-center h-screen flex-col p-10">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: isLoaded ? 1 : 0 }}
         transition={{ duration: 1 }}
-        className="z-10 relative shadow-2xl shadow-black p-4 md:p-6 pb-0 md:pb-0 bg-white flex flex-col justify-center items-center max-h-[95%]"
+        className={cn(
+          'z-10 relative p-4 md:py-6 md:px-2 pb-0 md:pb-0 bg-white',
+          'shadow-2xl shadow-black',
+          'flex flex-col',
+          isDesktopOrTablet === false ? '' : photo.aspectRatio > 1 ? 'max-w-[60%]' : 'max-w-[50%]',
+        )}
       >
         <Image
           src={photo.url}
@@ -79,11 +79,11 @@ const PhotoPage = () => {
           placeholder="blur"
           blurDataURL={photo.blurData}
           onLoad={() => setIsLoaded(true)}
-          className="z-10 w-auto max-h-[80%]"
+          className="z-10 object-contain max-h-[80dvh]"
         />
         {isLoaded && (
-          <div className="z-50 flex justify-between items-center select-none h-14 md:h-20 bg-white w-full px-2 lg:px-4">
-            <div className="flex flex-col text-center">
+          <div className="z-50 flex justify-between items-center select-none h-14 md:h-20 bg-white w-full px-2 lg:px-4 my-1 lg:my-0">
+            <div className="flex flex-col text-center max-w-[50%]">
               <h1
                 className={cn(
                   'font-semibold text-xs sm:text-sm lg:text-lg',
