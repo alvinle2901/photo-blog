@@ -1,5 +1,3 @@
-// TODO: api
-
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
 if (!TOKEN) {

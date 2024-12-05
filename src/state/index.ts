@@ -1,7 +1,8 @@
 import { createContext, useContext } from 'react';
 
-import { AnimationConfig } from '@/components/AnimateItems';
 import { User } from 'next-auth';
+
+import { AnimationConfig } from '@/components/AnimateItems';
 
 export interface AppStateContext {
   previousPathname?: string;

@@ -1,5 +1,5 @@
-// hooks for share photo modal
 import { create } from 'zustand';
+// hooks for share photo modal
 
 interface ModalStore {
   isOpen: boolean;

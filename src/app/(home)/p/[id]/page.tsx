@@ -23,8 +23,6 @@ import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/date';
 import { getShortenLocation } from '@/utils/string';
 
-/* eslint-disable @next/next/no-img-element */
-
 const PhotoPage = () => {
   const router = useRouter();
   const photoId = usePhotoId();
