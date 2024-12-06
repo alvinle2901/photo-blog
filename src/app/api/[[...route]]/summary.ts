@@ -3,10 +3,9 @@ import { Context, Hono } from 'hono';
 
 import { type AuthConfig, initAuthConfig, verifyAuth } from '@hono/auth-js';
 
+import authConfig from '@/auth.config';
 import { db } from '@/db/drizzle';
 import { photos } from '@/db/schema';
-
-import authConfig from '../../../../auth.config';
 
 const app = new Hono().use('*', initAuthConfig(getAuthConfig)).get('/', verifyAuth(), async (c) => {
   const auth = c.get('authUser');

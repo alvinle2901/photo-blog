@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import CreatePhotoModal from '../components/modals/create-photo-modal';
+import CreatePhotoModal from '@/components/modals/create-photo-modal';
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = React.useState(false);

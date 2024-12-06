@@ -4,10 +4,9 @@ import { eq } from 'drizzle-orm';
 
 import { DrizzleAdapter } from '@auth/drizzle-adapter';
 
+import authConfig from '@/auth.config';
 import { db } from '@/db/drizzle';
 import { users } from '@/db/schema';
-
-import authConfig from '../../auth.config';
 
 declare module 'next-auth' {
   interface Session {

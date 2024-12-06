@@ -1,5 +1,5 @@
-// hook for create photos modal
 import { create } from 'zustand';
+// hook for create photos modal
 
 interface ModalStore {
   isOpen: boolean;

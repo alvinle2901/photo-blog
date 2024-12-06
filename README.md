@@ -7,7 +7,7 @@ An open-source photo blog to showcase my shots within my life journey. Buildt wi
 [![Deploy with Vercel](https://vercel.com/button)]()
 Demo App
 
-https://shot-by-alv.us.kg/
+https://shot-by-alv.duckdns.org/
 
 ## Features
 
@@ -35,6 +35,7 @@ https://shot-by-alv.us.kg/
 
 - [ ] Implement search/filter for CMD-K menu & /dashboard
 - [ ] Get film simulation from Fujifilm's photos
+- [ ] Cache photo data for better loading
 - [ ] Implement page for polaroid photos
 - [ ] Implement dark theme 
 - [ ] Upload photos to Cloudflare R2/ AWS S3

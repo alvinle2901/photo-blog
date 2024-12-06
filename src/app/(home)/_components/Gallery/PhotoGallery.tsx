@@ -1,8 +1,6 @@
 'use client';
 
-// Grid photos gallery
-import { MasonryPhotoAlbum, RowsPhotoAlbum } from 'react-photo-album';
-import 'react-photo-album/masonry.css';
+import { RowsPhotoAlbum } from 'react-photo-album';
 import 'react-photo-album/rows.css';
 import { useMediaQuery } from 'react-responsive';
 
@@ -12,6 +10,7 @@ import renderNextImage from '@/components/images/render-next-image';
 import { useGetPhotos } from '@/features/photos/api/use-get-photos';
 
 const PhotoGallery = () => {
+  // Grid photos gallery
   const photosQuery = useGetPhotos();
   const isDesktopOrTablet = useMediaQuery({ query: '(min-width: 768px)' });
 

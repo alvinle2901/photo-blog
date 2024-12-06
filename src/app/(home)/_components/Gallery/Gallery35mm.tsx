@@ -1,4 +1,3 @@
-// Gallery for 35mm images
 'use client';
 
 import { Gallery } from 'react-grid-gallery';
@@ -15,9 +14,8 @@ import { useGet35mmPhotos } from '@/features/photos-35mm/api/use-get-photos';
 
 import { use35mmPhotos } from '@/hooks/use-35mm-photos';
 
-// Gallery for 35mm images
-
 const Gallery35mm = () => {
+  // Gallery for 35mm images
   const router = useRouter();
   const photosQuery = useGet35mmPhotos();
   const isDesktopOrTablet = useMediaQuery({ query: '(min-width: 768px)' });
@@ -78,7 +76,13 @@ const Gallery35mm = () => {
     );
   };
 
-  return renderGallery();
+  return photosQuery.isPending ? (
+    <div className="w-full flex items-center justify-center">
+      <Icons.loader className="animate-spin" />
+    </div>
+  ) : (
+    renderGallery()
+  );
 };
 
 export default Gallery35mm;

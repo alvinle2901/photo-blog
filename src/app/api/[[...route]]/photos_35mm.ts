@@ -1,14 +1,13 @@
-import { and, asc, desc, eq, gte, lt } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { Context, Hono } from 'hono';
 import { z } from 'zod';
 
 import { type AuthConfig, initAuthConfig, verifyAuth } from '@hono/auth-js';
 import { zValidator } from '@hono/zod-validator';
 
+import authConfig from '@/auth.config';
 import { db } from '@/db/drizzle';
 import { insert35mmPhotoSchema, photos_35mm } from '@/db/schema';
-
-import authConfig from '../../../../auth.config';
 
 const app = new Hono()
   .use('*', initAuthConfig(getAuthConfig))

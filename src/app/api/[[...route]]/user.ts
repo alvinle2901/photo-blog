@@ -5,10 +5,9 @@ import { z } from 'zod';
 import { type AuthConfig, initAuthConfig, verifyAuth } from '@hono/auth-js';
 import { zValidator } from '@hono/zod-validator';
 
+import authConfig from '@/auth.config';
 import { db } from '@/db/drizzle';
 import { users } from '@/db/schema';
-
-import authConfig from '../../../../auth.config';
 
 const app = new Hono().use('*', initAuthConfig(getAuthConfig)).patch(
   '/',
