@@ -16,6 +16,7 @@ const config = {
         hostname: 'github.com',
       },
     ],
+    minimumCacheTTL: 60,
   },
   experimental: {
     turbo: {
