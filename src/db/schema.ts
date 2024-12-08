@@ -130,6 +130,7 @@ export const photos_35mm = pgTable('photos_35mm', {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   url: text('url').notNull(),
+  film: text('film').notNull(),
   title: text('title').notNull(),
   description: text('description').notNull(),
   width: real('width').notNull(),

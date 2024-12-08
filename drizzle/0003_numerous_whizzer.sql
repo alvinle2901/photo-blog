@@ -1,0 +1,1 @@
+ALTER TABLE "photos_35mm" ADD COLUMN "film" text NOT NULL;
