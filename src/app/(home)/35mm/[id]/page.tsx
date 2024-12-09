@@ -54,6 +54,8 @@ const Photo35mm = () => {
         height={photo.height}
         alt={''}
         className="w-auto max-h-[80dvh]"
+        quality={5}
+        priority
       />
       <div className="flex mt-3">
         {index === 0 ? (

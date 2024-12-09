@@ -30,6 +30,7 @@ import { getImageBlur } from '@/actions/photos';
 import { insertPhotoSchema } from '@/db/schema';
 import { useModal } from '@/hooks/use-create-modal';
 import { formatExif } from '@/lib/format-exif';
+import { compressedImage } from '@/lib/image-compress';
 import { getReverseGeocoding } from '@/lib/map';
 import { UploadDropzone } from '@/lib/uploadthing';
 import { cn } from '@/utils/cn';
@@ -75,7 +76,8 @@ const CreatePhotoModal = () => {
   });
 
   const handleImageUpload = async (file: File) => {
-    const buffer = await imageToBuffer(file);
+    const image = await compressedImage(file);
+    const buffer = await imageToBuffer(image);
 
     const data = ExifParserFactory.create(buffer as Buffer).parse();
 
