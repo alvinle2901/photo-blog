@@ -135,6 +135,7 @@ export const photos_35mm = pgTable('photos_35mm', {
   description: text('description').notNull(),
   width: real('width').notNull(),
   height: real('height').notNull(),
+  createAt: timestamp('create_at').defaultNow(),
 });
 
 export const insert35mmPhotoSchema = createInsertSchema(photos_35mm);
