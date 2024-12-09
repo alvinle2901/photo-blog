@@ -29,6 +29,23 @@ const Photo35mm = () => {
     }
   }, [index, photos35mm]);
 
+  //  handle arrow keys
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === 'ArrowLeft') {
+        handlePrev();
+      } else if (event.key === 'ArrowRight') {
+        handleNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   // Handle prev/next images
   const handlePrev = () => {
     router.push(`/35mm/${photos35mm[index - 1].id}`);
