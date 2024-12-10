@@ -9,6 +9,7 @@ import { Icons } from '@/components/icons';
 
 import { use35mmPhotos } from '@/hooks/use-35mm-photos';
 import { usePhotoId } from '@/hooks/use-photo-id';
+import useSwipe from '@/hooks/use-swipe';
 
 const Photo35mm = () => {
   const router = useRouter();
@@ -55,6 +56,12 @@ const Photo35mm = () => {
     router.push(`/35mm/${photos35mm[index + 1].id}`);
   };
 
+  // Handle swipe functions
+  const swipeHandlers = useSwipe({
+    onSwipedLeft: () => handlePrev(),
+    onSwipedRight: () => handleNext(),
+  });
+
   if (!photo) {
     return (
       <div className="w-full h-dvh flex items-center justify-center">
@@ -64,7 +71,10 @@ const Photo35mm = () => {
   }
 
   return (
-    <section className="overflow-hidden ml-0 md:ml-[320px] relative flex items-center justify-center h-[100dvh] flex-col">
+    <section
+      className="overflow-hidden ml-0 md:ml-[320px] relative flex items-center justify-center h-[100dvh] flex-col"
+      {...swipeHandlers}
+    >
       <Image
         src={photo.url}
         width={photo.width}
