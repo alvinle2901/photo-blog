@@ -1,15 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 
 import Image from 'next/image';
 
 import { toast } from 'sonner';
 import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { z } from 'zod';
-
-import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button } from '@/components/ui/Button';
 import {
@@ -19,15 +16,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/Dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/Form';
-import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/TextArea';
 
 import { useCreate35mmPhoto } from '@/features/photos-35mm/api/use-create-photo';
 import { useCreatePhoto } from '@/features/photos/api/use-create-photo';
 
 import { getImageBlur } from '@/actions/photos';
-import { insertPhotoSchema } from '@/db/schema';
+import { insert35mmPhotoSchema, insertPhotoSchema } from '@/db/schema';
 import { useModal } from '@/hooks/use-create-modal';
 import { formatExif } from '@/lib/format-exif';
 import { compressedImage } from '@/lib/image-compress';
@@ -35,10 +29,12 @@ import { getReverseGeocoding } from '@/lib/map';
 import { UploadDropzone } from '@/lib/uploadthing';
 import { cn } from '@/utils/cn';
 import { getImageDimensionsFromFile } from '@/utils/get-image-size';
-import { imageToBuffer } from '@/utils/image';
+import { blobToFile, imageToBuffer } from '@/utils/image';
 
 import { Icons } from '../icons';
 import { RadioGroup, RadioGroupItem } from '../ui/RadioGroup';
+import Form35mm from './form-35mm';
+import FormDigital from './form-digital';
 
 type UploadData = {
   key: string;
@@ -50,6 +46,11 @@ type UploadData = {
 const FormSchema = insertPhotoSchema.pick({
   title: true,
   description: true,
+});
+
+const Form35mmSchema = insert35mmPhotoSchema.pick({
+  title: true,
+  film: true,
 });
 
 const CreatePhotoModal = () => {
@@ -66,14 +67,6 @@ const CreatePhotoModal = () => {
 
   const mutation = useCreatePhoto();
   const mutation35mm = useCreate35mmPhoto();
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      title: '',
-      description: '',
-    },
-  });
 
   const handleImageUpload = async (file: File) => {
     const image = await compressedImage(file);
@@ -93,6 +86,7 @@ const CreatePhotoModal = () => {
     }
 
     setExif(data);
+    return image;
   };
 
   const handleClose = () => {
@@ -143,13 +137,13 @@ const CreatePhotoModal = () => {
       onSuccess: () => {
         handleClose();
         setRes(null);
-        form.reset();
+        // form.reset();
         setStatus('Waiting for update photo');
       },
     });
   };
 
-  const hand35mmSubmit = async (values: z.infer<typeof FormSchema>) => {
+  const hand35mmSubmit = async (values: z.infer<typeof Form35mmSchema>) => {
     setIsReady(false);
 
     if (!res?.url) {
@@ -178,6 +172,7 @@ const CreatePhotoModal = () => {
       width: width,
       height: height,
       blurData: blur,
+      description: '',
       ...values,
     };
 
@@ -185,7 +180,7 @@ const CreatePhotoModal = () => {
       onSuccess: () => {
         handleClose();
         setRes(null);
-        form.reset();
+        // form.reset();
         setStatus('Waiting for update photo');
       },
     });
@@ -224,6 +219,7 @@ const CreatePhotoModal = () => {
             className="ut-button:bg-sky-500 ut-label:text-sky-500 ut-button:ut-uploading:after:bg-sky-600"
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
+              console.log(res[0])
               setRes(res[0]);
               toast.success('Photo uploaded!');
               setIsReady(true);
@@ -233,83 +229,55 @@ const CreatePhotoModal = () => {
               console.log(`ERROR! ${error.message}`);
               toast.error(error.message);
             }}
-            onBeforeUploadBegin={(files) => {
-              return files.map((file) => {
-                handleImageUpload(file);
-
-                return file;
-              });
+            onBeforeUploadBegin={async (files) => {
+              // console.log(files);
+              const newFiles = await Promise.all(
+                files.map(async (file) => {
+                  const name = file.name;
+                  const lastModified = file.lastModified;
+                  const type = file.type
+                  const image = await handleImageUpload(file);
+                  const newImage = blobToFile(image, name, lastModified, type);
+                  return newImage;
+                }),
+              );
+              // console.log(newFiles);
+              return newFiles;
             }}
           />
         )}
 
-        {/* Radio group */}
         <RadioGroup
           defaultValue={mode}
-          className="mt-1 flex justify-between"
+          className="mt-1 flex space-x-4"
           onValueChange={(value) => {
             setMode(value);
           }}
         >
           <RadioGroupItem value={'digital'}>Digital</RadioGroupItem>
           <RadioGroupItem value={'35mm'}>35mm</RadioGroupItem>
-          <RadioGroupItem value={'polaroid'}>Polaroid</RadioGroupItem>
+          {/* <RadioGroupItem value={'polaroid'}>Polaroid</RadioGroupItem> */}
         </RadioGroup>
 
-        <Form {...form}>
-          <form
-            onSubmit={
-              mode === 'digital' ? form.handleSubmit(handSubmit) : form.handleSubmit(hand35mmSubmit)
-            }
-            className="space-y-4 pt-2"
-          >
-            <FormField
-              control={form.control}
-              name="title"
-              disabled={!isReady}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input disabled={false} {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+        {mode === 'digital' ? (
+          <FormDigital isReady={isReady} handSubmit={handSubmit} status={status} />
+        ) : (
+          <Form35mm isReady={isReady} handSubmit={hand35mmSubmit} status={status} />
+        )}
 
-            <FormField
-              control={form.control}
-              name="description"
-              disabled={!isReady}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea disabled={false} {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <div className="flex items-center">
-              {!res?.url ? (
-                <p className={cn('text-xs text-muted-foreground')}>
-                  <Icons.loader className="mr-2 inline-block size-2 animate-spin" />
-                  Photo upload
-                </p>
-              ) : (
-                <p className={cn('text-xs text-green-500')}>
-                  <Icons.check className="mr-2 inline-block size-2" />
-                  Photo upload
-                </p>
-              )}
-            </div>
-
-            <Button type="submit" variant="primary" className="w-full" disabled={!isReady}>
-              {status}
-            </Button>
-          </form>
-        </Form>
+        <div className="flex items-center">
+          {!res?.url ? (
+            <p className={cn('text-xs text-muted-foreground')}>
+              <Icons.loader className="mr-2 inline-block size-2 animate-spin" />
+              Photo upload
+            </p>
+          ) : (
+            <p className={cn('text-xs text-green-500')}>
+              <Icons.check className="mr-2 inline-block size-2" />
+              Photo upload
+            </p>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );

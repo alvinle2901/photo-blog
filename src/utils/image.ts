@@ -22,3 +22,10 @@ export const imageToBuffer = (image: File) => {
 export const checkImageOrientation = (width: number, height: number) => {
   return width > height ? 'landscape' : 'portrait';
 };
+
+export const blobToFile = (blob: File, fileName: string, lastModified: number, type: string) => {
+  return new File([blob], fileName, {
+    type: type,
+    lastModified: lastModified
+  });
+}

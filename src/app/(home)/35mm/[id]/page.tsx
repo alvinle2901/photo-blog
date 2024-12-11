@@ -9,6 +9,7 @@ import { Icons } from '@/components/icons';
 
 import { use35mmPhotos } from '@/hooks/use-35mm-photos';
 import { usePhotoId } from '@/hooks/use-photo-id';
+import useSwipe from '@/hooks/use-swipe';
 
 const Photo35mm = () => {
   const router = useRouter();
@@ -29,6 +30,23 @@ const Photo35mm = () => {
     }
   }, [index, photos35mm]);
 
+  //  handle arrow keys
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === 'ArrowLeft') {
+        handlePrev();
+      } else if (event.key === 'ArrowRight') {
+        handleNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   // Handle prev/next images
   const handlePrev = () => {
     router.push(`/35mm/${photos35mm[index - 1].id}`);
@@ -37,6 +55,12 @@ const Photo35mm = () => {
   const handleNext = () => {
     router.push(`/35mm/${photos35mm[index + 1].id}`);
   };
+
+  // Handle swipe functions
+  const swipeHandlers = useSwipe({
+    onSwipedLeft: () => handlePrev(),
+    onSwipedRight: () => handleNext(),
+  });
 
   if (!photo) {
     return (
@@ -47,14 +71,17 @@ const Photo35mm = () => {
   }
 
   return (
-    <section className="overflow-hidden ml-0 md:ml-[320px] relative flex items-center justify-center h-[100dvh] flex-col">
+    <section
+      className="overflow-hidden ml-0 md:ml-[320px] relative flex items-center justify-center h-[100dvh] flex-col"
+      {...swipeHandlers}
+    >
       <Image
         src={photo.url}
         width={photo.width}
         height={photo.height}
         alt={''}
         className="w-auto max-h-[80dvh]"
-        quality={5}
+        quality={65}
         priority
       />
       <div className="flex mt-3">
