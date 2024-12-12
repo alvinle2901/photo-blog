@@ -39,6 +39,8 @@ const Gallery35mm = () => {
       height: photo.height,
       title: photo.title,
       description: photo.description,
+      film: photo.film,
+      createAt: photo.createAt
     })) ?? [];
   setPhotos35mm(photosToSaved);
 

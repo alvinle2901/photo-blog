@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 
 import photos from './photos';
-import photos_35mm from './photos_35mm';
+import photos_35mm from './photos-35mm';
 import summary from './summary';
 import user from './user';
 

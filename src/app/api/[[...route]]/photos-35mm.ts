@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { Context, Hono } from 'hono';
 import { z } from 'zod';
 
@@ -12,7 +12,7 @@ import { insert35mmPhotoSchema, photos_35mm } from '@/db/schema';
 const app = new Hono()
   .use('*', initAuthConfig(getAuthConfig))
   .get('/', async (c) => {
-    const query = db.select().from(photos_35mm);
+    const query = db.select().from(photos_35mm).orderBy(desc(photos_35mm.createAt));
 
     const data = await query;
 
