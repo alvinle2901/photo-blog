@@ -40,7 +40,7 @@ const Gallery35mm = () => {
       title: photo.title,
       description: photo.description,
       film: photo.film,
-      createAt: photo.createAt
+      createAt: photo.createAt,
     })) ?? [];
   setPhotos35mm(photosToSaved);
 
@@ -73,6 +73,9 @@ const Gallery35mm = () => {
         sizes={{
           size: '1168px',
           sizes: [{ viewport: '(max-width: 1200px)', size: 'calc(100vw - 32px)' }],
+        }}
+        onClick={({ photo }) => {
+          router.push(`/35mm/${photo.id}`);
         }}
       />
     );

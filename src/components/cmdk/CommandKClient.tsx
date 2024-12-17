@@ -112,20 +112,14 @@ export default function CommandKClient({
     }
   }, [isOpen]);
 
-  const pagesItems: CommandKItem[] = [
-    {
-      label: 'Home',
-      path: '/',
-    },
-    ...(pathname === '/grid'
-      ? [{ label: '35mm', path: '/35mm' }]
-      : pathname === '/35mm'
-        ? [{ label: 'Grid', path: '/grid' }]
-        : [
-            { label: 'Grid', path: '/grid' },
-            { label: '35mm', path: '/35mm' },
-          ]),
+  const baseItems: CommandKItem[] = [
+    { label: 'Home', path: '/' },
+    { label: 'Grid', path: '/grid' },
+    { label: '35mm', path: '/35mm' },
+    { label: 'Map', path: '/map' },
   ];
+
+  const pagesItems = baseItems.filter((item) => !(pathname === item.path));
 
   const sectionPages: CommandKSection = {
     heading: 'Pages',
