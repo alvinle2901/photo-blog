@@ -62,6 +62,7 @@ const Gallery35mm = () => {
         onClick={(index, image, e) => {
           router.push(`/35mm/${image.id}`);
         }}
+        defaultContainerWidth={1200}
       />
     ) : (
       <ColumnsPhotoAlbum
