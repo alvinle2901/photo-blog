@@ -42,6 +42,18 @@ const app = new Hono()
       });
     },
   )
+  .get('/camera', async (c) => {
+    const query = db
+      .selectDistinct({ make: photos.make, model: photos.model })
+      .from(photos)
+      .execute();
+
+    const data = await query;
+
+    return c.json({
+      data,
+    });
+  })
   .get(
     '/',
     zValidator(

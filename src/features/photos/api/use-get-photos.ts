@@ -55,3 +55,22 @@ export const useGetPhotosPagination = (page: string, pageSize: string) => {
     },
   });
 };
+
+export const useGetCameras = () => {
+  const query = useQuery({
+    queryKey: ['cameras'],
+    queryFn: async () => {
+      const res = await client.api.photos['camera'].$get({});
+
+      if (!res.ok) {
+        throw new Error('Get unique camera wrong');
+      }
+
+      const { data } = await res.json();
+
+      return data;
+    },
+  });
+
+  return query;
+};
