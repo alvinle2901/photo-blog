@@ -11,7 +11,7 @@ import { useGetPhotosPagination } from '@/features/photos/api/use-get-photos';
 
 import { Photo } from '@/app/(dashboard)/_components/PhotoList';
 
-const INITIAL_PHOTOS_NUMBER = '20';
+const INITIAL_PHOTOS_NUMBER = '10';
 const PERPAGE_PHOTOS_NUMBER = '10';
 
 const PhotoList = () => {
@@ -30,9 +30,9 @@ const PhotoList = () => {
     const newPhotos = photosQuery.data ?? [];
 
     // Set timeout to show loading state when scroll down
-    if (page !== 1) {
-      setTimeout(() => {}, 1000);
-    }
+    // if (page !== 1) {
+    //   setTimeout(() => {}, 1000);
+    // }
     setPhotos([...photos, ...newPhotos]);
     setHasMore(newPhotos.length > 0);
     setPage(page + 1);
