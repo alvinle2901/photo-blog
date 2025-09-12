@@ -3,9 +3,9 @@ import { TbPhotoShare } from 'react-icons/tb';
 
 import Link from 'next/link';
 
-import SiteGrid from '@/components/ui/SiteGrid';
 import { Icons } from '@/components/icons';
 import ImageLarge from '@/components/images/ImageLarge';
+import SiteGrid from '@/components/ui/SiteGrid';
 
 import { useShareModal } from '@/hooks/use-share-modal';
 import { formatExposureTime } from '@/lib/format-exif';
@@ -50,6 +50,7 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
             'gap-y-4',
             '-translate-y-1',
             'mb-4',
+            'gap-x-1.5 lg:gap-x-0'
           )}
         >
           {renderMiniGrid(
@@ -65,6 +66,10 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
                   {photo.make} {photo.model}
                 </div>
               </div>
+              {/* LOCATION  */}
+              {photo.locationName !== 'unknown' ? (
+                <li className="lg:hidden text-gray-500 dark:text-gray-400 font-ibmMono">{getShortenLocation(photo.locationName)}</li>
+              ) : null}
             </>,
           )}
           {renderMiniGrid(

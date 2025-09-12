@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 // hook for create photos modal
-
 interface ModalStore {
   isOpen: boolean;
   onOpen: () => void;

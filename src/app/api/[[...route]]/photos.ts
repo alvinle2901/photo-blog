@@ -67,13 +67,17 @@ const app = new Hono()
     ),
     async (c) => {
       const { year, sortBy, page, pageSize } = c.req.valid('query');
+      const offset =
+        page === '1'
+          ? (parseInt(page) - 1) * parseInt(pageSize)
+          : (parseInt(page) - 1) * parseInt(pageSize) + 10;
 
       const query = db
         .select()
         .from(photos)
         .orderBy(sortBy === 'tookAsc' ? asc(photos.takeAt) : desc(photos.takeAt))
         .limit(parseInt(pageSize))
-        .offset((parseInt(page) - 1) * parseInt(pageSize));
+        .offset(offset);
 
       if (year && year !== 'all') {
         const startDate = new Date(`${year}-01-01T00:00:00.000Z`).toISOString();

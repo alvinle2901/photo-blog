@@ -11,7 +11,7 @@ import { useGetPhotosPagination } from '@/features/photos/api/use-get-photos';
 
 import { Photo } from '@/app/(dashboard)/_components/PhotoList';
 
-const INITIAL_PHOTOS_NUMBER = '10';
+const INITIAL_PHOTOS_NUMBER = '20';
 const PERPAGE_PHOTOS_NUMBER = '10';
 
 const PhotoList = () => {
