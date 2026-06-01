@@ -8,6 +8,15 @@ import { photos } from '../db/schema';
 import { storage } from '../storage';
 import { getIsAdmin } from '../auth/session';
 import { CACHE_KEYS } from '../cache/keys';
+import { getPhotosPaginated } from './query';
+import type { Photo } from '.';
+
+export async function fetchPhotosPaginated(
+  page: number,
+  limit: number,
+): Promise<Photo[]> {
+  return getPhotosPaginated(page, limit);
+}
 
 export async function deletePhoto(id: string) {
   if (!(await getIsAdmin())) redirect('/sign-in');

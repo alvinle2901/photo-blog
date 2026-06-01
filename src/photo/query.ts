@@ -12,6 +12,20 @@ export async function getPhotos(): Promise<Photo[]> {
   return rows.map(rowToPhoto);
 }
 
+export async function getPhotosPaginated(
+  page: number,
+  limit: number,
+): Promise<Photo[]> {
+  const offset = (page - 1) * limit;
+  const rows = await db
+    .select()
+    .from(photos)
+    .orderBy(desc(photos.createdAt))
+    .limit(limit)
+    .offset(offset);
+  return rows.map(rowToPhoto);
+}
+
 export async function getPhotoById(id: string): Promise<Photo | null> {
   'use cache';
   const rows = await db

@@ -1,11 +1,19 @@
 import type { Metadata } from 'next';
+import { Readex_Pro } from 'next/font/google';
+
 import './globals.css';
 
-export const metadata: Metadata = {
-  title: 'Photo Blog',
-  description: 'A personal photo blog',
-};
+const readex = Readex_Pro({ subsets: ['latin'] });
 
+import AppStateProvider from '@/state/AppStateProvider';
+
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s - momento of alvin',
+    default: 'momento of alvin',
+  },
+};
 export default function RootLayout({
   children,
 }: {
@@ -13,7 +21,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className={readex.className}>
+        <AppStateProvider>{children}</AppStateProvider>
+      </body>
     </html>
   );
 }
+
