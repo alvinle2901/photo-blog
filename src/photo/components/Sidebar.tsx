@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -15,11 +14,11 @@ const Sidebar = () => {
 
   const homeRoutes = [
     {
-      label: 'Home.',
+      label: 'home.',
       href: '/',
     },
     {
-      label: 'Map.',
+      label: 'map.',
       href: '/map',
     },
     {
@@ -37,19 +36,28 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-[95dvh] w-[19%] pt-12 pl-3 fixed md:flex flex-col items-end justify-between z-50 hidden">
-      <div className="flex flex-col items-end gap-4">
+    <div className="h-screen w-[18%] shrink-0 py-8 px-8 sticky top-0 md:flex flex-col justify-between hidden">
+      <div className="flex flex-col gap-6">
         <Link href={'/'}>
-          <Image src="/momento.svg" width={200} height={200} alt="Logo" className="mb-4" />
+        <p
+            className="italic text-4xl text-[#18170f] font-light leading-none"
+            style={{ fontFamily: "'Cormorant', serif" }}
+          >
+            momento
+          </p>
+          <p
+            className="text-[#b5b0a8] mt-1 tracking-[0.14em]"
+            style={{ fontFamily: "'DM Mono', monospace" }}
+          >
+            by alv.
+          </p>
         </Link>
         <ViewSwitcher currentSelection={switcherSelectionForPath()} />
         {/* Navs */}
-        <nav className="flex flex-col text-[#1F1F1F] gap-8">
-          <ul className="text-[18px] text-right font-helveticaNeue uppercase space-y-[4px]">
+        <nav className="flex flex-1 flex-col gap-0.5 mt-2">
             {homeRoutes.map((route) => (
               <LinksItem label={route.label} href={route.href} key={route.href}></LinksItem>
             ))}
-          </ul>
         </nav>
       </div>
       {/* Socials */}

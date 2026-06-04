@@ -1,4 +1,4 @@
-import React from 'react';
+import { JSX } from 'react';
 import { TbPhotoShare } from 'react-icons/tb';
 
 import Link from 'next/link';
@@ -31,6 +31,7 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
 
   return (
     <SiteGrid
+    className="border-b"
       contentMain={
         <ImageLarge
           className="w-full max-h-[60vh] object-contain"

@@ -5,7 +5,7 @@ const INSTAGRAM_LINK = 'https://www.instagram.com/shot_by_al_';
 
 const SocialLinks = () => {
   return (
-    <div className="flex flex-wrap justify-center gap-2">
+    <div className="flex flex-wrap gap-3 pt-4 border-t border-[#e5e0d9]">
       <div className="flex space-x-4 text-gray-400">
         <a
           href={FACEBOOK_LINK}

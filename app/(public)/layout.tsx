@@ -4,11 +4,13 @@ import Sidebar from "@/photo/components/Sidebar";
 
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <main>
+    <main className="max-w-[1400px] mx-auto bg-[#f7f5f2]">
       {/* <QueryProvider> */}
         <Nav />
-        <Sidebar />
-        {children}
+        <div className="flex">
+          <Sidebar />
+          <div className="flex-1 min-w-0">{children}</div>
+        </div>
         <FloatingDockMobile />
         {/* <PhotoShareModalProvider />
         <CommandK />

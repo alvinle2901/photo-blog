@@ -12,18 +12,19 @@ const LinksItem = ({ label, href }: { label: string; href: string }) => {
     (pathname === '/' && href === '/') || pathname === href || pathname?.startsWith(`${href}/`);
 
   return (
-    <li className="group cursor-pointer">
       <Link
         href={href}
         prefetch
         className={cn(
-          'group-hover:font-bold transition-colors duration-150',
-          isActive && 'font-bold',
+          'w-full px-2 py-1.5 rounded text-[14px] tracking-[0.03em] transition-colors duration-150',
+          isActive ? 'bg-[#ece7df] text-[#18170f]'
+                : 'text-[#b5b0a8] hover:text-[#18170f]',
         )}
+        style={{ fontFamily: "'DM Mono', monospace" }}
+
       >
         {label}
       </Link>
-    </li>
   );
 };
 
