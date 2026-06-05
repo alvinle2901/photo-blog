@@ -8,8 +8,12 @@ import { photos } from '../db/schema';
 import { storage } from '../storage';
 import { getIsAdmin } from '../auth/session';
 import { CACHE_KEYS } from '../cache/keys';
-import { getPhotosPaginated } from './query';
+import { getPhotos, getPhotosPaginated } from './query';
 import type { Photo } from '.';
+
+export async function fetchAllPhotos(): Promise<Photo[]> {
+  return getPhotos();
+}
 
 export async function fetchPhotosPaginated(
   page: number,
