@@ -32,7 +32,7 @@ const PhotoList = () => {
   }, [loadMore]);
 
   return (
-    <div className="space-y-4 py-8">
+    <div className="space-y-4">
       <InfiniteScroll
         dataLength={photos.length}
         next={loadMore}

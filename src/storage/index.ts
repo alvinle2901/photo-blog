@@ -1,3 +1,5 @@
+export { getOptimizedKey, getOptimizedUrl } from './utils';
+
 export interface StorageProvider {
   /** Upload a file, returns its public URL */
   upload(params: {

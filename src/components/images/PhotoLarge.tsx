@@ -52,12 +52,18 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
             '-translate-y-1',
             'mb-4',
           )}
+          style={{ fontFamily: "'DM Mono', monospace" }}
         >
           {renderMiniGrid(
             <>
               {/* TITLE  */}
-              <Link href={`/p/${photo.id}`} className="font-bold uppercase">
-                {photo.title}
+              <Link href={`/p/${photo.id}`}>
+              <h2
+          className="italic text-2xl text-[#18170f] font-normal leading-tight"
+          style={{ fontFamily: "'Cormorant', serif" }}
+        >
+          {photo.title}
+        </h2>
               </Link>
               {/* CAMERA  */}
               <div className="flex items-center">
@@ -77,7 +83,7 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
                     {photo.focalLength35mm ? photo.focalLength35mm + 'mm' : '-'}
                   </span>
                 </li>
-                <li>{photo.fNumber ? 'ƒ' + photo.fNumber : '-'}</li>
+                <li>{photo.fStop ? 'ƒ/' + photo.fStop : '-'}</li>
                 <li>ISO {photo.iso}</li>
                 <li>{formatExposureTime(photo.exposureTime || 0)}</li>
                 {photo.locationName && photo.locationName !== 'unknown' ? (
@@ -89,7 +95,7 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
               </ul>
               <div className={cn('flex gap-y-4', 'flex-col sm:flex-row lg:flex-col')}>
                 <div className={cn('grow uppercase', 'text-gray-500', 'dark:text-gray-400')}>
-                  {formatDate(photo.takeAt)}
+                  {formatDate(photo.createdAt)}
                 </div>
               </div>
             </>,

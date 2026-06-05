@@ -2,9 +2,11 @@ import { randomUUID } from 'crypto';
 import { db } from '../db/client';
 import { photos } from '../db/schema';
 import { storage } from '../storage';
+import { getOptimizedKey } from '../storage/utils';
 import { extractExif } from './extract-exif';
 import { generateBlurHash } from './generate-blur';
 import { generateColorData } from './generate-color';
+import { generateOptimizedVariants } from './generate-optimized';
 import { rowToPhoto, type Photo } from '../photo';
 
 export type UploadInput = {
@@ -20,17 +22,29 @@ export async function processUpload(input: UploadInput): Promise<Photo> {
   const ext = fileName.split('.').pop()?.toLowerCase() ?? 'jpg';
   const key = `photos/${id}.${ext}`;
 
-  // 1. Upload to R2
+  // 1. Upload original to R2
   const url = await storage.upload({ key, body: buffer, contentType });
 
-  // 2. Extract EXIF + blur hash + color palette in parallel
+  // 2. Generate optimized variants (sm/md/lg) and upload in parallel
+  const variants = await generateOptimizedVariants(buffer);
+  await Promise.all(
+    variants.map(({ suffix, buffer: variantBuffer }) =>
+      storage.upload({
+        key: getOptimizedKey(key, suffix),
+        body: variantBuffer,
+        contentType: 'image/jpeg',
+      }),
+    ),
+  );
+
+  // 3. Extract EXIF + blur hash + color palette in parallel
   const [exif, blurData, colorData] = await Promise.all([
     extractExif(buffer, fileName),
     generateBlurHash(buffer),
     generateColorData(buffer),
   ]);
 
-  // 3. Insert into DB
+  // 4. Insert into DB
   const [row] = await db
     .insert(photos)
     .values({
@@ -52,6 +66,8 @@ export async function processUpload(input: UploadInput): Promise<Photo> {
       longitude: exif.longitude,
       takenAt: exif.takenAt,
       takenAtNaive: exif.takenAtNaive,
+      filmSimulation: exif.filmSimulation,
+      recipeData: exif.recipeData ? JSON.stringify(exif.recipeData) : null,
     })
     .returning();
 
