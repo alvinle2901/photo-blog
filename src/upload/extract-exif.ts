@@ -1,5 +1,9 @@
 import exifr from 'exifr';
+import { ExifParserFactory } from 'ts-exif-parser';
 import { DEFAULT_ASPECT_RATIO } from '../photo';
+import { isExifMakeFujifilm } from '../platforms/fujifilm/server';
+import { getFujifilmSimulationFromMakerNote, type FujifilmSimulation } from '../platforms/fujifilm/simulation';
+import { getFujifilmRecipeFromMakerNote, type FujifilmRecipe } from '../platforms/fujifilm/recipe';
 
 export type ExtractedExif = {
   make: string | null;
@@ -16,6 +20,8 @@ export type ExtractedExif = {
   takenAtNaive: string | null;
   aspectRatio: number;
   extension: string;
+  filmSimulation: FujifilmSimulation | null;
+  recipeData: FujifilmRecipe | null;
 };
 
 export async function extractExif(
@@ -58,8 +64,30 @@ export async function extractExif(
 
   const extension = fileName.split('.').pop()?.toLowerCase() ?? 'jpg';
 
+  // --- Film simulation + recipe (Fujifilm only) ---
+  let filmSimulation: FujifilmSimulation | null = null;
+  let recipeData: FujifilmRecipe | null = null;
+
+  const make: string | null = data?.Make ?? null;
+  if (isExifMakeFujifilm(make ?? undefined)) {
+    console.log('Fujifilm EXIF detected; attempting to extract film simulation and recipe data from MakerNote');
+    try {
+      const parser = ExifParserFactory.create(buffer);
+      parser.enableBinaryFields(true);
+      const binaryExif = parser.parse();
+      console.log('Parsed EXIF data with ts-exif-parser', binaryExif);
+      const makerNote = binaryExif.tags?.MakerNote;
+      if (Buffer.isBuffer(makerNote)) {
+        filmSimulation = getFujifilmSimulationFromMakerNote(makerNote) ?? null;
+        recipeData = getFujifilmRecipeFromMakerNote(makerNote);
+      }
+    } catch {
+      // MakerNote parsing is best-effort; don't fail the whole upload
+    }
+  }
+
   return {
-    make: data?.Make ?? null,
+    make,
     model: data?.Model ?? null,
     focalLength: data?.FocalLength ?? null,
     focalLength35mm: data?.FocalLengthIn35mmFormat ?? null,
@@ -73,5 +101,7 @@ export async function extractExif(
     takenAtNaive,
     aspectRatio,
     extension,
+    filmSimulation,
+    recipeData,
   };
 }

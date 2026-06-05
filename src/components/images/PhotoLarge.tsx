@@ -12,6 +12,8 @@ import { formatExposureTime } from '@/utils/format-exif';
 import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/date';
 import { getShortenLocation } from '@/utils/string';
+import { labelForFujifilmSimulation } from '@/platforms/fujifilm/simulation';
+import type { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 
 const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => {
   const renderMiniGrid = (children: JSX.Element) => (
@@ -72,6 +74,12 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
                   {photo.make} {photo.model}
                 </div>
               </div>
+              {/* FILM SIMULATION */}
+              {photo.filmSimulation && (
+                <div className="text-xs text-gray-500 dark:text-gray-400 font-ibmMono uppercase tracking-wide">
+                  {labelForFujifilmSimulation(photo.filmSimulation as FujifilmSimulation)}
+                </div>
+              )}
             </>,
           )}
           {renderMiniGrid(

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getOptimizedUrl } from '@/storage';
+import { getOptimizedUrl } from '@/storage/utils';
 
 // Height determined by intrinsic photo aspect ratio
 export const IMAGE_TINY_WIDTH = 50;
