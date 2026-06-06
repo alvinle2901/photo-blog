@@ -22,6 +22,33 @@ export async function fetchPhotosPaginated(
   return getPhotosPaginated(page, limit);
 }
 
+export async function updatePhoto(
+  id: string,
+  data: {
+    title?: string | null;
+    caption?: string | null;
+    semanticDescription?: string | null;
+    tags?: string[] | null;
+    hidden?: boolean;
+    priorityOrder?: number | null;
+    latitude?: number | null;
+    longitude?: number | null;
+    locationName?: string | null;
+    recipeTitle?: string | null;
+    recipeData?: unknown | null;
+  },
+) {
+  if (!(await getIsAdmin())) redirect('/sign-in');
+
+  await db
+    .update(photos)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(photos.id, id));
+
+  revalidateTag(CACHE_KEYS.photos(), 'max');
+  revalidateTag(CACHE_KEYS.photo(id), 'max');
+}
+
 export async function deletePhoto(id: string) {
   if (!(await getIsAdmin())) redirect('/sign-in');
 
@@ -42,6 +69,6 @@ export async function deletePhoto(id: string) {
 
   await db.delete(photos).where(eq(photos.id, id));
 
-  revalidateTag(CACHE_KEYS.photos(), 'default');
-  revalidateTag(CACHE_KEYS.photo(id), 'default');
+  revalidateTag(CACHE_KEYS.photos(), 'max');
+  revalidateTag(CACHE_KEYS.photo(id), 'max');
 }

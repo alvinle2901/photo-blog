@@ -34,8 +34,10 @@ export type Photo = {
   // Location
   latitude: number | null;
   longitude: number | null;
+  locationName: string | null;
   // Film
   filmSimulation: string | null;
+  recipeTitle: string | null;
   recipeData: unknown | null;
   // Meta
   hidden: boolean;

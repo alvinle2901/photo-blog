@@ -1,10 +1,13 @@
 import { db } from '../db/client';
 import { photos } from '../db/schema';
 import { desc, eq } from 'drizzle-orm';
+import { cacheTag } from 'next/cache';
 import { rowToPhoto, type Photo } from './index';
+import { CACHE_KEYS } from '../cache/keys';
 
 export async function getPhotos(): Promise<Photo[]> {
   'use cache';
+  cacheTag(CACHE_KEYS.photos());
   const rows = await db
     .select()
     .from(photos)
@@ -28,6 +31,7 @@ export async function getPhotosPaginated(
 
 export async function getPhotoById(id: string): Promise<Photo | null> {
   'use cache';
+  cacheTag(CACHE_KEYS.photo(id));
   const rows = await db
     .select()
     .from(photos)
