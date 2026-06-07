@@ -38,7 +38,7 @@ const PhotoCard = ({ photo }: { photo: Photo }) => {
 
   return (
     <div className="relative">
-      <AspectRatio ratio={4 / 5} className="overflow-hidden rounded-sm bg-muted">
+      <AspectRatio ratio={4 / 5} className="overflow-hidden rounded-t-sm bg-muted">
         <Image
           src={photo.url}
           fill
@@ -65,14 +65,20 @@ const PhotoCard = ({ photo }: { photo: Photo }) => {
 
       <Link href={`/photos/${photo.id}`} className="group">
         <div className="w-full">
-          <div className="w-full space-y-2 bg-[#f7f5f2] border border-[#e5e0d9] rounded-b-sm overflow-hidden p-2 transition duration-150">
-            <h1 className="line-clamp-1 group-hover:underline">{photo.title}</h1>
-            <h3 className="text-xs text-muted-foreground">
+          <div className="w-full space-y-2 bg-[#f7f5f2] border-b border-l border-r border-[#e5e0d9] rounded-b-sm overflow-hidden p-2 transition duration-150">
+            <p
+          className="italic text-lg text-[#18170f] leading-tight truncate"
+          style={{ fontFamily: "'Cormorant', serif" }}
+        >
+          {photo.title}
+        </p>
+            <p className="text-[12px] text-[#b5b0a8] mt-0.5 tracking-wide truncate"
+          style={{ fontFamily: "'DM Mono', monospace" }}>
                   {formatDate(photo.takenAt)}
               
-              </h3>
-            <p className="flex items-center text-[10px] font-light text-muted-foreground">
-              <Icons.mapPin size={12} className="mr-2 text-sky-500" />
+              </p>
+            <p className="flex items-center text-[11px] font-light text-muted-foreground">
+              <Icons.mapPin size={12} className="mr-2 text-gray-500" />
               {convertToCoordination(photo.longitude, photo.latitude)}
             </p>
           </div>

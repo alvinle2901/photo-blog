@@ -8,6 +8,7 @@ const ibmPlexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['100','200','30
 const poppins = Poppins({ subsets: ['latin'], weight: ['100','200','300','400','500','600','700','800','900'], style: ['normal','italic'], variable: '--font-poppins' });
 
 import AppStateProvider from '@/state/AppStateProvider';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: {
@@ -23,7 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className={`${readex.className} ${ibmPlexMono.variable} ${poppins.variable}`}>
+        <Suspense>
         <AppStateProvider>{children}</AppStateProvider>
+
+        </Suspense>
       </body>
     </html>
   );
