@@ -20,6 +20,13 @@ export async function getPhotosPaginated(
   limit: number,
 ): Promise<Photo[]> {
   const offset = (page - 1) * limit;
+  return getPhotosPaginatedByOffset(offset, limit);
+}
+
+export async function getPhotosPaginatedByOffset(
+  offset: number,
+  limit: number,
+): Promise<Photo[]> {
   const rows = await db
     .select()
     .from(photos)

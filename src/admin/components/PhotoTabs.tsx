@@ -13,11 +13,11 @@ interface Props {
 const PhotoTabs = ({ photos, isPending }: Props) => {
   return (
     <Tabs className="flex-col" defaultValue="tab1">
-      <TabList className="flex shrink-0 space-x-8 px-6 text-gray-500" aria-label="Manage images"
+      <TabList className="flex shrink-0 space-x-8 px-6 text-gray-500 tracking-[0.04em]" aria-label="Manage images"
           style={{ fontFamily: "'DM Mono', monospace" }}
       >
         <TabTrigger
-          className="flex py-4 cursor-pointer select-none items-center justify-center text-[15px] leading-none outline-none first:rounded-tl-md last:rounded-tr-md hover:text-[#18170f] data-[state=active]:text-[#18170f] data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current"
+          className="flex py-5 cursor-pointer select-none items-center justify-center text-[15px] leading-none outline-none first:rounded-tl-md last:rounded-tr-md hover:text-[#18170f] data-[state=active]:text-[#18170f] data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current"
           value="tab1"
         >
           digital

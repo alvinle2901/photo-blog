@@ -28,6 +28,8 @@ export async function generateOptimizedVariants(
   return Promise.all(
     OPTIMIZED_SIZES.map(async ({ suffix, width, quality }) => {
       const buffer = await sharp(original)
+        // Respect EXIF orientation before resizing/encoding.
+        .rotate()
         .resize(width, undefined, { withoutEnlargement: true })
         .toFormat('jpeg', { quality })
         .toBuffer();

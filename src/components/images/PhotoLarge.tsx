@@ -33,7 +33,7 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
 
   return (
     <SiteGrid
-    className="border-b"
+    className="border-b border-[#e5e0d9]"
       contentMain={
         <ImageLarge
           className="w-full max-h-[60vh] object-contain"
@@ -52,7 +52,7 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
             'grid grid-cols-2 lg:grid-cols-1',
             'gap-y-4',
             '-translate-y-1',
-            'mb-4',
+            'my-4',
           )}
           style={{ fontFamily: "'DM Mono', monospace" }}
         >
@@ -70,13 +70,13 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
               {/* CAMERA  */}
               <div className="flex items-center">
                 <Icons.camera className="h-4 w-4" />
-                <div className="uppercase font-ibmMono font-medium pl-1">
+                <div className="uppercase font-medium pl-1">
                   {photo.make} {photo.model}
                 </div>
               </div>
               {/* FILM SIMULATION */}
               {photo.filmSimulation && (
-                <div className="text-xs text-gray-500 dark:text-gray-400 font-ibmMono uppercase tracking-wide">
+                <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                   {labelForFujifilmSimulation(photo.filmSimulation as FujifilmSimulation)}
                 </div>
               )}
@@ -84,10 +84,10 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
           )}
           {renderMiniGrid(
             <>
-              <ul className={cn('text-gray-500', 'dark:text-gray-400 font-ibmMono')}>
+              <ul className={cn('text-gray-500', 'dark:text-gray-400')}>
                 <li>
                   {photo.focalLength ? photo.focalLength + 'mm' : '-'}{' '}
-                  <span className={cn('text-gray-400/80', 'dark:text-gray-400/50 font-ibmMono')}>
+                  <span className={cn('text-gray-400/80', 'dark:text-gray-400/50')}>
                     {photo.focalLength35mm ? photo.focalLength35mm + 'mm' : '-'}
                   </span>
                 </li>
@@ -103,7 +103,7 @@ const PhotoLarge = ({ photo, priority }: { photo: any; priority?: boolean }) => 
               </ul>
               <div className={cn('flex gap-y-4', 'flex-col sm:flex-row lg:flex-col')}>
                 <div className={cn('grow uppercase', 'text-gray-500', 'dark:text-gray-400')}>
-                  {formatDate(photo.createdAt)}
+                  {formatDate(photo.takenAt)}
                 </div>
               </div>
             </>,

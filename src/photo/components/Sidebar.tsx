@@ -36,7 +36,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-screen w-[18%] shrink-0 py-8 px-8 sticky top-0 md:flex flex-col justify-between hidden">
+    <div className="h-screen w-[20%] shrink-0 py-8 px-8 sticky top-0 md:flex flex-col justify-between hidden">
       <div className="flex flex-col gap-6">
         <Link href={'/'}>
         <p

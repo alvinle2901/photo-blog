@@ -1,35 +1,53 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import useSWRInfinite from 'swr/infinite';
 
 import AnimateItems from '@/components/AnimateItems';
 import { Icons } from '@/components/icons';
 import PhotoLarge from '@/components/images/PhotoLarge';
-import { fetchPhotosPaginated } from '@/photo/actions';
 
 import { Photo } from '..';
 
 const INITIAL_LIMIT = 20;
 const PAGE_LIMIT = 10;
 
+type PhotosPage = {
+  photos: Photo[];
+  hasMore: boolean;
+  nextOffset: number;
+  limit: number;
+};
+
+const fetcher = async (url: string): Promise<PhotosPage> => {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error('Failed to load photos');
+  }
+
+  return response.json();
+};
+
 const PhotoList = () => {
-  const [photos, setPhotos] = useState<Photo[]>([]);
-  const [hasMore, setHasMore] = useState(true);
-  const pageRef = useRef(1);
+  const { data, error, setSize } = useSWRInfinite<PhotosPage>(
+    (pageIndex, previousPageData) => {
+      if (previousPageData && !previousPageData.hasMore) return null;
 
-  const loadMore = useCallback(async () => {
-    const limit = pageRef.current === 1 ? INITIAL_LIMIT : PAGE_LIMIT;
-    const newPhotos = await fetchPhotosPaginated(pageRef.current, limit);
-    setPhotos((prev) => [...prev, ...newPhotos]);
-    setHasMore(newPhotos.length > 0);
-    pageRef.current += 1;
-  }, []);
+      const offset = previousPageData?.nextOffset ?? 0;
+      const limit = pageIndex === 0 ? INITIAL_LIMIT : PAGE_LIMIT;
+      return `/api/photos?offset=${offset}&limit=${limit}`;
+    },
+    fetcher,
+    {
+      revalidateFirstPage: false,
+    },
+  );
 
-  // Initial fetch
-  useEffect(() => {
-    loadMore();
-  }, [loadMore]);
+  const photos = data?.flatMap((page) => page.photos) ?? [];
+  const lastPage = data?.[data.length - 1];
+  const hasMore = lastPage?.hasMore ?? true;
+  const loadMore = () => setSize((size) => size + 1);
 
   return (
     <div className="space-y-4">
@@ -43,6 +61,11 @@ const PhotoList = () => {
           </div>
         }
       >
+        {error ? (
+          <div className="mx-[10%] mt-7 rounded-full border py-1 text-center text-sm text-red-500">
+            Could not load photos.
+          </div>
+        ) : null}
         <AnimateItems
           className="space-y-1"
           duration={0.7}
