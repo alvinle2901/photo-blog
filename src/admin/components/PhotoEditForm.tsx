@@ -18,10 +18,13 @@ export function PhotoEditForm({ photo }: Props) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [displayAspectRatio, setDisplayAspectRatio] = useState(
+    photo.aspectRatio > 0 ? photo.aspectRatio : 4 / 3
+  );
   const [draftLocation, setDraftLocation] = useState(() => ({
     latitude: photo.latitude != null ? String(photo.latitude) : '',
     longitude: photo.longitude != null ? String(photo.longitude) : '',
-    locationName: photo.locationName ?? '',
+    locationName: photo.locationName ?? ''
   }));
 
   const mapLocation = useMemo(() => {
@@ -33,7 +36,7 @@ export function PhotoEditForm({ photo }: Props) {
 
     return {
       latitude: parseCoordinate(draftLocation.latitude),
-      longitude: parseCoordinate(draftLocation.longitude),
+      longitude: parseCoordinate(draftLocation.longitude)
     };
   }, [draftLocation.latitude, draftLocation.longitude]);
 
@@ -45,7 +48,7 @@ export function PhotoEditForm({ photo }: Props) {
     setDraftLocation({
       latitude: String(location.latitude),
       longitude: String(location.longitude),
-      locationName: location.locationName ?? '',
+      locationName: location.locationName ?? ''
     });
   };
 
@@ -58,7 +61,10 @@ export function PhotoEditForm({ photo }: Props) {
 
     const tagsRaw = (fd.get('tags') as string).trim();
     const tags = tagsRaw
-      ? tagsRaw.split(',').map((t) => t.trim()).filter(Boolean)
+      ? tagsRaw
+          .split(',')
+          .map((t) => t.trim())
+          .filter(Boolean)
       : null;
 
     const priorityRaw = (fd.get('priorityOrder') as string).trim();
@@ -83,17 +89,18 @@ export function PhotoEditForm({ photo }: Props) {
     startTransition(async () => {
       try {
         await updatePhoto(photo.id, {
-          title:               (fd.get('title') as string).trim() || null,
-          caption:             (fd.get('caption') as string).trim() || null,
-          semanticDescription: (fd.get('semanticDescription') as string).trim() || null,
+          title: (fd.get('title') as string).trim() || null,
+          caption: (fd.get('caption') as string).trim() || null,
+          semanticDescription:
+            (fd.get('semanticDescription') as string).trim() || null,
           tags,
-          hidden:              fd.get('hidden') === 'on',
-          priorityOrder:       isNaN(priorityOrder!) ? null : priorityOrder,
-          latitude:            latitude != null && !isNaN(latitude) ? latitude : null,
-          longitude:           longitude != null && !isNaN(longitude) ? longitude : null,
-          locationName:        (fd.get('locationName') as string).trim() || null,
-          recipeTitle:         (fd.get('recipeTitle') as string).trim() || null,
-          recipeData,
+          hidden: fd.get('hidden') === 'on',
+          priorityOrder: isNaN(priorityOrder!) ? null : priorityOrder,
+          latitude: latitude != null && !isNaN(latitude) ? latitude : null,
+          longitude: longitude != null && !isNaN(longitude) ? longitude : null,
+          locationName: (fd.get('locationName') as string).trim() || null,
+          recipeTitle: (fd.get('recipeTitle') as string).trim() || null,
+          recipeData
         });
         setSaved(true);
         router.refresh();
@@ -108,9 +115,25 @@ export function PhotoEditForm({ photo }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
         {/* Left column: Metadata, Recipe, Visibility */}
         <div className="space-y-6">
-          <AspectRatio ratio={4/3} className="max-w-sm">
-            <Image src={photo.url} alt={photo.caption ?? photo.title ?? 'Photo'} layout="fill" className="rounded-lg object-cover border" />
-          </AspectRatio>
+          <div
+            className={displayAspectRatio < 1 ? 'max-w-full' : ''}
+            style={displayAspectRatio < 1 ? { width: '24rem' } : undefined}>
+            <AspectRatio ratio={displayAspectRatio < 1 ? 3 / 4 : 4 / 3}>
+              <Image
+                src={photo.url}
+                alt={photo.caption ?? photo.title ?? 'Photo'}
+                layout="fill"
+                className="rounded-lg object-cover border"
+                onLoadingComplete={(img) => {
+                  if (!img.naturalWidth || !img.naturalHeight) return;
+                  const nextAspectRatio = img.naturalWidth / img.naturalHeight;
+                  if (!Number.isFinite(nextAspectRatio)) return;
+                  if (Math.abs(nextAspectRatio - displayAspectRatio) < 0.01) return;
+                  setDisplayAspectRatio(nextAspectRatio);
+                }}
+              />
+            </AspectRatio>
+          </div>
           {/* Metadata */}
           <section className="border rounded-lg p-5 space-y-4">
             <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
@@ -178,7 +201,11 @@ export function PhotoEditForm({ photo }: Props) {
               <textarea
                 name="recipeData"
                 rows={6}
-                defaultValue={photo.recipeData ? JSON.stringify(photo.recipeData, null, 2) : ''}
+                defaultValue={
+                  photo.recipeData
+                    ? JSON.stringify(photo.recipeData, null, 2)
+                    : ''
+                }
                 placeholder='{"FilmSimulation": "Classic Chrome", ...}'
                 className={`${inputCls} font-mono text-xs`}
                 spellCheck={false}
@@ -203,7 +230,9 @@ export function PhotoEditForm({ photo }: Props) {
             {process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN && (
               <div className="max-w-sm">
                 <GeocoderControl
-                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
+                  mapboxAccessToken={
+                    process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+                  }
                   placeholder="Search location"
                   minLength={2}
                   limit={6}
@@ -218,7 +247,7 @@ export function PhotoEditForm({ photo }: Props) {
                     handleLocationSelect({
                       latitude,
                       longitude,
-                      locationName: result.place_name ?? null,
+                      locationName: result.place_name ?? null
                     });
                   }}
                 />
@@ -238,7 +267,10 @@ export function PhotoEditForm({ photo }: Props) {
                 type="text"
                 value={draftLocation.locationName}
                 onChange={(event) =>
-                  setDraftLocation((current) => ({ ...current, locationName: event.target.value }))
+                  setDraftLocation((current) => ({
+                    ...current,
+                    locationName: event.target.value
+                  }))
                 }
                 placeholder="e.g. Tokyo, Japan"
                 className={inputCls}
@@ -255,7 +287,7 @@ export function PhotoEditForm({ photo }: Props) {
                   onChange={(event) =>
                     setDraftLocation((current) => ({
                       ...current,
-                      latitude: event.target.value,
+                      latitude: event.target.value
                     }))
                   }
                   placeholder="e.g. 35.68950"
@@ -271,7 +303,7 @@ export function PhotoEditForm({ photo }: Props) {
                   onChange={(event) =>
                     setDraftLocation((current) => ({
                       ...current,
-                      longitude: event.target.value,
+                      longitude: event.target.value
                     }))
                   }
                   placeholder="e.g. 139.69171"
@@ -288,30 +320,70 @@ export function PhotoEditForm({ photo }: Props) {
             </h2>
 
             <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
-              <ExifRow label="Camera"        value={[photo.make, photo.model].filter(Boolean).join(' ') || null} />
-              <ExifRow label="Focal length"  value={photo.focalLength ? `${photo.focalLength} mm` : null} />
-              <ExifRow label="35mm equiv."   value={photo.focalLength35mm ? `${photo.focalLength35mm} mm` : null} />
-              <ExifRow label="Aperture"      value={photo.fStop ? `f/${photo.fStop}` : null} />
-              <ExifRow label="Shutter"       value={photo.exposureTime ? formatShutter(photo.exposureTime) : null} />
-              <ExifRow label="ISO"           value={photo.iso ? String(photo.iso) : null} />
-              <ExifRow label="Exp. comp."    value={photo.exposureComp != null ? `${photo.exposureComp > 0 ? '+' : ''}${photo.exposureComp} EV` : null} />
-              <ExifRow label="Film sim."     value={photo.filmSimulation} />
-              <ExifRow label="Taken"         value={photo.takenAt ? photo.takenAt.toLocaleString() : (photo.takenAtNaive ?? null)} />
+              <ExifRow
+                label="Camera"
+                value={
+                  [photo.make, photo.model].filter(Boolean).join(' ') || null
+                }
+              />
+              <ExifRow
+                label="Focal length"
+                value={photo.focalLength ? `${photo.focalLength} mm` : null}
+              />
+              <ExifRow
+                label="35mm equiv."
+                value={
+                  photo.focalLength35mm ? `${photo.focalLength35mm} mm` : null
+                }
+              />
+              <ExifRow
+                label="Aperture"
+                value={photo.fStop ? `f/${photo.fStop}` : null}
+              />
+              <ExifRow
+                label="Shutter"
+                value={
+                  photo.exposureTime ? formatShutter(photo.exposureTime) : null
+                }
+              />
+              <ExifRow
+                label="ISO"
+                value={photo.iso ? String(photo.iso) : null}
+              />
+              <ExifRow
+                label="Exp. comp."
+                value={
+                  photo.exposureComp != null
+                    ? `${photo.exposureComp > 0 ? '+' : ''}${photo.exposureComp} EV`
+                    : null
+                }
+              />
+              <ExifRow label="Film sim." value={photo.filmSimulation} />
+              <ExifRow
+                label="Taken"
+                value={
+                  photo.takenAt
+                    ? photo.takenAt.toLocaleString()
+                    : (photo.takenAtNaive ?? null)
+                }
+              />
             </div>
           </section>
 
-                      <Field label="Priority order" hint="Lower number = shown first; leave blank for default">
-              <input
-                name="priorityOrder"
-                type="number"
-                step="any"
-                defaultValue={photo.priorityOrder ?? ''}
-                placeholder="e.g. 1"
-                className={`${inputCls} max-w-[140px]`}
-              />
-            </Field>
+          <Field
+            label="Priority order"
+            hint="Lower number = shown first; leave blank for default">
+            <input
+              name="priorityOrder"
+              type="number"
+              step="any"
+              defaultValue={photo.priorityOrder ?? ''}
+              placeholder="e.g. 1"
+              className={`${inputCls} max-w-[140px]`}
+            />
+          </Field>
 
-                      {/* Visibility */}
+          {/* Visibility */}
           <section className="border rounded-lg p-5 space-y-4">
             <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
               Visibility
@@ -324,7 +396,9 @@ export function PhotoEditForm({ photo }: Props) {
                 defaultChecked={photo.hidden}
                 className="w-4 h-4 rounded border-gray-300"
               />
-              <span className="text-sm text-gray-700">Hide from public gallery</span>
+              <span className="text-sm text-gray-700">
+                Hide from public gallery
+              </span>
             </label>
           </section>
         </div>
@@ -335,25 +409,19 @@ export function PhotoEditForm({ photo }: Props) {
         <button
           type="submit"
           disabled={isPending}
-          className="px-4 py-2 bg-black text-white text-sm rounded-md hover:bg-black/80 disabled:opacity-40 transition-colors"
-        >
+          className="px-4 py-2 bg-black text-white text-sm rounded-md hover:bg-black/80 disabled:opacity-40 transition-colors">
           {isPending ? 'Saving…' : 'Save changes'}
         </button>
 
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-4 py-2 text-sm text-gray-600 hover:text-black transition-colors"
-        >
+          className="px-4 py-2 text-sm text-gray-600 hover:text-black transition-colors">
           Cancel
         </button>
 
-        {saved && (
-          <span className="text-sm text-green-600">Saved!</span>
-        )}
-        {error && (
-          <span className="text-sm text-red-600">{error}</span>
-        )}
+        {saved && <span className="text-sm text-green-600">Saved!</span>}
+        {error && <span className="text-sm text-red-600">{error}</span>}
       </div>
     </form>
   );
@@ -367,7 +435,7 @@ const inputCls =
 function Field({
   label,
   hint,
-  children,
+  children
 }: {
   label: string;
   hint?: string;
@@ -384,7 +452,13 @@ function Field({
   );
 }
 
-function ExifRow({ label, value }: { label: string; value: string | null | undefined }) {
+function ExifRow({
+  label,
+  value
+}: {
+  label: string;
+  value: string | null | undefined;
+}) {
   return (
     <>
       <span className="text-gray-500">{label}</span>

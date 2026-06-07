@@ -1,5 +1,6 @@
 import exifr from 'exifr';
 import { ExifParserFactory } from 'ts-exif-parser';
+import sharp from 'sharp';
 import { DEFAULT_ASPECT_RATIO } from '../photo';
 import { isExifMakeFujifilm } from '../platforms/fujifilm/server';
 import { getFujifilmSimulationFromMakerNote, type FujifilmSimulation } from '../platforms/fujifilm/simulation';
@@ -37,15 +38,7 @@ export async function extractExif(
     iptc: false,
   }).catch(() => null);
 
-  const width: number | undefined = data?.ImageWidth ?? data?.ExifImageWidth;
-  const height: number | undefined = data?.ImageHeight ?? data?.ExifImageHeight;
-  const isRotated = [5, 6, 7, 8].includes(data?.Orientation ?? 0);
-
-  const effectiveWidth = isRotated ? height : width;
-  const effectiveHeight = isRotated ? width : height;
-  const aspectRatio = effectiveWidth && effectiveHeight
-    ? effectiveWidth / effectiveHeight
-    : DEFAULT_ASPECT_RATIO;
+  const aspectRatio = await getAspectRatioFromImage(buffer, data);
 
   // Parse naive datetime string (no timezone, as shot)
   const takenAtRaw: string | undefined = data?.DateTimeOriginal
@@ -104,4 +97,65 @@ export async function extractExif(
     filmSimulation,
     recipeData,
   };
+}
+
+type ExifLike = Record<string, unknown> | null;
+
+async function getAspectRatioFromImage(buffer: Buffer, data: ExifLike): Promise<number> {
+  const sharpMeta = await sharp(buffer).metadata().catch(() => null);
+  const sharpWidth = toPositiveNumber(sharpMeta?.width);
+  const sharpHeight = toPositiveNumber(sharpMeta?.height);
+
+  if (sharpWidth && sharpHeight) {
+    const orientation = sharpMeta?.orientation;
+    const needsSwap = orientation != null && orientation >= 5 && orientation <= 8;
+    const width = needsSwap ? sharpHeight : sharpWidth;
+    const height = needsSwap ? sharpWidth : sharpHeight;
+    return width / height;
+  }
+
+  const exifWidth = pickDimension(data, [
+    'ExifImageWidth',
+    'ImageWidth',
+    'PixelXDimension',
+    'FileImageWidth',
+    'width',
+  ]);
+  const exifHeight = pickDimension(data, [
+    'ExifImageHeight',
+    'ImageHeight',
+    'PixelYDimension',
+    'FileImageHeight',
+    'height',
+  ]);
+
+  if (exifWidth && exifHeight) {
+    const orientation = pickDimension(data, ['Orientation']);
+    const needsSwap = orientation != null && orientation >= 5 && orientation <= 8;
+    const width = needsSwap ? exifHeight : exifWidth;
+    const height = needsSwap ? exifWidth : exifHeight;
+    return width / height;
+  }
+
+  return DEFAULT_ASPECT_RATIO;
+}
+
+function pickDimension(data: ExifLike, keys: string[]): number | null {
+  if (!data) return null;
+  for (const key of keys) {
+    const value = toPositiveNumber(data[key]);
+    if (value != null) return value;
+  }
+  return null;
+}
+
+function toPositiveNumber(value: unknown): number | null {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) && value > 0 ? value : null;
+  }
+  if (typeof value === 'string') {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+  }
+  return null;
 }

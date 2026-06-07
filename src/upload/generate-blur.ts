@@ -9,6 +9,8 @@ const BLUR_QUALITY = 80;
  */
 export async function generateBlurHash(buffer: Buffer): Promise<string> {
   const data = await sharp(buffer)
+    // Keep placeholder orientation consistent with final optimized images.
+    .rotate()
     .resize(BLUR_WIDTH)
     .modulate({ saturation: 1.15 })
     .blur(4)
