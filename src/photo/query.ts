@@ -46,3 +46,34 @@ export async function getPhotoById(id: string): Promise<Photo | null> {
     .limit(1);
   return rows[0] ? rowToPhoto(rows[0]) : null;
 }
+
+export async function getPhotoPageData(
+  id: string,
+  nextLimit = 12,
+): Promise<{
+  photo: Photo;
+  prevPhoto: Photo | null;
+  nextPhoto: Photo | null;
+  nextPhotos: Photo[];
+} | null> {
+  'use cache';
+  cacheTag(CACHE_KEYS.photos());
+  cacheTag(CACHE_KEYS.photo(id));
+
+  const photos = await getPhotos();
+  const index = photos.findIndex(photo => photo.id === id);
+
+  if (index === -1) return null;
+
+  const photo = photos[index];
+  const prevPhoto = index > 0 ? photos[index - 1] : null;
+  const nextPhoto = index < photos.length - 1 ? photos[index + 1] : null;
+  const nextPhotos = photos.slice(index + 1, index + 1 + nextLimit);
+
+  return {
+    photo,
+    prevPhoto,
+    nextPhoto,
+    nextPhotos,
+  };
+}
