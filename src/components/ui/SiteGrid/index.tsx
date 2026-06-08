@@ -15,9 +15,9 @@ const SiteGrid = ({
 }) => {
   return (
     <div
-      className={cn(className, 'grid', 'grid-cols-1 lg:grid-cols-10 gap-x-6 gap-y-4', 'max-w-7xl')}
+      className={cn(className, 'grid', 'grid-cols-1 lg:grid-cols-12 gap-x-6 gap-y-4', 'max-w-7xl')}
     >
-      <div className={cn('col-span-1 lg:col-span-7', sideFirstOnMobile && 'order-2 lg:order-none')}>
+      <div className={cn('col-span-1 lg:col-span-9', sideFirstOnMobile && 'order-2 lg:order-none')}>
         {contentMain}
       </div>
       {contentSide && (

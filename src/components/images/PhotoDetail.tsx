@@ -7,7 +7,6 @@ import { Icons } from '@/components/icons';
 import ImageLarge from '@/components/images/ImageLarge';
 import PhotoShareButton from '@/components/images/PhotoShareButton';
 
-// import { useShareModal } from '@/hooks/use-share-modal';
 import { formatExposureTime } from '@/utils/format-exif';
 import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/date';
@@ -33,8 +32,6 @@ const PhotoDetail = ({
       {children}
     </div>
   );
-
-  // const { onOpen } = useShareModal();
 
   return (
     <SiteGrid

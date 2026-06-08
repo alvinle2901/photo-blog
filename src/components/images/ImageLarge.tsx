@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import { getOptimizedUrl } from '@/storage/utils';
 
 // Height determined by intrinsic photo aspect ratio
@@ -7,7 +6,7 @@ export const IMAGE_TINY_WIDTH = 50;
 // Height determined by intrinsic photo aspect ratio
 export const IMAGE_SMALL_WIDTH = 300;
 // Height determined by intrinsic photo aspect ratio
-export const IMAGE_LARGE_WIDTH = 900;
+export const IMAGE_LARGE_WIDTH = 1200;
 
 export default function ImageLarge({
   className,
@@ -27,7 +26,6 @@ export default function ImageLarge({
   blurData: string;
 }) {
   return (
-    <Link href={`/p/${id}`} className="active:brightness-75">
       <Image
         {...{
           className,
@@ -40,6 +38,5 @@ export default function ImageLarge({
           height: Math.round(IMAGE_LARGE_WIDTH / aspectRatio),
         }}
       />
-    </Link>
   );
 }

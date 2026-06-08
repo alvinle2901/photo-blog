@@ -23,6 +23,7 @@ const ViewSwitcher = ({ currentSelection }: { currentSelection?: SwitcherSelecti
     <div className="flex gap-1 md:mt-2">
       <Switcher type="borderless">
         <SwitcherItem
+          className="px-0.5"
           icon={<Icons.search size={18} />}
           onClick={() => {
             setIsCommandKOpen?.(true);
