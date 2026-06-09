@@ -1,4 +1,4 @@
-import { getPhotosPaginatedByOffset } from '@/photo/query';
+import { getPhotosPaginatedCached } from '@/photo/cache';
 
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 50;
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     DEFAULT_LIMIT,
   );
   const limit = Math.min(Math.max(requestedLimit, 1), MAX_LIMIT);
-  const photos = await getPhotosPaginatedByOffset(offset, limit + 1);
+  const photos = await getPhotosPaginatedCached(offset, limit + 1);
 
   return Response.json({
     photos: photos.slice(0, limit),

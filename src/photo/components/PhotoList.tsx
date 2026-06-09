@@ -19,6 +19,12 @@ type PhotosPage = {
   limit: number;
 };
 
+type PhotoListProps = {
+  initialPhotos?: Photo[];
+  initialHasMore?: boolean;
+  initialNextOffset?: number;
+};
+
 const fetcher = async (url: string): Promise<PhotosPage> => {
   const response = await fetch(url);
 
@@ -29,17 +35,35 @@ const fetcher = async (url: string): Promise<PhotosPage> => {
   return response.json();
 };
 
-const PhotoList = () => {
+const PhotoList = ({
+  initialPhotos,
+  initialHasMore = true,
+  initialNextOffset = INITIAL_LIMIT,
+}: PhotoListProps) => {
+  const fallbackData: PhotosPage[] | undefined = initialPhotos
+    ? [
+        {
+          photos: initialPhotos,
+          hasMore: initialHasMore,
+          nextOffset: initialNextOffset,
+          limit: INITIAL_LIMIT,
+        },
+      ]
+    : undefined;
+
   const { data, error, setSize } = useSWRInfinite<PhotosPage>(
     (pageIndex, previousPageData) => {
+      // Page 0 is already covered by fallbackData — don't re-fetch.
+      if (pageIndex === 0 && fallbackData) return null;
       if (previousPageData && !previousPageData.hasMore) return null;
 
       const offset = previousPageData?.nextOffset ?? 0;
-      const limit = pageIndex === 0 ? INITIAL_LIMIT : PAGE_LIMIT;
+      const limit = PAGE_LIMIT;
       return `/api/photos?offset=${offset}&limit=${limit}`;
     },
     fetcher,
     {
+      fallbackData,
       revalidateFirstPage: false,
     },
   );
