@@ -133,3 +133,124 @@ export async function getPhotoPageDataByFilm(
     count: filmPhotos.length,
   };
 }
+
+const yearForPhoto = (photo: Photo): string =>
+  String((photo.takenAt ?? photo.createdAt).getUTCFullYear());
+
+const cameraMatches = (photo: Photo, make: string, model: string): boolean =>
+  (photo.make ?? '').toLowerCase() === make.toLowerCase()
+  && (photo.model ?? '').toLowerCase() === model.toLowerCase();
+
+export async function getUniqueYears(): Promise<Array<{ year: string; count: number }>> {
+  const allPhotos = await getPhotos();
+  const counts = new Map<string, number>();
+
+  for (const photo of allPhotos) {
+    const year = yearForPhoto(photo);
+    counts.set(year, (counts.get(year) ?? 0) + 1);
+  }
+
+  return Array
+    .from(counts.entries())
+    .map(([year, count]) => ({ year, count }))
+    .sort((a, b) => Number(b.year) - Number(a.year));
+}
+
+export async function getPhotosByYear(
+  year: string,
+  limit?: number,
+): Promise<Photo[]> {
+  const allPhotos = await getPhotos();
+  const filtered = allPhotos.filter(photo => yearForPhoto(photo) === year);
+  return typeof limit === 'number' ? filtered.slice(0, limit) : filtered;
+}
+
+export async function getPhotoPageDataByYear(
+  id: string,
+  year: string,
+  nextLimit = 12,
+): Promise<{
+  photo: Photo;
+  prevPhoto: Photo | null;
+  nextPhoto: Photo | null;
+  nextPhotos: Photo[];
+  count: number;
+} | null> {
+  const yearPhotos = await getPhotosByYear(year);
+  const index = yearPhotos.findIndex(photo => photo.id === id);
+
+  if (index === -1) {
+    return null;
+  }
+
+  return {
+    photo: yearPhotos[index],
+    prevPhoto: index > 0 ? yearPhotos[index - 1] : null,
+    nextPhoto: index < yearPhotos.length - 1 ? yearPhotos[index + 1] : null,
+    nextPhotos: yearPhotos.slice(index + 1, index + 1 + nextLimit),
+    count: yearPhotos.length,
+  };
+}
+
+export async function getUniqueCameras(): Promise<Array<{ make: string; model: string; count: number }>> {
+  const allPhotos = await getPhotos();
+  const counts = new Map<string, number>();
+
+  for (const photo of allPhotos) {
+    if (!photo.make || !photo.model) {
+      continue;
+    }
+
+    const key = `${photo.make}|||${photo.model}`;
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+
+  return Array
+    .from(counts.entries())
+    .map(([key, count]) => {
+      const [make, model] = key.split('|||');
+      return { make, model, count };
+    })
+    .sort((a, b) => {
+      const makeCmp = a.make.localeCompare(b.make);
+      return makeCmp !== 0 ? makeCmp : a.model.localeCompare(b.model);
+    });
+}
+
+export async function getPhotosByCamera(
+  make: string,
+  model: string,
+  limit?: number,
+): Promise<Photo[]> {
+  const allPhotos = await getPhotos();
+  const filtered = allPhotos.filter(photo => cameraMatches(photo, make, model));
+  return typeof limit === 'number' ? filtered.slice(0, limit) : filtered;
+}
+
+export async function getPhotoPageDataByCamera(
+  id: string,
+  make: string,
+  model: string,
+  nextLimit = 12,
+): Promise<{
+  photo: Photo;
+  prevPhoto: Photo | null;
+  nextPhoto: Photo | null;
+  nextPhotos: Photo[];
+  count: number;
+} | null> {
+  const cameraPhotos = await getPhotosByCamera(make, model);
+  const index = cameraPhotos.findIndex(photo => photo.id === id);
+
+  if (index === -1) {
+    return null;
+  }
+
+  return {
+    photo: cameraPhotos[index],
+    prevPhoto: index > 0 ? cameraPhotos[index - 1] : null,
+    nextPhoto: index < cameraPhotos.length - 1 ? cameraPhotos[index + 1] : null,
+    nextPhotos: cameraPhotos.slice(index + 1, index + 1 + nextLimit),
+    count: cameraPhotos.length,
+  };
+}

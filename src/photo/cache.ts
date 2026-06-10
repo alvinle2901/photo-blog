@@ -3,13 +3,19 @@ import { unstable_cache } from 'next/cache';
 
 import { CACHE_KEYS } from '@/cache/keys';
 import {
+  getPhotoPageDataByCamera,
   getPhotoById,
   getPhotoPageDataByFilm,
+  getPhotoPageDataByYear,
   getPhotoPageData,
+  getPhotosByCamera,
   getPhotosByFilm,
+  getPhotosByYear,
   getPhotos,
   getPhotosPaginatedByOffset,
+  getUniqueCameras,
   getUniqueFilms,
+  getUniqueYears,
 } from '@/photo/query';
 
 export const getPhotosCached = unstable_cache(
@@ -61,6 +67,55 @@ export const getPhotoPageDataByFilmCached = (
     () => getPhotoPageDataByFilm(id, film, nextLimit),
     [CACHE_KEYS.photo(id), CACHE_KEYS.film(film), `next-${nextLimit}`],
     { tags: [CACHE_KEYS.photos(), CACHE_KEYS.photo(id), CACHE_KEYS.film(film)] },
+  )();
+
+export const getUniqueYearsCached = unstable_cache(
+  getUniqueYears,
+  [CACHE_KEYS.year('all')],
+  { tags: [CACHE_KEYS.photos(), CACHE_KEYS.year('all')] },
+);
+
+export const getPhotosByYearCached = (year: string, limit?: number) =>
+  unstable_cache(
+    () => getPhotosByYear(year, limit),
+    [CACHE_KEYS.year(year), `limit-${typeof limit === 'number' ? limit : 'all'}`],
+    { tags: [CACHE_KEYS.photos(), CACHE_KEYS.year(year)] },
+  )();
+
+export const getPhotoPageDataByYearCached = (
+  id: string,
+  year: string,
+  nextLimit = 12,
+) =>
+  unstable_cache(
+    () => getPhotoPageDataByYear(id, year, nextLimit),
+    [CACHE_KEYS.photo(id), CACHE_KEYS.year(year), `next-${nextLimit}`],
+    { tags: [CACHE_KEYS.photos(), CACHE_KEYS.photo(id), CACHE_KEYS.year(year)] },
+  )();
+
+export const getUniqueCamerasCached = unstable_cache(
+  getUniqueCameras,
+  [CACHE_KEYS.camera('all', 'all')],
+  { tags: [CACHE_KEYS.photos(), CACHE_KEYS.camera('all', 'all')] },
+);
+
+export const getPhotosByCameraCached = (make: string, model: string, limit?: number) =>
+  unstable_cache(
+    () => getPhotosByCamera(make, model, limit),
+    [CACHE_KEYS.camera(make, model), `limit-${typeof limit === 'number' ? limit : 'all'}`],
+    { tags: [CACHE_KEYS.photos(), CACHE_KEYS.camera(make, model)] },
+  )();
+
+export const getPhotoPageDataByCameraCached = (
+  id: string,
+  make: string,
+  model: string,
+  nextLimit = 12,
+) =>
+  unstable_cache(
+    () => getPhotoPageDataByCamera(id, make, model, nextLimit),
+    [CACHE_KEYS.photo(id), CACHE_KEYS.camera(make, model), `next-${nextLimit}`],
+    { tags: [CACHE_KEYS.photos(), CACHE_KEYS.photo(id), CACHE_KEYS.camera(make, model)] },
   )();
 
 export const getPhotosForRequest = cache(getPhotosCached);
