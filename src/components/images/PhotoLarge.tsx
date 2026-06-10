@@ -6,19 +6,20 @@ import SiteGrid from '@/components/ui/SiteGrid';
 import { Icons } from '@/components/icons';
 import ImageLarge from '@/components/images/ImageLarge';
 import PhotoShareButton from '@/components/images/PhotoShareButton';
+import type { Photo } from '@/photo';
 
 import { formatExposureTime } from '@/utils/format-exif';
 import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/date';
 import { getShortenLocation } from '@/utils/string';
-import { labelForFujifilmSimulation } from '@/platforms/fujifilm/simulation';
-import type { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
+import PhotoFilmIcon from '@/film/PhotoFilmIcon';
+import { absolutePathForFilm, labelForFilm } from '@/film';
 
 const PhotoLarge = ({
   photo,
   priority
 }: {
-  photo: any;
+  photo: Photo & { gpsAltitude?: number | null };
   priority?: boolean;
 }) => {
   const renderMiniGrid = (children: JSX.Element) => (
@@ -76,14 +77,6 @@ const PhotoLarge = ({
                   {photo.make} {photo.model}
                 </div>
               </div>
-              {/* FILM SIMULATION */}
-              {photo.filmSimulation && (
-                <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                  {labelForFujifilmSimulation(
-                    photo.filmSimulation as FujifilmSimulation
-                  )}
-                </div>
-              )}
             </>
           )}
           {renderMiniGrid(
@@ -108,6 +101,16 @@ const PhotoLarge = ({
                   <li className="hidden lg:block">{photo.gpsAltitude + 'm'}</li>
                 ) : null}
               </ul>
+              {/* FILM SIMULATION */}
+              {photo.filmSimulation && (
+                <Link
+                  href={absolutePathForFilm(photo.filmSimulation)}
+                  className="flex w-fit items-center gap-1 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                >
+                  <PhotoFilmIcon film={photo.filmSimulation} height={14} />
+                  <span>{labelForFilm(photo.filmSimulation)}</span>
+                </Link>
+              )}
               <div
                 className={cn(
                   'flex gap-y-4',
