@@ -1,0 +1,32 @@
+import { getPhotosByCameraCached, getUniqueCamerasCached } from '@/photo/cache';
+import CameraImageResponse from '@/camera/CameraImageResponse';
+import { ImageResponse } from 'next/og';
+import { CAMERA_GRID_INITIAL } from '@/camera';
+
+export async function generateStaticParams() {
+  const cameras = await getUniqueCamerasCached();
+  return cameras.map(({ make, model }) => ({ make, model }));
+}
+
+export async function GET(
+  _: Request,
+  context: { params: Promise<{ make: string; model: string }> },
+) {
+  const { make, model } = await context.params;
+
+  const photos = await getPhotosByCameraCached(make, model, CAMERA_GRID_INITIAL);
+
+  const width = 1200;
+  const height = 630;
+
+  return new ImageResponse(
+    <CameraImageResponse make={make} model={model} photos={photos} />,
+    {
+      width,
+      height,
+      headers: {
+        'cache-control': 'public, max-age=3600, s-maxage=3600',
+      },
+    },
+  );
+}
