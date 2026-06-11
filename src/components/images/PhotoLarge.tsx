@@ -14,6 +14,7 @@ import { formatDate } from '@/utils/date';
 import { getShortenLocation } from '@/utils/string';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import { absolutePathForFilm, labelForFilm } from '@/film';
+import { absolutePathForCamera } from '@/camera';
 
 const PhotoLarge = ({
   photo,
@@ -71,12 +72,14 @@ const PhotoLarge = ({
                 </h2>
               </Link>
               {/* CAMERA  */}
-              <div className="flex items-center">
+              <Link
+                href={absolutePathForCamera(photo.make, photo.model)}
+                className="flex items-center">
                 <Icons.camera className="h-4 w-4" />
                 <div className="uppercase font-medium pl-1">
                   {photo.make} {photo.model}
                 </div>
-              </div>
+              </Link>
             </>
           )}
           {renderMiniGrid(
@@ -105,8 +108,7 @@ const PhotoLarge = ({
               {photo.filmSimulation && (
                 <Link
                   href={absolutePathForFilm(photo.filmSimulation)}
-                  className="flex w-fit items-center gap-1 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
-                >
+                  className="flex w-fit items-center gap-1 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
                   <PhotoFilmIcon film={photo.filmSimulation} height={14} />
                   <span>{labelForFilm(photo.filmSimulation)}</span>
                 </Link>
