@@ -1,7 +1,11 @@
 import { notFound } from 'next/navigation';
 import PhotoGridPage from '@/photo/components/PhotoGridPage';
-import { getPhotos } from '@/photo/query';
+import { getPhotos, getUniqueCameras } from '@/photo/query';
 import type { Photo } from '@/photo';
+import {
+  getUniqueFilmsCached,
+  getUniqueYearsCached,
+} from '@/photo/cache';
 
 type SortType = 'createdAt' | 'takenAt' | 'title';
 type SortOrder = 'asc' | 'desc';
@@ -60,7 +64,13 @@ export default async function GridSortedPage({
     notFound();
   }
 
-  const photos = await getPhotos();
+  const [photos, years, cameras, films] = await Promise.all([
+    getPhotos(),
+    getUniqueYearsCached(),
+    getUniqueCameras(),
+    getUniqueFilmsCached(),
+  ]);
+
   const sortedPhotos = sortPhotos(
     photos,
     sortType as SortType,
@@ -72,6 +82,9 @@ export default async function GridSortedPage({
       photos={sortedPhotos}
       sortType={sortType as SortType}
       sortOrder={sortOrder as SortOrder}
+      years={years}
+      cameras={cameras}
+      films={films}
     />
   );
 }
