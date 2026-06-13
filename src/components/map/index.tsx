@@ -66,7 +66,7 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
         height: '100%',
       }}
       projection={mercator}
-      mapStyle="mapbox://styles/mapbox/light-v11"
+      mapStyle="mapbox://styles/mapbox/streets-v12"
     >
       <NavigationControl />
       {coords.latitude && coords.longitude && (
