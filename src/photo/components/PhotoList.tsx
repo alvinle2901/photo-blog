@@ -8,6 +8,8 @@ import { Icons } from '@/components/icons';
 import PhotoLarge from '@/components/images/PhotoLarge';
 
 import { Photo } from '..';
+import PhotoCard from './Photo';
+import PhotoCardLarge from './PhotoCardLarge';
 
 const INITIAL_LIMIT = 20;
 const PAGE_LIMIT = 10;
@@ -38,7 +40,7 @@ const fetcher = async (url: string): Promise<PhotosPage> => {
 const PhotoList = ({
   initialPhotos,
   initialHasMore = true,
-  initialNextOffset = INITIAL_LIMIT,
+  initialNextOffset = INITIAL_LIMIT
 }: PhotoListProps) => {
   const fallbackData: PhotosPage[] | undefined = initialPhotos
     ? [
@@ -46,8 +48,8 @@ const PhotoList = ({
           photos: initialPhotos,
           hasMore: initialHasMore,
           nextOffset: initialNextOffset,
-          limit: INITIAL_LIMIT,
-        },
+          limit: INITIAL_LIMIT
+        }
       ]
     : undefined;
 
@@ -64,8 +66,8 @@ const PhotoList = ({
     fetcher,
     {
       fallbackData,
-      revalidateFirstPage: false,
-    },
+      revalidateFirstPage: false
+    }
   );
 
   const photos = data?.flatMap((page) => page.photos) ?? [];
@@ -83,21 +85,21 @@ const PhotoList = ({
           <div className="flex justify-center border rounded-full mt-7 py-1 mx-[10%]">
             <Icons.loader className="animate-spin" size={18} />
           </div>
-        }
-      >
+        }>
         {error ? (
           <div className="mx-[10%] mt-7 rounded-full border py-1 text-center text-sm text-red-500">
             Could not load photos.
           </div>
         ) : null}
         <AnimateItems
-          className="space-y-1"
+          // className="space-y-6"
           duration={0.7}
           staggerDelay={0.15}
           distanceOffset={0}
           staggerOnFirstLoadOnly
           items={photos.map((photo, index) => (
-            <PhotoLarge key={photo.id} photo={photo} priority={index <= 1} />
+            // <PhotoLarge key={photo.id} photo={photo} priority={index <= 1} />
+            <PhotoCardLarge photo={photo} />
           ))}
         />
       </InfiniteScroll>
