@@ -1,21 +1,21 @@
-import sharp from 'sharp';
+import sharp from "sharp";
 
-export type OptimizedSuffix = 'sm' | 'md' | 'lg';
+export type OptimizedSuffix = "sm" | "md" | "lg";
 
 export const OPTIMIZED_SIZES: {
-  suffix: OptimizedSuffix;
-  /** max width in pixels */
-  width: number;
-  quality: number;
+	suffix: OptimizedSuffix;
+	/** max width in pixels */
+	width: number;
+	quality: number;
 }[] = [
-  { suffix: 'sm', width: 200,  quality: 90 },
-  { suffix: 'md', width: 640,  quality: 90 },
-  { suffix: 'lg', width: 1080, quality: 80 },
+	{ suffix: "sm", width: 200, quality: 90 },
+	{ suffix: "md", width: 640, quality: 90 },
+	{ suffix: "lg", width: 1080, quality: 80 },
 ];
 
 export type OptimizedVariant = {
-  suffix: OptimizedSuffix;
-  buffer: Buffer;
+	suffix: OptimizedSuffix;
+	buffer: Buffer;
 };
 
 /**
@@ -23,17 +23,17 @@ export type OptimizedVariant = {
  * Each variant is a JPEG buffer ready to be uploaded to storage.
  */
 export async function generateOptimizedVariants(
-  original: Buffer,
+	original: Buffer,
 ): Promise<OptimizedVariant[]> {
-  return Promise.all(
-    OPTIMIZED_SIZES.map(async ({ suffix, width, quality }) => {
-      const buffer = await sharp(original)
-        // Respect EXIF orientation before resizing/encoding.
-        .rotate()
-        .resize(width, undefined, { withoutEnlargement: true })
-        .toFormat('jpeg', { quality })
-        .toBuffer();
-      return { suffix, buffer };
-    }),
-  );
+	return Promise.all(
+		OPTIMIZED_SIZES.map(async ({ suffix, width, quality }) => {
+			const buffer = await sharp(original)
+				// Respect EXIF orientation before resizing/encoding.
+				.rotate()
+				.resize(width, undefined, { withoutEnlargement: true })
+				.toFormat("jpeg", { quality })
+				.toBuffer();
+			return { suffix, buffer };
+		}),
+	);
 }

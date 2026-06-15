@@ -1,8 +1,8 @@
-import { fromUnixTime } from 'date-fns';
-import { ExifData } from 'ts-exif-parser';
+import { fromUnixTime } from "date-fns";
+import type { ExifData } from "ts-exif-parser";
 
 function formatTimestamp(timestamp: number): string {
-  return fromUnixTime(timestamp).toISOString();
+	return fromUnixTime(timestamp).toISOString();
 }
 
 // make: varchar("make", { length: 255 }),
@@ -20,82 +20,85 @@ function formatTimestamp(timestamp: number): string {
 // gpsAltitude: real("gps_altitude"),
 // takeAt: timestamp("take_at"),
 export const formatExif = (exif?: ExifData) => {
-  if (!exif?.tags) return null;
+	if (!exif?.tags) return null;
 
-  const gps = convertGPSToDecimal({
-    GPSLatitude: exif.tags.GPSLatitude,
-    GPSLatitudeRef: exif.tags.GPSLatitudeRef,
-    GPSLongitude: exif.tags.GPSLongitude,
-    GPSLongitudeRef: exif.tags.GPSLongitudeRef,
-  });
+	const gps = convertGPSToDecimal({
+		GPSLatitude: exif.tags.GPSLatitude,
+		GPSLatitudeRef: exif.tags.GPSLatitudeRef,
+		GPSLongitude: exif.tags.GPSLongitude,
+		GPSLongitudeRef: exif.tags.GPSLongitudeRef,
+	});
 
-  const data = {
-    make: exif.tags.Make,
-    model: exif.tags.Model,
-    lensModel: exif.tags.LensModel,
-    focalLength: exif.tags.FocalLength,
-    focalLength35mm: exif.tags.FocalLengthIn35mmFormat?.toString(),
-    fNumber: exif.tags.FNumber,
-    iso: exif.tags.ISO,
-    exposureTime: exif.tags.ExposureTime,
-    exposureCompensation: exif.tags.ExposureCompensation?.toString(),
-    gpsAltitude: exif.tags.GPSAltitude,
-    takeAt: exif.tags.DateTimeOriginal ? formatTimestamp(exif.tags.DateTimeOriginal) : undefined,
-    ...gps,
-  };
+	const data = {
+		make: exif.tags.Make,
+		model: exif.tags.Model,
+		lensModel: exif.tags.LensModel,
+		focalLength: exif.tags.FocalLength,
+		focalLength35mm: exif.tags.FocalLengthIn35mmFormat?.toString(),
+		fNumber: exif.tags.FNumber,
+		iso: exif.tags.ISO,
+		exposureTime: exif.tags.ExposureTime,
+		exposureCompensation: exif.tags.ExposureCompensation?.toString(),
+		gpsAltitude: exif.tags.GPSAltitude,
+		takeAt: exif.tags.DateTimeOriginal
+			? formatTimestamp(exif.tags.DateTimeOriginal)
+			: undefined,
+		...gps,
+	};
 
-  return data;
+	return data;
 };
 
 interface GPSData {
-  GPSLatitude?: number;
-  GPSLatitudeRef?: string;
-  GPSLongitude?: number;
-  GPSLongitudeRef?: string;
+	GPSLatitude?: number;
+	GPSLatitudeRef?: string;
+	GPSLongitude?: number;
+	GPSLongitudeRef?: string;
 }
 
-function isValidLatitudeRef(ref: string | undefined): ref is 'N' | 'S' {
-  return ref === 'N' || ref === 'S';
+function isValidLatitudeRef(ref: string | undefined): ref is "N" | "S" {
+	return ref === "N" || ref === "S";
 }
 
-function isValidLongitudeRef(ref: string | undefined): ref is 'E' | 'W' {
-  return ref === 'E' || ref === 'W';
+function isValidLongitudeRef(ref: string | undefined): ref is "E" | "W" {
+	return ref === "E" || ref === "W";
 }
 
 function convertGPSToDecimal(gpsData: GPSData): {
-  latitude: number;
-  longitude: number;
+	latitude: number;
+	longitude: number;
 } | null {
-  const { GPSLatitude, GPSLatitudeRef, GPSLongitude, GPSLongitudeRef } = gpsData;
+	const { GPSLatitude, GPSLatitudeRef, GPSLongitude, GPSLongitudeRef } =
+		gpsData;
 
-  if (
-    typeof GPSLatitude !== 'number' ||
-    !isValidLatitudeRef(GPSLatitudeRef) ||
-    typeof GPSLongitude !== 'number' ||
-    !isValidLongitudeRef(GPSLongitudeRef)
-  ) {
-    return null;
-  }
+	if (
+		typeof GPSLatitude !== "number" ||
+		!isValidLatitudeRef(GPSLatitudeRef) ||
+		typeof GPSLongitude !== "number" ||
+		!isValidLongitudeRef(GPSLongitudeRef)
+	) {
+		return null;
+	}
 
-  let latitude = GPSLatitude;
-  if (GPSLatitudeRef === 'S') {
-    latitude = -latitude;
-  }
+	let latitude = GPSLatitude;
+	if (GPSLatitudeRef === "S") {
+		latitude = -latitude;
+	}
 
-  let longitude = GPSLongitude;
-  if (GPSLongitudeRef === 'W') {
-    longitude = -longitude;
-  }
+	let longitude = GPSLongitude;
+	if (GPSLongitudeRef === "W") {
+		longitude = -longitude;
+	}
 
-  return {
-    latitude,
-    longitude,
-  };
+	return {
+		latitude,
+		longitude,
+	};
 }
 
 export const formatExposureTime = (exposureTime = 0) =>
-  exposureTime > 0
-    ? exposureTime < 1
-      ? `1/${Math.round(1 / exposureTime)}s`
-      : `${exposureTime}s`
-    : undefined;
+	exposureTime > 0
+		? exposureTime < 1
+			? `1/${Math.round(1 / exposureTime)}s`
+			: `${exposureTime}s`
+		: undefined;

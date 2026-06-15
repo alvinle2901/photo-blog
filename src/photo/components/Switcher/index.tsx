@@ -1,27 +1,29 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-import { cn } from '@/utils/cn';
+import { cn } from "@/utils/cn";
 
 const Switcher = ({
-  children,
-  type = 'regular',
+	children,
+	type = "regular",
 }: {
-  children: ReactNode;
-  type?: 'regular' | 'borderless';
+	children: ReactNode;
+	type?: "regular" | "borderless";
 }) => {
-  return (
-    <div
-      className={cn(
-        'flex divide-x overflow-hidden',
-        'divide-gray-300 dark:divide-gray-800',
-        'border rounded-md',
-        type === 'regular' ? 'border-gray-300 dark:border-gray-800' : 'border-transparent',
-        type === 'regular' && 'shadow-sm',
-      )}
-    >
-      {children}
-    </div>
-  );
+	return (
+		<div
+			className={cn(
+				"flex divide-x overflow-hidden",
+				"divide-gray-300 dark:divide-gray-800",
+				"border rounded-md",
+				type === "regular"
+					? "border-gray-300 dark:border-gray-800"
+					: "border-transparent",
+				type === "regular" && "shadow-sm",
+			)}
+		>
+			{children}
+		</div>
+	);
 };
 
 export default Switcher;
