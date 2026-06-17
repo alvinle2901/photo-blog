@@ -46,8 +46,8 @@ export default function PhotoCard({
 }: PhotoCardProps) {
 	const [favourited, setFavourited] = useState(photo.isFavourited ?? false);
 	const isPortrait = photo.aspectRatio && photo.aspectRatio < 1;
-	const portraitRotation = seededRotation(`${photo.id}-portrait`, -1.4, 1.4);
-	const landscapeRotation = seededRotation(`${photo.id}-landscape`, -1.1, 1.1);
+	const portraitRotation = seededRotation(`${photo.id}-portrait`, -2.5, 2.5);
+	const landscapeRotation = seededRotation(`${photo.id}-landscape`, -1.8, 1.8);
 
 	function handleFavourite(e: React.MouseEvent) {
 		e.stopPropagation();
@@ -97,7 +97,7 @@ export default function PhotoCard({
 								transform: "rotate(180deg)",
 							}}
 						>
-							{formatDate(photo.takenAt)}
+							{formatDate(photo.takenAt, false)}
 						</span>
 					</div>
 
@@ -172,7 +172,7 @@ export default function PhotoCard({
 				{/* Caption row */}
 				<div className="flex items-center justify-between mt-2 px-0.5">
 					<span className="font-courier-prime text-[11px] text-[#8a7a58] tracking-wider">
-						{photo.takenAt}
+						{formatDate(photo.takenAt, false)}
 					</span>
 					<span className="font-dancing text-[14px] text-[#5a4a2a] truncate mx-2">
 						{photo.locationName}

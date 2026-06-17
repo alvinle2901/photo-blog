@@ -1,8 +1,11 @@
-export function formatDate(dateString: string | null): string {
-	if (!dateString) return "";
+export function formatDate(
+	date: Date | string | null,
+	includeTime = true,
+): string {
+	if (!date) return "";
 
-	// Parse ISO 8601 date string
-	const date = new Date(dateString);
+	// Parse date if it's a string
+	const d = typeof date === "string" ? new Date(date) : date;
 
 	// Months mapping
 	const months = [
@@ -21,19 +24,23 @@ export function formatDate(dateString: string | null): string {
 	];
 
 	// Extract date components
-	const day = String(date.getUTCDate()).padStart(2, "0");
-	const month = months[date.getUTCMonth()];
-	const year = date.getUTCFullYear();
+	const day = String(d.getUTCDate()).padStart(2, "0");
+	const month = months[d.getUTCMonth()];
+	const year = d.getUTCFullYear();
 
-	let hours = date.getUTCHours();
-	const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+	let formattedDate = `${day} ${month} ${year}`;
 
-	// Determine AM/PM and adjust hours
-	const period = hours >= 12 ? "PM" : "AM";
-	hours = hours % 12;
-	hours = hours ? hours : 12; // Handle midnight
+	if (includeTime) {
+		let hours = d.getUTCHours();
+		const minutes = String(d.getUTCMinutes()).padStart(2, "0");
 
-	// Format the date string
-	const formattedDate = `${day} ${month} ${year} ${hours}:${minutes}${period}`;
+		// Determine AM/PM and adjust hours
+		const period = hours >= 12 ? "PM" : "AM";
+		hours = hours % 12;
+		hours = hours ? hours : 12; // Handle midnight
+
+		formattedDate += ` ${hours}:${minutes}${period}`;
+	}
+
 	return formattedDate.toUpperCase();
 }
