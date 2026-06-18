@@ -57,6 +57,17 @@ export const albums = pgTable("albums", {
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const filmPhotos = pgTable("film_photos", {
+	id: varchar("id", { length: 36 }).primaryKey(),
+	url: text("url").notNull(),
+	title: varchar("title", { length: 255 }),
+	description: text("description"),
+	width: integer("width").notNull(),
+	height: integer("height").notNull(),
+	film: varchar("film", { length: 100 }),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const albumPhotos = pgTable(
 	"album_photos",
 	{
