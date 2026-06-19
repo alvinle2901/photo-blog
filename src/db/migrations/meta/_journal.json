@@ -1,13 +1,20 @@
 {
-	"version": "7",
-	"dialect": "postgresql",
-	"entries": [
-		{
-			"idx": 0,
-			"version": "7",
-			"when": 1780668386556,
-			"tag": "0000_add_location_name_recipe_title",
-			"breakpoints": true
-		}
-	]
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1780668386556,
+      "tag": "0000_add_location_name_recipe_title",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781813606780,
+      "tag": "0001_keen_stardust",
+      "breakpoints": true
+    }
+  ]
 }
