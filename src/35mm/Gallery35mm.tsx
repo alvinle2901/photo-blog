@@ -1,93 +1,60 @@
 'use client';
 
-import { Gallery } from 'react-grid-gallery';
+import { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { ColumnsPhotoAlbum } from 'react-photo-album';
 import 'react-photo-album/columns.css';
-import { useMediaQuery } from 'react-responsive';
+import type { Photo } from 'react-photo-album';
 
-import { useRouter } from 'next/navigation';
-
-import { Icons } from '@/components/icons';
 import renderNextImage from '@/components/images/render-next-image';
 
-import { useGet35mmPhotos } from '@/features/photos-35mm/api/use-get-photos';
+export type Gallery35mmPhoto = {
+	id: string;
+	url: string;
+	width: number;
+	height: number;
+	title: string | null;
+};
 
-import { use35mmPhotos } from '@/hooks/use-35mm-photos';
+type GalleryPhoto = Photo & {
+	key: string;
+};
 
-const Gallery35mm = () => {
-  // Gallery for 35mm images
-  const router = useRouter();
-  const photosQuery = useGet35mmPhotos();
-  const isDesktopOrTablet = useMediaQuery({ query: '(min-width: 768px)' });
+type Props = {
+	filmPhotos: Gallery35mmPhoto[];
+};
 
-  const setPhotos35mm = use35mmPhotos((state) => state.setPhotos35mm);
+const Gallery35mm = ({ filmPhotos }: Props) => {
+	const router = useRouter();
 
-  const photos =
-    photosQuery.data?.map((photo) => ({
-      id: photo.id,
-      src: photo.url,
-      width: photo.width,
-      height: photo.height,
-    })) ?? [];
+	const photos = useMemo<GalleryPhoto[]>(
+		() =>
+			filmPhotos.map((photo) => ({
+				key: photo.id,
+				src: photo.url,
+				width: photo.width,
+				height: photo.height,
+				alt: photo.title ?? '35mm photo',
+			})),
+		[filmPhotos],
+	);
 
-  // Save 35mm photos to persist storage
-  const photosToSaved =
-    photosQuery.data?.map((photo) => ({
-      id: photo.id,
-      url: photo.url,
-      width: photo.width,
-      height: photo.height,
-      title: photo.title,
-      description: photo.description,
-      film: photo.film,
-      createAt: photo.createAt,
-    })) ?? [];
-  setPhotos35mm(photosToSaved);
-
-  const renderGallery = () => {
-    if (photosQuery.isPending) {
-      return (
-        <div className="w-full flex items-center justify-center">
-          <Icons.loader className="animate-spin" />
-        </div>
-      );
-    }
-
-    return isDesktopOrTablet ? (
-      <Gallery
-        images={photos}
-        margin={3}
-        enableImageSelection={false}
-        rowHeight={390}
-        onClick={(index, image, e) => {
-          router.push(`/35mm/${image.id}`);
-        }}
-      />
-    ) : (
-      <ColumnsPhotoAlbum
-        photos={photos}
-        render={{ image: renderNextImage }}
-        defaultContainerWidth={1200}
-        spacing={6}
-        columns={1}
-        sizes={{
-          size: '1168px',
-          sizes: [{ viewport: '(max-width: 1200px)', size: 'calc(100vw - 32px)' }],
-        }}
-        onClick={({ photo }) => {
-          router.push(`/35mm/${photo.id}`);
-        }}
-      />
-    );
-  };
-
-  return photosQuery.isPending ? (
-    <div className="w-full flex items-center justify-center">
-      <Icons.loader className="animate-spin" />
-    </div>
-  ) : (
-    renderGallery()
-  );
+	return (
+		<ColumnsPhotoAlbum
+			photos={photos}
+			render={{ image: renderNextImage }}
+			defaultContainerWidth={1200}
+			spacing={6}
+			columns={(containerWidth) => (containerWidth < 768 ? 1 : 3)}
+			sizes={{
+				size: '1168px',
+				sizes: [{ viewport: '(max-width: 1200px)', size: 'calc(100vw - 32px)' }],
+			}}
+			onClick={({ photo }) => {
+				router.push(`/35mm/${String(photo.key)}`);
+			}}
+		/>
+	);
 };
 
 export default Gallery35mm;
