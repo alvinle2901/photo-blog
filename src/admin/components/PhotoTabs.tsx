@@ -2,15 +2,18 @@
 
 import { TabContent, TabList, Tabs, TabTrigger } from "@/components/ui/Tabs";
 import type { Photo } from "@/photo";
+import type { FilmPhoto } from "@/35mm/query";
 
 import PhotoList from "./PhotoList";
 
 interface Props {
 	photos: Photo[];
+	filmPhotos: FilmPhoto[];
 	isPending: boolean;
 }
 
-const PhotoTabs = ({ photos, isPending }: Props) => {
+const PhotoTabs = ({ photos, filmPhotos, isPending }: Props) => {
+
 	return (
 		<Tabs className="flex-col" defaultValue="tab1">
 			<TabList
@@ -41,7 +44,7 @@ const PhotoTabs = ({ photos, isPending }: Props) => {
 				<PhotoList type={"digital"} photos={photos} isPending={isPending} />
 			</TabContent>
 			<TabContent value="tab2">
-				<PhotoList type={"35mm"} photos={photos} isPending={isPending} />
+				<PhotoList type={"35mm"} filmPhotos={filmPhotos} isPending={isPending} />
 			</TabContent>
 			{/* <TabContent value="tab3"><PhotoList /></TabContent> */}
 		</Tabs>

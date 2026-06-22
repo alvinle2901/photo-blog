@@ -5,16 +5,22 @@ import { MapProvider } from "react-map-gl/mapbox";
 import PhotoTabs from "@/admin/components/PhotoTabs";
 import Mapbox from "@/components/map";
 import type { Photo } from "@/photo";
+import type { FilmPhoto } from "@/35mm/query";
 import { fetchAllPhotos } from "@/photo/actions";
 
 export default function AdminPhotoListPage() {
 	const [photos, setPhotos] = useState<Photo[]>([]);
+	const [filmPhotos, setFilmPhotos] = useState<FilmPhoto[]>([]);
 	const [isPending, setIsPending] = useState(true);
 
 	useEffect(() => {
-		fetchAllPhotos()
-			.then(setPhotos)
-			.finally(() => setIsPending(false));
+		Promise.all([
+			fetchAllPhotos(),
+			fetch("/api/photos/35mm").then((r) => r.json() as Promise<FilmPhoto[]>).catch(() => [] as FilmPhoto[]),
+		]).then(([digitalPhotos, film]) => {
+			setPhotos(digitalPhotos);
+			setFilmPhotos(film);
+		}).finally(() => setIsPending(false));
 	}, []);
 
 	return (
@@ -22,7 +28,7 @@ export default function AdminPhotoListPage() {
 			<div className="flex h-[calc(100vh-60px)] overflow-hidden">
 				{/* Left content — scrolls independently */}
 				<div className="w-full overflow-y-auto lg:w-7/12">
-					<PhotoTabs photos={photos} isPending={isPending} />
+					<PhotoTabs photos={photos} filmPhotos={filmPhotos} isPending={isPending} />
 				</div>
 
 				{/* Right Content — stays fixed */}
