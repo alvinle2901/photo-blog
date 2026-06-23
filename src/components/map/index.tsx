@@ -2,11 +2,17 @@
 
 import type { Projection } from "mapbox-gl";
 import { useEffect, useState } from "react";
-import Map, { Marker, NavigationControl, useMap } from "react-map-gl/mapbox";
+import Map, {
+	Marker,
+	NavigationControl,
+	Popup,
+	useMap,
+} from "react-map-gl/mapbox";
 
 import type { Photo } from "@/photo";
 
 import "mapbox-gl/dist/mapbox-gl.css";
+import Image from "next/image";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -17,6 +23,7 @@ interface Props {
 
 const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 	const { map } = useMap();
+	const [hoveredPhoto, setHoveredPhoto] = useState<Photo | null>(null);
 	const [coords, setCoords] = useState<{
 		latitude: number | null;
 		longitude: number | null;
@@ -68,6 +75,30 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 			mapStyle="mapbox://styles/mapbox/streets-v12"
 		>
 			<NavigationControl />
+			{hoveredPhoto?.latitude != null && hoveredPhoto?.longitude != null && (
+				<Popup
+					className='p-0'
+					longitude={hoveredPhoto.longitude}
+					latitude={hoveredPhoto.latitude}
+					anchor="bottom-left"
+					closeButton={false}
+					closeOnClick={false}
+					offset={5}
+				>
+					<div className="w-50 overflow-hidden bg-white">
+						<Image
+							src={hoveredPhoto.url}
+							alt={hoveredPhoto.title || "Photo thumbnail"}
+							className="h-30 w-full object-cover"
+							width={180}
+							height={108}
+						/>
+						<p className="truncate text-xs pt-1 text-gray-700">
+							{hoveredPhoto.title || hoveredPhoto.id}
+						</p>
+					</div>
+				</Popup>
+			)}
 			{coords.latitude && coords.longitude && (
 				<Marker
 					longitude={coords.longitude}
@@ -81,7 +112,7 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 				</Marker>
 			)}
 			{photos.map((photo) => {
-				if (!photo.latitude || !photo.longitude) return null;
+				if (photo.latitude == null || photo.longitude == null) return null;
 				return (
 					<Marker
 						key={photo.id}
@@ -89,7 +120,11 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 						latitude={photo.latitude}
 						anchor="bottom"
 					>
-						<span className="relative flex h-3 w-3">
+						<span
+							className="relative flex h-3 w-3 cursor-pointer"
+							onMouseEnter={() => setHoveredPhoto(photo)}
+							onMouseLeave={() => setHoveredPhoto((prev) => (prev?.id === photo.id ? null : prev))}
+						>
 							<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
 							<span className="relative inline-flex h-3 w-3 rounded-full bg-sky-500"></span>
 						</span>
