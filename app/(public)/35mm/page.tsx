@@ -1,9 +1,9 @@
 import Gallery35mm from "@/35mm/Gallery35mm";
-import { getFilmPhotos } from "@/35mm/query";
+import { getFilmPhotosCached } from "@/35mm/data";
 import type { Metadata } from "next/types";
 import { cache } from "react";
 
-const getFilmPhotosCachedCached = cache(async () => getFilmPhotos());
+const getFilmPhotosCachedCached = cache(async () => getFilmPhotosCached());
 
 export async function generateMetadata(): Promise<Metadata> {
   const filmPhotos = await getFilmPhotosCachedCached();

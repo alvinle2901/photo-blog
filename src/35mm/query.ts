@@ -33,6 +33,32 @@ export async function getFilmPhotoById(
 	return rows[0] ?? null;
 }
 
+export async function getFilmPhotoPageData(
+	id: string,
+	nextLimit = 12,
+): Promise<{
+	photo: FilmPhoto;
+	prevPhoto: FilmPhoto | null;
+	nextPhoto: FilmPhoto | null;
+	nextPhotos: FilmPhoto[];
+	count: number;
+} | null> {
+	const photos = await getFilmPhotos();
+	const index = photos.findIndex((photo) => photo.id === id);
+
+	if (index === -1) {
+		return null;
+	}
+
+	return {
+		photo: photos[index],
+		prevPhoto: index > 0 ? photos[index - 1] : null,
+		nextPhoto: index < photos.length - 1 ? photos[index + 1] : null,
+		nextPhotos: photos.slice(index + 1, index + 1 + nextLimit),
+		count: photos.length,
+	};
+}
+
 export async function createFilmPhoto(
 	data: NewFilmPhoto,
 ): Promise<FilmPhoto> {
