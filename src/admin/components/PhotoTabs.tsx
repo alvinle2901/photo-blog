@@ -13,7 +13,6 @@ interface Props {
 }
 
 const PhotoTabs = ({ photos, filmPhotos, isPending }: Props) => {
-
 	return (
 		<Tabs className="flex-col" defaultValue="tab1">
 			<TabList
@@ -44,7 +43,11 @@ const PhotoTabs = ({ photos, filmPhotos, isPending }: Props) => {
 				<PhotoList type={"digital"} photos={photos} isPending={isPending} />
 			</TabContent>
 			<TabContent value="tab2">
-				<PhotoList type={"35mm"} filmPhotos={filmPhotos} isPending={isPending} />
+				<PhotoList
+					type={"35mm"}
+					filmPhotos={filmPhotos}
+					isPending={isPending}
+				/>
 			</TabContent>
 			{/* <TabContent value="tab3"><PhotoList /></TabContent> */}
 		</Tabs>

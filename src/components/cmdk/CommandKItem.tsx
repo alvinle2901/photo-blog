@@ -32,7 +32,7 @@ export default function CommandKItem({
 			keywords={keywords}
 			className={cn(
 				"px-2",
-				accessory ? "py-2" : "py-1",
+				accessory ? "py-1x		" : "py-1",
 				"rounded-md cursor-pointer tracking-wide",
 				"active:!bg-gray-200/75",
 				...(loading
@@ -43,9 +43,12 @@ export default function CommandKItem({
 			onSelect={onSelect}
 			disabled={loading || disabled}
 		>
-			<div className="flex items-center gap-2 sm:gap-3">
+			<div className="flex items-center gap-2 sm:gap-2">
 				{accessory}
-				<span className="grow text-ellipsis truncate font-ibmMono font-medium">
+				<span
+					className="grow text-sm"
+					style={{ fontFamily: "'DM Mono', monospace" }}
+				>
 					{label}
 				</span>
 				{annotation && !loading && (

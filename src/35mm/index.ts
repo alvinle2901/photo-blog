@@ -16,10 +16,9 @@ export function descriptionFor35mmPhoto(
 	photo: FilmPhoto,
 	html = false,
 ): string {
-	const raw = [photo.description, photo.film]
-		.filter(Boolean)
-		.join(" - ")
-		.trim() || `35mm Photo ${photo.id}`;
+	const raw =
+		[photo.description, photo.film].filter(Boolean).join(" - ").trim() ||
+		`35mm Photo ${photo.id}`;
 
 	return html ? raw : raw.replace(/<[^>]+>/g, "");
 }

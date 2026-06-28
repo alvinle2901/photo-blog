@@ -22,9 +22,7 @@ export async function getFilmPhotosPaginated(
 		.offset(offset);
 }
 
-export async function getFilmPhotoById(
-	id: string,
-): Promise<FilmPhoto | null> {
+export async function getFilmPhotoById(id: string): Promise<FilmPhoto | null> {
 	const rows = await db
 		.select()
 		.from(filmPhotos)
@@ -59,9 +57,7 @@ export async function getFilmPhotoPageData(
 	};
 }
 
-export async function createFilmPhoto(
-	data: NewFilmPhoto,
-): Promise<FilmPhoto> {
+export async function createFilmPhoto(data: NewFilmPhoto): Promise<FilmPhoto> {
 	const rows = await db.insert(filmPhotos).values(data).returning();
 	return rows[0];
 }

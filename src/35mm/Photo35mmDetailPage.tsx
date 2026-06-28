@@ -79,7 +79,9 @@ export default function Photo35mmDetailPage({
 							{photo.title || "Untitled"}
 						</h1>
 						{photo.film && <p className="uppercase">{photo.film}</p>}
-						{photo.description && <p className="text-gray-700">{photo.description}</p>}
+						{photo.description && (
+							<p className="text-gray-700">{photo.description}</p>
+						)}
 					</aside>
 				</div>
 			</div>

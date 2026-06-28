@@ -17,7 +17,12 @@ interface Props {
 	isPending?: boolean;
 }
 
-const PhotoList = ({ type, photos = [], filmPhotos = [], isPending = false }: Props) => {
+const PhotoList = ({
+	type,
+	photos = [],
+	filmPhotos = [],
+	isPending = false,
+}: Props) => {
 	return (
 		<div className="space-y-4">
 			<div className="flex items-center py-5 border-t border-b border-[#e5e0d9] px-6">
@@ -40,7 +45,9 @@ const PhotoList = ({ type, photos = [], filmPhotos = [], isPending = false }: Pr
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
 						{type === "digital"
 							? photos.map((item) => <PhotoCard key={item.id} photo={item} />)
-							: filmPhotos.map((item) => <PhotoOtherCard key={item.id} photo={item} />)}
+							: filmPhotos.map((item) => (
+									<PhotoOtherCard key={item.id} photo={item} />
+								))}
 					</div>
 				)}
 			</div>

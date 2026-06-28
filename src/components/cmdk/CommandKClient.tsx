@@ -14,7 +14,6 @@ import { BiLockAlt, BiSolidUser } from "react-icons/bi";
 import { HiDocumentText } from "react-icons/hi";
 import { useDebounce } from "use-debounce";
 
-// import { logout } from '@/actions/auth';
 import { useAppState } from "@/state";
 import { cn } from "@/utils/cn";
 
@@ -51,6 +50,7 @@ export default function CommandKClient({
 	const pathname = usePathname();
 	const {
 		isUserLoggedIn,
+		setIsUserLoggedIn,
 		isCommandKOpen: isOpen,
 		setIsCommandKOpen: setIsOpen,
 	} = useAppState();
@@ -127,47 +127,57 @@ export default function CommandKClient({
 	}, [isOpen]);
 
 	const baseItems: CommandKItem[] = [
-		{ label: "Home", path: "/" },
-		{ label: "Grid", path: "/grid" },
+		{ label: "home", path: "/" },
+		{ label: "grid", path: "/grid" },
 		{ label: "35mm", path: "/35mm" },
-		{ label: "Map", path: "/map" },
+		{ label: "map", path: "/map" },
 	];
 
 	const pagesItems = baseItems.filter((item) => !(pathname === item.path));
 
 	const sectionPages: CommandKSection = {
-		heading: "Pages",
+		heading: "pages",
 		accessory: <HiDocumentText size={15} className="translate-x-[-1px]" />,
 		items: pagesItems,
 	};
 
 	const adminSection: CommandKSection = {
-		heading: "Admin",
+		heading: "admin",
 		accessory: <BiSolidUser size={15} className="translate-x-[-1px]" />,
 		items: isUserLoggedIn
 			? (
 					[
 						{
-							label: "Dashboard",
+							label: "dashboard",
 							annotation: <BiLockAlt />,
 							path: "/dashboard",
 						},
 						{
-							label: "Manage Photos",
+							label: "manage photos",
 							annotation: <BiLockAlt />,
 							path: "/photos",
 						},
 					] as CommandKItem[]
 				).concat({
-					label: "Sign Out",
+					label: "sign out",
 					action: async () => {
-						// logout();
+						try {
+							await fetch("/api/auth/sign-out", {
+								method: "POST",
+								credentials: "same-origin",
+							});
+						} finally {
+							setIsUserLoggedIn?.(false);
+							setIsOpen?.(false);
+							router.push("/sign-in", { scroll: true });
+							router.refresh();
+						}
 					},
 				})
 			: [
 					{
-						label: "Sign In",
-						path: "/auth/login",
+						label: "sign in",
+						path: "/sign-in",
 					},
 				],
 	};
@@ -223,6 +233,7 @@ export default function CommandKClient({
 						</Command.Empty>
 						{queriedSections
 							.concat(sectionPages)
+							.concat(serverSections)
 							.concat(adminSection)
 							.filter(({ items }) => items.length > 0)
 							.map(({ heading, accessory, items }) => (
@@ -241,12 +252,11 @@ export default function CommandKClient({
 										</div>
 									}
 									className={cn(
-										"uppercase",
 										"select-none",
 										"[&>*:first-child]:py-1",
 										"[&>*:first-child]:font-medium",
 										"[&>*:first-child]:text-gray-400",
-										"[&>*:first-child]:text-xs",
+										"[&>*:first-child]:text-sm",
 										"[&>*:first-child]:tracking-wider",
 									)}
 								>

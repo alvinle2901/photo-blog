@@ -51,7 +51,10 @@ export function Upload35mmForm() {
 		e.preventDefault();
 
 		if (!selectedFile) {
-			setStatus({ state: "error", message: "Please select a photo to upload." });
+			setStatus({
+				state: "error",
+				message: "Please select a photo to upload.",
+			});
 			return;
 		}
 
@@ -63,10 +66,15 @@ export function Upload35mmForm() {
 		if (description.trim()) formData.append("description", description.trim());
 		if (film.trim()) formData.append("film", film.trim());
 
-		const res = await fetch("/api/upload/35mm", { method: "POST", body: formData });
+		const res = await fetch("/api/upload/35mm", {
+			method: "POST",
+			body: formData,
+		});
 
 		if (!res.ok) {
-			const { error } = await res.json().catch(() => ({ error: "Upload failed" }));
+			const { error } = await res
+				.json()
+				.catch(() => ({ error: "Upload failed" }));
 			setStatus({ state: "error", message: error ?? "Upload failed" });
 			return;
 		}
@@ -120,10 +128,7 @@ export function Upload35mmForm() {
 				/>
 				{preview ? (
 					// biome-ignore lint/a11y/useKeyWithClickEvents: wrapper handles click
-					<div
-						className="relative w-full"
-						onClick={(e) => e.stopPropagation()}
-					>
+					<div className="relative w-full" onClick={(e) => e.stopPropagation()}>
 						{/* eslint-disable-next-line @next/next/no-img-element */}
 						<img
 							src={preview}
@@ -147,7 +152,9 @@ export function Upload35mmForm() {
 							Drop a photo here, or{" "}
 							<span className="text-black font-medium">click to browse</span>
 						</p>
-						<p className="text-xs text-gray-400 mt-1">JPEG, PNG, HEIC, TIFF, WebP</p>
+						<p className="text-xs text-gray-400 mt-1">
+							JPEG, PNG, HEIC, TIFF, WebP
+						</p>
 					</>
 				)}
 			</div>
@@ -155,7 +162,10 @@ export function Upload35mmForm() {
 			{/* Metadata fields */}
 			<div className="space-y-4">
 				<div>
-					<label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+					<label
+						htmlFor="title"
+						className="block text-sm font-medium text-gray-700 mb-1"
+					>
 						Title
 					</label>
 					<input
@@ -169,7 +179,10 @@ export function Upload35mmForm() {
 				</div>
 
 				<div>
-					<label htmlFor="film" className="block text-sm font-medium text-gray-700 mb-1">
+					<label
+						htmlFor="film"
+						className="block text-sm font-medium text-gray-700 mb-1"
+					>
 						Film Stock
 					</label>
 					<input
@@ -183,7 +196,10 @@ export function Upload35mmForm() {
 				</div>
 
 				<div>
-					<label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+					<label
+						htmlFor="description"
+						className="block text-sm font-medium text-gray-700 mb-1"
+					>
 						Description
 					</label>
 					<textarea

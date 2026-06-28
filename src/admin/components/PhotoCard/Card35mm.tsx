@@ -7,7 +7,10 @@ import type { FilmPhoto } from "@/35mm/query";
 const PhotoOtherCard = ({ photo }: { photo: FilmPhoto }) => {
 	return (
 		<div className="relative">
-			<AspectRatio ratio={4 / 5} className="overflow-hidden rounded-xl bg-muted">
+			<AspectRatio
+				ratio={4 / 5}
+				className="overflow-hidden rounded-xl bg-muted"
+			>
 				<Image
 					src={photo.url}
 					fill

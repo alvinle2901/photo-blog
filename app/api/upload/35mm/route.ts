@@ -21,7 +21,10 @@ export async function POST(request: NextRequest) {
 	}
 
 	if (!file.type.startsWith("image/")) {
-		return NextResponse.json({ error: "Only image files are supported" }, { status: 400 });
+		return NextResponse.json(
+			{ error: "Only image files are supported" },
+			{ status: 400 },
+		);
 	}
 
 	const title = (formData.get("title") as string | null) ?? null;
@@ -36,14 +39,21 @@ export async function POST(request: NextRequest) {
 	const height = metadata.height;
 
 	if (!width || !height) {
-		return NextResponse.json({ error: "Could not read image dimensions" }, { status: 400 });
+		return NextResponse.json(
+			{ error: "Could not read image dimensions" },
+			{ status: 400 },
+		);
 	}
 
 	// Upload to R2
 	const id = randomUUID();
 	const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
 	const key = `35mm/${id}.${ext}`;
-	const url = await storage.upload({ key, body: buffer, contentType: file.type || "image/jpeg" });
+	const url = await storage.upload({
+		key,
+		body: buffer,
+		contentType: file.type || "image/jpeg",
+	});
 
 	// Insert into DB
 	const [row] = await db

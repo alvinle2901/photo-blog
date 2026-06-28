@@ -1,3 +1,4 @@
+import CommandK from "@/components/cmdk/CommandK";
 import FloatingDockMobile from "@/photo/components/FloatingDockHome";
 import Nav from "@/photo/components/Navbar";
 import Sidebar from "@/photo/components/Sidebar";
@@ -12,8 +13,8 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
 				<div className="flex-1 min-w-0">{children}</div>
 			</div>
 			<FloatingDockMobile />
+			<CommandK />
 			{/* <PhotoShareModalProvider />
-        <CommandK />
       </QueryProvider> */}
 		</main>
 	);

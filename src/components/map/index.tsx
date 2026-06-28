@@ -77,7 +77,7 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 			<NavigationControl />
 			{hoveredPhoto?.latitude != null && hoveredPhoto?.longitude != null && (
 				<Popup
-					className='p-0'
+					className="p-0"
 					longitude={hoveredPhoto.longitude}
 					latitude={hoveredPhoto.latitude}
 					anchor="bottom-left"
@@ -123,7 +123,9 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 						<span
 							className="relative flex h-3 w-3 cursor-pointer"
 							onMouseEnter={() => setHoveredPhoto(photo)}
-							onMouseLeave={() => setHoveredPhoto((prev) => (prev?.id === photo.id ? null : prev))}
+							onMouseLeave={() =>
+								setHoveredPhoto((prev) => (prev?.id === photo.id ? null : prev))
+							}
 						>
 							<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
 							<span className="relative inline-flex h-3 w-3 rounded-full bg-sky-500"></span>

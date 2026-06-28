@@ -16,11 +16,15 @@ export default function AdminPhotoListPage() {
 	useEffect(() => {
 		Promise.all([
 			fetchAllPhotos(),
-			fetch("/api/photos/35mm").then((r) => r.json() as Promise<FilmPhoto[]>).catch(() => [] as FilmPhoto[]),
-		]).then(([digitalPhotos, film]) => {
-			setPhotos(digitalPhotos);
-			setFilmPhotos(film);
-		}).finally(() => setIsPending(false));
+			fetch("/api/photos/35mm")
+				.then((r) => r.json() as Promise<FilmPhoto[]>)
+				.catch(() => [] as FilmPhoto[]),
+		])
+			.then(([digitalPhotos, film]) => {
+				setPhotos(digitalPhotos);
+				setFilmPhotos(film);
+			})
+			.finally(() => setIsPending(false));
 	}, []);
 
 	return (
@@ -28,7 +32,11 @@ export default function AdminPhotoListPage() {
 			<div className="flex h-[calc(100vh-60px)] overflow-hidden">
 				{/* Left content — scrolls independently */}
 				<div className="w-full overflow-y-auto lg:w-7/12">
-					<PhotoTabs photos={photos} filmPhotos={filmPhotos} isPending={isPending} />
+					<PhotoTabs
+						photos={photos}
+						filmPhotos={filmPhotos}
+						isPending={isPending}
+					/>
 				</div>
 
 				{/* Right Content — stays fixed */}
