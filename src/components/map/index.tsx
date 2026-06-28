@@ -1,6 +1,9 @@
 "use client";
 
+import "mapbox-gl/dist/mapbox-gl.css";
+
 import type { Projection } from "mapbox-gl";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import Map, {
 	Marker,
@@ -10,9 +13,6 @@ import Map, {
 } from "react-map-gl/mapbox";
 
 import type { Photo } from "@/photo";
-
-import "mapbox-gl/dist/mapbox-gl.css";
-import Image from "next/image";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -65,7 +65,7 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 			initialViewState={{
 				longitude: 28.97953,
 				latitude: 41.015137,
-				zoom: 2,
+				zoom: 3,
 			}}
 			style={{
 				width: "100%",

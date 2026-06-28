@@ -1,5 +1,6 @@
-import Mapbox from "@/components/map";
 import { getPhotosForRequest } from "@/photo/cache";
+
+import MapPageClient from "./MapPageClient";
 
 // meta
 export const metadata = {
@@ -23,7 +24,7 @@ const MapPage = async () => {
 
 	return (
 		<section className="ml-0 h-dvh">
-			<Mapbox showLocal={false} photos={photosWithCoords} />
+			<MapPageClient photos={photosWithCoords} />
 		</section>
 	);
 };
