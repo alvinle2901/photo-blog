@@ -1,6 +1,11 @@
 import type { Metadata } from "next/types";
 import { cache } from "react";
-import { CAMERA_GRID_INITIAL, generateMetaForCamera } from "@/camera";
+
+import {
+	CAMERA_GRID_INITIAL,
+	decodeCameraParams,
+	generateMetaForCamera,
+} from "@/camera";
 import CameraOverview from "@/camera/CameraOverview";
 import { getPhotosCameraDataCached } from "@/camera/data";
 import { getUniqueCamerasCached } from "@/photo/cache";
@@ -21,7 +26,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({
 	params,
 }: CameraProps): Promise<Metadata> {
-	const { make, model } = await params;
+	const { make, model } = decodeCameraParams(await params);
 
 	const [photos, { count }] = await getPhotosCameraDataCachedCached(
 		make,
@@ -54,7 +59,7 @@ export async function generateMetadata({
 }
 
 export default async function CameraPage({ params }: CameraProps) {
-	const { make, model } = await params;
+	const { make, model } = decodeCameraParams(await params);
 
 	const [photos, { count }] = await getPhotosCameraDataCachedCached(
 		make,

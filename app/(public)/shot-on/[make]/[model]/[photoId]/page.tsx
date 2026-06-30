@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next/types";
 import { cache } from "react";
+
 import {
 	absolutePathForPhoto,
+	decodeCameraParams,
 	descriptionForPhoto,
 	titleForPhoto,
 } from "@/camera";
@@ -21,7 +23,8 @@ interface PhotoCameraProps {
 export async function generateMetadata({
 	params,
 }: PhotoCameraProps): Promise<Metadata> {
-	const { photoId, make, model } = await params;
+	const { photoId, ...cameraParams } = await params;
+	const { make, model } = decodeCameraParams(cameraParams);
 
 	const data = await getPhotosNearIdCachedCached(photoId, make, model);
 
@@ -56,7 +59,8 @@ export async function generateMetadata({
 }
 
 export default async function PhotoCameraPage({ params }: PhotoCameraProps) {
-	const { photoId, make, model } = await params;
+	const { photoId, ...cameraParams } = await params;
+	const { make, model } = decodeCameraParams(cameraParams);
 
 	const data = await getPhotosNearIdCachedCached(photoId, make, model);
 

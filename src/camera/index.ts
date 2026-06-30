@@ -6,6 +6,27 @@ export function cameraLabel(make: string, model: string): string {
 	return `${make} ${model}`.trim();
 }
 
+function decodePathSegment(value: string): string {
+	try {
+		return decodeURIComponent(value);
+	} catch {
+		return value;
+	}
+}
+
+export function decodeCameraParams({
+	make,
+	model,
+}: {
+	make: string;
+	model: string;
+}) {
+	return {
+		make: decodePathSegment(make),
+		model: decodePathSegment(model),
+	};
+}
+
 export function absolutePathForCamera(make: string, model: string): string {
 	return `/shot-on/${encodeURIComponent(make)}/${encodeURIComponent(model)}`;
 }
