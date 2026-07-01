@@ -44,7 +44,7 @@ export default function PhotoCard({
 	onClick,
 	onFavourite,
 }: PhotoCardProps) {
-	const [favourited, setFavourited] = useState(photo.isFavourited ?? false);
+	const [favourited, setFavourited] = useState(false);
 	const isPortrait = photo.aspectRatio && photo.aspectRatio < 1;
 	const portraitRotation = seededRotation(`${photo.id}-portrait`, -2.5, 2.5);
 	const landscapeRotation = seededRotation(`${photo.id}-landscape`, -1.8, 1.8);

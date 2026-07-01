@@ -4,16 +4,10 @@ import { cache } from "react";
 import { FILM_GRID_INITIAL, generateMetaForFilm } from "@/film";
 import { getPhotosFilmDataCached } from "@/film/data";
 import FilmOverview from "@/film/FilmOverview";
-import { getUniqueFilmsCached } from "@/photo/cache";
 
 const getPhotosFilmDataCachedCached = cache((film: string) =>
 	getPhotosFilmDataCached({ film, limit: FILM_GRID_INITIAL }),
 );
-
-export async function generateStaticParams() {
-	const films = await getUniqueFilmsCached();
-	return films.map(({ film }) => ({ film }));
-}
 
 interface FilmProps {
 	params: Promise<{ film: string }>;

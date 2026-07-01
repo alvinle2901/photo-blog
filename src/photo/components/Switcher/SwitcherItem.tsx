@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactElement } from "react";
 
 import { cn } from "@/utils/cn";
 
@@ -11,7 +12,7 @@ const SwitcherItem = ({
 	active,
 	noPadding,
 }: {
-	icon: JSX.Element;
+	icon: ReactElement;
 	title?: string;
 	href?: string;
 	className?: string;

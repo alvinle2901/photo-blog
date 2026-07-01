@@ -87,17 +87,14 @@ export async function getPhotosByFilm(
 	film: string,
 	limit?: number,
 ): Promise<Photo[]> {
-	let query = db
+	const query = db
 		.select()
 		.from(photos)
 		.where(eq(photos.filmSimulation, film))
 		.orderBy(desc(photos.createdAt));
 
-	if (typeof limit === "number") {
-		query = query.limit(limit);
-	}
-
-	const rows = await query;
+	const rows =
+		typeof limit === "number" ? await query.limit(limit) : await query;
 	return rows.map(rowToPhoto);
 }
 

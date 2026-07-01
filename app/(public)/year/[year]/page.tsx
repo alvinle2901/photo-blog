@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import type { Metadata } from "next/types";
 import { cache } from "react";
-import { getUniqueYearsCached } from "@/photo/cache";
 import { generateMetaForYear, YEAR_GRID_INITIAL } from "@/year";
 import { getPhotosYearDataCached } from "@/year/data";
 import YearOverview from "@/year/YearOverview";
@@ -9,11 +8,6 @@ import YearOverview from "@/year/YearOverview";
 const getPhotosYearDataCachedCached = cache((year: string) =>
 	getPhotosYearDataCached({ year, limit: YEAR_GRID_INITIAL }),
 );
-
-export async function generateStaticParams() {
-	const years = await getUniqueYearsCached();
-	return years.map(({ year }) => ({ year }));
-}
 
 interface YearProps {
 	params: Promise<{ year: string }>;

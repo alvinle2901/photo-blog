@@ -1,9 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,300;1,400&family=DM+Mono:wght@400;500&family=EB+Garamond:wght@400;500&display=swap");
 @import "tailwindcss";
 
 @font-face {
 	font-family: "Helvetica Neue";
 	src: url("/fonts/HelveticaNeueThin.otf");
+}
+
+:root {
+	--font-display-serif: Georgia, "Times New Roman", serif;
+	--font-mono-fallback: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+	--font-sans-fallback: "Helvetica Neue", Arial, sans-serif;
 }
 
 html,
@@ -38,6 +43,10 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 @theme {
+  --font-courier-prime: var(--font-mono-fallback);
+  --font-ibm-plex-mono: var(--font-mono-fallback);
+  --font-poppins: var(--font-sans-fallback);
+
   --color-background: hsl(0 0% 100%);
   --color-foreground: hsl(222.2 84% 4.9%);
 
@@ -106,5 +115,6 @@ body::-webkit-scrollbar-thumb:hover {
 	body {
 		background-color: #e8e4de;
 		color: var(--color-foreground);
+		font-family: var(--font-sans-fallback);
 	}
 }

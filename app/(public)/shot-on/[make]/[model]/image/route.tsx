@@ -2,12 +2,7 @@ import { ImageResponse } from "next/og";
 
 import { CAMERA_GRID_INITIAL, decodeCameraParams } from "@/camera";
 import CameraImageResponse from "@/camera/CameraImageResponse";
-import { getPhotosByCameraCached, getUniqueCamerasCached } from "@/photo/cache";
-
-export async function generateStaticParams() {
-	const cameras = await getUniqueCamerasCached();
-	return cameras.map(({ make, model }) => ({ make, model }));
-}
+import { getPhotosByCameraCached } from "@/photo/cache";
 
 export async function GET(
 	_: Request,

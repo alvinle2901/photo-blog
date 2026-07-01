@@ -5,7 +5,7 @@ import type { SessionData } from "./src/auth/session";
 const PROTECTED_PREFIX = "/admin";
 const SIGN_IN_PATH = "/sign-in";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 
 	if (!pathname.startsWith(PROTECTED_PREFIX)) {

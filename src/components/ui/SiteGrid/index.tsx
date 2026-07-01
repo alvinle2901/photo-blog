@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import { cn } from "@/utils/cn";
 
 const SiteGrid = ({
@@ -8,8 +9,8 @@ const SiteGrid = ({
 	sideHiddenOnMobile,
 }: {
 	className?: string;
-	contentMain: JSX.Element;
-	contentSide?: JSX.Element;
+	contentMain: ReactElement;
+	contentSide?: ReactElement;
 	sideFirstOnMobile?: boolean;
 	sideHiddenOnMobile?: boolean;
 }) => {

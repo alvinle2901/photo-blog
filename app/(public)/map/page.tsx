@@ -14,7 +14,9 @@ const getMapPhotos = async () => {
 			(photo) => photo.latitude !== null && photo.longitude !== null,
 		);
 	} catch (error) {
-		console.error("Failed to load map photos:", error);
+		if (process.env.NODE_ENV !== "production") {
+			console.error("Failed to load map photos:", error);
+		}
 		return [];
 	}
 };

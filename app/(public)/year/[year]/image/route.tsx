@@ -1,12 +1,7 @@
 import { ImageResponse } from "next/og";
-import { getPhotosByYearCached, getUniqueYearsCached } from "@/photo/cache";
+import { getPhotosByYearCached } from "@/photo/cache";
 import { YEAR_GRID_INITIAL } from "@/year";
 import YearImageResponse from "@/year/YearImageResponse";
-
-export async function generateStaticParams() {
-	const years = await getUniqueYearsCached();
-	return years.map(({ year }) => ({ year }));
-}
 
 export async function GET(
 	_: Request,

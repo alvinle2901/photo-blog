@@ -2,8 +2,6 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import queryString from "query-string";
-
 import { Icons } from "@/components/icons";
 import {
 	Select,
@@ -21,20 +19,10 @@ const Sort = () => {
 	const pathname = usePathname();
 
 	const onChange = (newValue: string) => {
-		const query = {
-			sortBy: newValue,
-		};
-
-		const url = queryString.stringifyUrl(
-			{
-				url: pathname,
-				query,
-			},
-			{
-				skipNull: true,
-				skipEmptyString: true,
-			},
-		);
+		const nextParams = new URLSearchParams(params.toString());
+		nextParams.set("sortBy", newValue);
+		const query = nextParams.toString();
+		const url = query ? `${pathname}?${query}` : pathname;
 
 		router.push(url);
 	};

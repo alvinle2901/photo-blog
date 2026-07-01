@@ -58,14 +58,7 @@ const PhotoCard = ({ photo }: { photo: Photo }) => {
 				className="absolute right-2 top-2 size-8 rounded-full bg-white"
 				onClick={handleHeartClick}
 			>
-				{photo.isFavorite ? (
-					<Icons.heart
-						size={18}
-						className="fill-rose-500 text-muted-foreground text-rose-500"
-					/>
-				) : (
-					<Icons.heart size={18} className="text-muted-foreground" />
-				)}
+				<Icons.heart size={18} className="text-muted-foreground" />
 			</Button>
 
 			<Link href={`/photos/${photo.id}`} className="group">

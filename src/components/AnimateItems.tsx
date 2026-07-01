@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { ReactElement } from "react";
 import { useRef } from "react";
 
 import { useAppState } from "@/state";
@@ -17,7 +18,7 @@ export interface AnimationConfig {
 
 interface Props extends AnimationConfig {
 	className?: string;
-	items: JSX.Element[];
+	items: ReactElement[];
 	animateFromAppState?: boolean;
 	animateOnFirstLoadOnly?: boolean;
 	staggerOnFirstLoadOnly?: boolean;
@@ -111,7 +112,7 @@ function AnimateItems({
 					}}
 					transition={{
 						duration: durationResolved,
-						easing: "easeOut",
+						ease: "easeOut",
 					}}
 				>
 					{item}

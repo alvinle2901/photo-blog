@@ -1,12 +1,7 @@
 import { ImageResponse } from "next/og";
 import { FILM_GRID_INITIAL } from "@/film";
 import FilmImageResponse from "@/film/FilmImageResponse";
-import { getPhotosByFilmCached, getUniqueFilmsCached } from "@/photo/cache";
-
-export async function generateStaticParams() {
-	const films = await getUniqueFilmsCached();
-	return films.map(({ film }) => ({ film }));
-}
+import { getPhotosByFilmCached } from "@/photo/cache";
 
 export async function GET(
 	_: Request,
