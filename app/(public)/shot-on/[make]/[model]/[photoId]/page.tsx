@@ -3,6 +3,7 @@ import type { Metadata } from "next/types";
 import { cache } from "react";
 
 import {
+	absolutePathForCamera,
 	absolutePathForPhoto,
 	decodeCameraParams,
 	descriptionForPhoto,
@@ -76,6 +77,7 @@ export default async function PhotoCameraPage({ params }: PhotoCameraProps) {
 			prevPhoto={prevPhoto}
 			nextPhoto={nextPhoto}
 			nextPhotos={nextPhotos}
+			photoPathBase={absolutePathForCamera(make, model)}
 		/>
 	);
 }

@@ -1,11 +1,15 @@
-import { randomUUID } from "crypto";
-import sharp from "sharp";
+import { randomUUID } from "node:crypto";
+
 import { revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
+import sharp from "sharp";
+
 import { getIsAdmin } from "@/auth/session";
 import { db } from "@/db/client";
 import { filmPhotos } from "@/db/schema";
 import { storage } from "@/storage";
+import { getOptimizedKey } from "@/storage/utils";
+import { generateOptimizedVariants } from "@/upload/generate-optimized";
 
 export async function POST(request: NextRequest) {
 	const isAdmin = await getIsAdmin();
@@ -54,6 +58,16 @@ export async function POST(request: NextRequest) {
 		body: buffer,
 		contentType: file.type || "image/jpeg",
 	});
+	const variants = await generateOptimizedVariants(buffer);
+	await Promise.all(
+		variants.map(({ suffix, buffer: variantBuffer }) =>
+			storage.upload({
+				key: getOptimizedKey(key, suffix),
+				body: variantBuffer,
+				contentType: "image/jpeg",
+			}),
+		),
+	);
 
 	// Insert into DB
 	const [row] = await db

@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo } from "react";
-import { useRouter } from "next/navigation";
-import { ColumnsPhotoAlbum } from "react-photo-album";
 import "react-photo-album/columns.css";
+
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import type { Photo } from "react-photo-album";
+import { ColumnsPhotoAlbum } from "react-photo-album";
 
 import renderNextImage from "@/components/images/render-next-image";
+import { getOptimizedUrl } from "@/storage/utils";
 
 export type Gallery35mmPhoto = {
 	id: string;
@@ -31,7 +33,7 @@ const Gallery35mm = ({ filmPhotos }: Props) => {
 		() =>
 			filmPhotos.map((photo) => ({
 				key: photo.id,
-				src: photo.url,
+				src: getOptimizedUrl(photo.url, "md"),
 				width: photo.width,
 				height: photo.height,
 				alt: photo.title ?? "35mm photo",

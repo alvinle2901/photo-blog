@@ -5,6 +5,7 @@ import { cache } from "react";
 import PhotoDetailPage from "@/photo/components/PhotoDetailPage";
 import {
 	absolutePathForPhoto,
+	absolutePathForYear,
 	descriptionForPhoto,
 	titleForPhoto,
 } from "@/year";
@@ -72,6 +73,7 @@ export default async function PhotoYearPage({ params }: PhotoYearProps) {
 			prevPhoto={prevPhoto}
 			nextPhoto={nextPhoto}
 			nextPhotos={nextPhotos}
+			photoPathBase={absolutePathForYear(year)}
 		/>
 	);
 }

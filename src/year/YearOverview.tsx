@@ -24,7 +24,7 @@ export default function YearOverview({
 				icon={<Icons.time size={14} strokeWidth={1.8} />}
 			/>
 
-			<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 gap-1 sm:gap-2">
+			<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-1 sm:gap-2 pr-2">
 				{photos.map((photo, index) => (
 					<Link
 						key={photo.id}

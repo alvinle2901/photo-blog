@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
+
+import Photo35mmDetailEnhancements from "@/35mm/Photo35mmDetailEnhancements";
 import type { FilmPhoto } from "@/35mm/query";
+import { getOptimizedUrl } from "@/storage/utils";
 
 export default function Photo35mmDetailPage({
 	photo,
@@ -15,6 +18,11 @@ export default function Photo35mmDetailPage({
 }) {
 	return (
 		<div className="space-y-6 md:space-y-8">
+			<Photo35mmDetailEnhancements
+				prevPhoto={prevPhoto}
+				nextPhoto={nextPhoto}
+				nextPhotos={nextPhotos}
+			/>
 			<div className="px-4 pt-8 md:px-6 lg:px-8">
 				<div
 					className="flex items-center justify-between border-b border-[#e5e0d9] pb-3 text-sm tracking-wide text-gray-600"
@@ -58,7 +66,7 @@ export default function Photo35mmDetailPage({
 				<div className="grid gap-6 lg:grid-cols-[1fr_280px]">
 					<div className="overflow-hidden rounded-md bg-[#ebe7df]">
 						<Image
-							src={photo.url}
+							src={getOptimizedUrl(photo.url, "lg")}
 							alt={photo.title || photo.id}
 							width={photo.width}
 							height={photo.height}
@@ -97,7 +105,7 @@ export default function Photo35mmDetailPage({
 								style={{ aspectRatio: "1 / 1" }}
 							>
 								<Image
-									src={item.url}
+									src={getOptimizedUrl(item.url, "md")}
 									alt={item.title || item.id}
 									fill
 									sizes="(max-width: 640px) 50vw, (max-width: 768px) 25vw, (max-width: 1024px) 33vw, 25vw"

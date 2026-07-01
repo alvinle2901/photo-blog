@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import type { Photo } from "@/photo";
+import type { FilmPhoto } from "@/35mm/query";
 import { getOptimizedUrl } from "@/storage/utils";
 
 const shouldIgnoreKeydown = (target: EventTarget | null) => {
@@ -25,18 +25,14 @@ const preloadImage = (url: string | null | undefined) => {
 	image.src = url;
 };
 
-export default function PhotoDetailEnhancements({
+export default function Photo35mmDetailEnhancements({
 	prevPhoto,
 	nextPhoto,
 	nextPhotos,
-	prevHref,
-	nextHref,
 }: {
-	prevPhoto: Photo | null;
-	nextPhoto: Photo | null;
-	nextPhotos: Photo[];
-	prevHref: string | null;
-	nextHref: string | null;
+	prevPhoto: FilmPhoto | null;
+	nextPhoto: FilmPhoto | null;
+	nextPhotos: FilmPhoto[];
 }) {
 	const router = useRouter();
 
@@ -44,38 +40,37 @@ export default function PhotoDetailEnhancements({
 		const onKeyDown = (event: KeyboardEvent) => {
 			if (shouldIgnoreKeydown(event.target)) return;
 
-			if (event.key === "ArrowLeft" && prevHref) {
+			if (event.key === "ArrowLeft" && prevPhoto) {
 				event.preventDefault();
-				router.push(prevHref);
+				router.push(`/35mm/${prevPhoto.id}`);
 			}
 
-			if (event.key === "ArrowRight" && nextHref) {
+			if (event.key === "ArrowRight" && nextPhoto) {
 				event.preventDefault();
-				router.push(nextHref);
+				router.push(`/35mm/${nextPhoto.id}`);
 			}
 		};
 
 		window.addEventListener("keydown", onKeyDown);
 		return () => window.removeEventListener("keydown", onKeyDown);
-	}, [router, prevHref, nextHref]);
+	}, [router, prevPhoto, nextPhoto]);
 
 	useEffect(() => {
 		preloadImage(prevPhoto ? getOptimizedUrl(prevPhoto.url, "lg") : null);
 		preloadImage(nextPhoto ? getOptimizedUrl(nextPhoto.url, "lg") : null);
 
-		if (prevHref) {
-			router.prefetch(prevHref);
+		if (prevPhoto) {
+			router.prefetch(`/35mm/${prevPhoto.id}`);
 		}
 
-		if (nextHref) {
-			router.prefetch(nextHref);
+		if (nextPhoto) {
+			router.prefetch(`/35mm/${nextPhoto.id}`);
 		}
 
-		// Preload a few upcoming thumbnails to warm browser cache
 		nextPhotos.slice(0, 6).forEach((photo) => {
 			preloadImage(getOptimizedUrl(photo.url, "md"));
 		});
-	}, [router, prevPhoto, nextPhoto, nextPhotos, prevHref, nextHref]);
+	}, [router, prevPhoto, nextPhoto, nextPhotos]);
 
 	return null;
 }

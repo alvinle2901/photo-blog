@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+
 import PhotoDetail from "@/components/images/PhotoDetail";
 import type { Photo } from "@/photo";
 import PhotoDetailEnhancements from "@/photo/components/PhotoDetailEnhancements";
@@ -19,6 +20,8 @@ export default function FilmPhotoDetailPage({
 	nextPhotos: Photo[];
 }) {
 	const filmPath = `/film/${encodeURIComponent(film)}`;
+	const prevHref = prevPhoto ? `${filmPath}/${prevPhoto.id}` : null;
+	const nextHref = nextPhoto ? `${filmPath}/${nextPhoto.id}` : null;
 
 	return (
 		<div className="space-y-6 md:space-y-8">
@@ -26,6 +29,8 @@ export default function FilmPhotoDetailPage({
 				prevPhoto={prevPhoto}
 				nextPhoto={nextPhoto}
 				nextPhotos={nextPhotos}
+				prevHref={prevHref}
+				nextHref={nextHref}
 			/>
 
 			<div className="px-4 pt-8 md:px-6 lg:px-8">
@@ -35,7 +40,7 @@ export default function FilmPhotoDetailPage({
 				>
 					{prevPhoto ? (
 						<Link
-							href={`${filmPath}/${prevPhoto.id}`}
+							href={prevHref ?? "#"}
 							prefetch
 							className="hover:text-gray-900 transition-colors"
 						>
@@ -55,7 +60,7 @@ export default function FilmPhotoDetailPage({
 
 					{nextPhoto ? (
 						<Link
-							href={`${filmPath}/${nextPhoto.id}`}
+							href={nextHref ?? "#"}
 							prefetch
 							className="hover:text-gray-900 transition-colors"
 						>

@@ -5,10 +5,8 @@ import useSWRInfinite from "swr/infinite";
 
 import AnimateItems from "@/components/AnimateItems";
 import { Icons } from "@/components/icons";
-import PhotoLarge from "@/components/images/PhotoLarge";
 
 import type { Photo } from "..";
-import PhotoCard from "./Photo";
 import PhotoCardLarge from "./PhotoCardLarge";
 
 const INITIAL_LIMIT = 20;
@@ -55,12 +53,10 @@ const PhotoList = ({
 
 	const { data, error, setSize } = useSWRInfinite<PhotosPage>(
 		(pageIndex, previousPageData) => {
-			// Page 0 is already covered by fallbackData — don't re-fetch.
-			if (pageIndex === 0 && fallbackData) return null;
 			if (previousPageData && !previousPageData.hasMore) return null;
 
-			const offset = previousPageData?.nextOffset ?? 0;
-			const limit = PAGE_LIMIT;
+			const offset = pageIndex === 0 ? 0 : (previousPageData?.nextOffset ?? 0);
+			const limit = pageIndex === 0 ? INITIAL_LIMIT : PAGE_LIMIT;
 			return `/api/photos?offset=${offset}&limit=${limit}`;
 		},
 		fetcher,
@@ -98,9 +94,8 @@ const PhotoList = ({
 					staggerDelay={0.15}
 					distanceOffset={0}
 					staggerOnFirstLoadOnly
-					items={photos.map((photo, index) => (
-						// <PhotoLarge key={photo.id} photo={photo} priority={index <= 1} />
-						<PhotoCardLarge photo={photo} />
+					items={photos.map((photo) => (
+						<PhotoCardLarge key={photo.id} photo={photo} />
 					))}
 				/>
 			</InfiniteScroll>

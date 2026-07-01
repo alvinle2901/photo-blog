@@ -25,7 +25,7 @@ export default function FilmOverview({
 				icon={<PhotoFilmIcon film={film} className="text-[#3d3a35]" height={14} />}
 			/>
 
-			<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 gap-1 sm:gap-2">
+			<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-1 sm:gap-2 pr-2">
 				{photos.map((photo, index) => (
 					<Link
 						key={photo.id}

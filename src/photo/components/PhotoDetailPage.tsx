@@ -1,29 +1,34 @@
 import Link from "next/link";
+
 import ImageSquare from "@/components/images/ImageSquare";
 import PhotoDetail from "@/components/images/PhotoDetail";
 import type { Photo } from "@/photo";
 import PhotoDetailEnhancements from "@/photo/components/PhotoDetailEnhancements";
-
-const titleForPhoto = (photo: Photo) =>
-	photo.title || photo.caption || "Untitled";
 
 export default function PhotoDetailPage({
 	photo,
 	prevPhoto,
 	nextPhoto,
 	nextPhotos,
+	photoPathBase = "/p",
 }: {
 	photo: Photo;
 	prevPhoto: Photo | null;
 	nextPhoto: Photo | null;
 	nextPhotos: Photo[];
+	photoPathBase?: string;
 }) {
+	const prevHref = prevPhoto ? `${photoPathBase}/${prevPhoto.id}` : null;
+	const nextHref = nextPhoto ? `${photoPathBase}/${nextPhoto.id}` : null;
+
 	return (
 		<div className="space-y-6 md:space-y-8">
 			<PhotoDetailEnhancements
 				prevPhoto={prevPhoto}
 				nextPhoto={nextPhoto}
 				nextPhotos={nextPhotos}
+				prevHref={prevHref}
+				nextHref={nextHref}
 			/>
 			<div className="px-4 pt-8 md:px-6 lg:px-8">
 				<div
@@ -32,7 +37,7 @@ export default function PhotoDetailPage({
 				>
 					{prevPhoto ? (
 						<Link
-							href={`/p/${prevPhoto.id}`}
+							href={prevHref ?? "#"}
 							prefetch
 							className="hover:text-gray-900 transition-colors"
 						>
@@ -52,7 +57,7 @@ export default function PhotoDetailPage({
 
 					{nextPhoto ? (
 						<Link
-							href={`/p/${nextPhoto.id}`}
+							href={nextHref ?? "#"}
 							prefetch
 							className="hover:text-gray-900 transition-colors"
 						>
