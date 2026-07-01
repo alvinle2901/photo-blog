@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { Icons } from "@/components/icons";
 import type { Photo } from "@/photo";
+import OverviewHeader from "@/photo/components/OverviewHeader";
 import { getOptimizedUrl } from "@/storage/utils";
 
 export default function YearOverview({
@@ -15,14 +17,12 @@ export default function YearOverview({
 }) {
 	return (
 		<section className="space-y-5 py-6">
-			<header className="px-4 md:px-6 lg:px-8">
-				<h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-					{year}
-				</h1>
-				<p className="mt-1 text-sm text-gray-600">
-					{count} {count === 1 ? "photo" : "photos"}
-				</p>
-			</header>
+			<OverviewHeader
+				category="Year"
+				title={year}
+				count={count}
+				icon={<Icons.time size={14} strokeWidth={1.8} />}
+			/>
 
 			<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 gap-1 sm:gap-2">
 				{photos.map((photo, index) => (
