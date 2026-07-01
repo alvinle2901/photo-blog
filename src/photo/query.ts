@@ -1,6 +1,6 @@
-import { desc, eq, isNotNull, sql } from "drizzle-orm";
+import { and, count, desc, eq, inArray, isNotNull, sql } from "drizzle-orm";
 
-import { db } from "../db/client";
+import { db, pool } from "../db/client";
 import { photos } from "../db/schema";
 import { type Photo, rowToPhoto } from "./index";
 
@@ -9,10 +9,31 @@ const photosChronologicalOrder = [
 	desc(photos.createdAt),
 ] as const;
 
+const photoYearExpression = sql<string>`extract(year from coalesce(${photos.takenAt}, ${photos.createdAt}))`;
+
+type NearbyPhotoRow = {
+	id: string;
+	row_number: string;
+	current_row_number: string;
+};
+
 export async function getPhotos(): Promise<Photo[]> {
 	const rows = await db
 		.select()
 		.from(photos)
+		.orderBy(...photosChronologicalOrder);
+	return rows.map(rowToPhoto);
+}
+
+export async function getGridPhotos(): Promise<Photo[]> {
+	return getPhotos();
+}
+
+export async function getMapPhotos(): Promise<Photo[]> {
+	const rows = await db
+		.select()
+		.from(photos)
+		.where(and(isNotNull(photos.latitude), isNotNull(photos.longitude)))
 		.orderBy(...photosChronologicalOrder);
 	return rows.map(rowToPhoto);
 }
@@ -43,6 +64,72 @@ export async function getPhotoById(id: string): Promise<Photo | null> {
 	return rows[0] ? rowToPhoto(rows[0]) : null;
 }
 
+async function getPhotosNearId(
+	id: string,
+	nextLimit: number,
+): Promise<{
+	prevPhoto: Photo | null;
+	nextPhoto: Photo | null;
+	nextPhotos: Photo[];
+} | null> {
+	const { rows } = await pool.query<NearbyPhotoRow>(
+		`
+			WITH ordered_photos AS (
+				SELECT
+					id,
+					row_number() OVER (
+						ORDER BY taken_at DESC NULLS LAST, created_at DESC
+					) AS row_number
+				FROM photos
+			),
+			current_photo AS (
+				SELECT row_number AS current_row_number
+				FROM ordered_photos
+				WHERE id = $1
+			)
+			SELECT
+				ordered_photos.*,
+				current_photo.current_row_number
+			FROM ordered_photos
+			CROSS JOIN current_photo
+			WHERE ordered_photos.row_number >= current_photo.current_row_number - 1
+				AND ordered_photos.row_number <= current_photo.current_row_number + $2
+			ORDER BY ordered_photos.row_number ASC
+		`,
+		[id, nextLimit],
+	);
+
+	const currentRowNumber = rows[0]?.current_row_number;
+	if (!currentRowNumber) return null;
+
+	const prevRow = rows.find(
+		(row) => Number(row.row_number) === Number(currentRowNumber) - 1,
+	);
+	const nextRows = rows.filter(
+		(row) => Number(row.row_number) > Number(currentRowNumber),
+	);
+	const orderedIds = [prevRow?.id, ...nextRows.map((row) => row.id)].filter(
+		(id): id is string => Boolean(id),
+	);
+	const nearbyRows =
+		orderedIds.length > 0
+			? await db.select().from(photos).where(inArray(photos.id, orderedIds))
+			: [];
+	const photosById = new Map(
+		nearbyRows.map((row) => [row.id, rowToPhoto(row)] as const),
+	);
+	const prevPhoto = prevRow ? (photosById.get(prevRow.id) ?? null) : null;
+	const nextPhotos = nextRows
+		.map((row) => photosById.get(row.id))
+		.filter((photo): photo is Photo => Boolean(photo));
+
+	return {
+		prevPhoto,
+		nextPhoto: nextPhotos[0] ?? null,
+		nextPhotos,
+	};
+}
+
 export async function getPhotoPageData(
 	id: string,
 	nextLimit = 12,
@@ -52,21 +139,15 @@ export async function getPhotoPageData(
 	nextPhoto: Photo | null;
 	nextPhotos: Photo[];
 } | null> {
-	const photos = await getPhotos();
-	const index = photos.findIndex((photo) => photo.id === id);
-
-	if (index === -1) return null;
-
-	const photo = photos[index];
-	const prevPhoto = index > 0 ? photos[index - 1] : null;
-	const nextPhoto = index < photos.length - 1 ? photos[index + 1] : null;
-	const nextPhotos = photos.slice(index + 1, index + 1 + nextLimit);
+	const [photo, nearbyPhotos] = await Promise.all([
+		getPhotoById(id),
+		getPhotosNearId(id, nextLimit),
+	]);
+	if (!photo || !nearbyPhotos) return null;
 
 	return {
 		photo,
-		prevPhoto,
-		nextPhoto,
-		nextPhotos,
+		...nearbyPhotos,
 	};
 }
 
@@ -74,21 +155,13 @@ export async function getUniqueFilms(): Promise<
 	Array<{ film: string; count: number }>
 > {
 	const rows = await db
-		.select({ film: photos.filmSimulation })
+		.select({ film: photos.filmSimulation, count: count() })
 		.from(photos)
-		.where(isNotNull(photos.filmSimulation));
+		.where(isNotNull(photos.filmSimulation))
+		.groupBy(photos.filmSimulation);
 
-	const counts = new Map<string, number>();
-
-	for (const row of rows) {
-		if (!row.film) {
-			continue;
-		}
-		counts.set(row.film, (counts.get(row.film) ?? 0) + 1);
-	}
-
-	return Array.from(counts.entries())
-		.map(([film, count]) => ({ film, count }))
+	return rows
+		.filter((row): row is { film: string; count: number } => Boolean(row.film))
 		.sort((a, b) => a.film.localeCompare(b.film));
 }
 
@@ -105,6 +178,14 @@ export async function getPhotosByFilm(
 	const rows =
 		typeof limit === "number" ? await query.limit(limit) : await query;
 	return rows.map(rowToPhoto);
+}
+
+export async function getPhotoCountByFilm(film: string): Promise<number> {
+	const rows = await db
+		.select({ count: count() })
+		.from(photos)
+		.where(eq(photos.filmSimulation, film));
+	return rows[0]?.count ?? 0;
 }
 
 export async function getPhotoPageDataByFilm(
@@ -134,26 +215,16 @@ export async function getPhotoPageDataByFilm(
 	};
 }
 
-const yearForPhoto = (photo: Photo): string =>
-	String((photo.takenAt ?? photo.createdAt).getUTCFullYear());
-
-const cameraMatches = (photo: Photo, make: string, model: string): boolean =>
-	(photo.make ?? "").toLowerCase() === make.toLowerCase() &&
-	(photo.model ?? "").toLowerCase() === model.toLowerCase();
-
 export async function getUniqueYears(): Promise<
 	Array<{ year: string; count: number }>
 > {
-	const allPhotos = await getPhotos();
-	const counts = new Map<string, number>();
+	const rows = await db
+		.select({ year: photoYearExpression, count: count() })
+		.from(photos)
+		.groupBy(photoYearExpression);
 
-	for (const photo of allPhotos) {
-		const year = yearForPhoto(photo);
-		counts.set(year, (counts.get(year) ?? 0) + 1);
-	}
-
-	return Array.from(counts.entries())
-		.map(([year, count]) => ({ year, count }))
+	return rows
+		.map((row) => ({ year: String(row.year), count: row.count }))
 		.sort((a, b) => Number(b.year) - Number(a.year));
 }
 
@@ -161,9 +232,23 @@ export async function getPhotosByYear(
 	year: string,
 	limit?: number,
 ): Promise<Photo[]> {
-	const allPhotos = await getPhotos();
-	const filtered = allPhotos.filter((photo) => yearForPhoto(photo) === year);
-	return typeof limit === "number" ? filtered.slice(0, limit) : filtered;
+	const query = db
+		.select()
+		.from(photos)
+		.where(sql`${photoYearExpression} = ${Number(year)}`)
+		.orderBy(...photosChronologicalOrder);
+
+	const rows =
+		typeof limit === "number" ? await query.limit(limit) : await query;
+	return rows.map(rowToPhoto);
+}
+
+export async function getPhotoCountByYear(year: string): Promise<number> {
+	const rows = await db
+		.select({ count: count() })
+		.from(photos)
+		.where(sql`${photoYearExpression} = ${Number(year)}`);
+	return rows[0]?.count ?? 0;
 }
 
 export async function getPhotoPageDataByYear(
@@ -196,23 +281,16 @@ export async function getPhotoPageDataByYear(
 export async function getUniqueCameras(): Promise<
 	Array<{ make: string; model: string; count: number }>
 > {
-	const allPhotos = await getPhotos();
-	const counts = new Map<string, number>();
+	const rows = await db
+		.select({ make: photos.make, model: photos.model, count: count() })
+		.from(photos)
+		.where(and(isNotNull(photos.make), isNotNull(photos.model)))
+		.groupBy(photos.make, photos.model);
 
-	for (const photo of allPhotos) {
-		if (!photo.make || !photo.model) {
-			continue;
-		}
-
-		const key = `${photo.make}|||${photo.model}`;
-		counts.set(key, (counts.get(key) ?? 0) + 1);
-	}
-
-	return Array.from(counts.entries())
-		.map(([key, count]) => {
-			const [make, model] = key.split("|||");
-			return { make, model, count };
-		})
+	return rows
+		.filter((row): row is { make: string; model: string; count: number } =>
+			Boolean(row.make && row.model),
+		)
 		.sort((a, b) => {
 			const makeCmp = a.make.localeCompare(b.make);
 			return makeCmp !== 0 ? makeCmp : a.model.localeCompare(b.model);
@@ -224,11 +302,26 @@ export async function getPhotosByCamera(
 	model: string,
 	limit?: number,
 ): Promise<Photo[]> {
-	const allPhotos = await getPhotos();
-	const filtered = allPhotos.filter((photo) =>
-		cameraMatches(photo, make, model),
-	);
-	return typeof limit === "number" ? filtered.slice(0, limit) : filtered;
+	const query = db
+		.select()
+		.from(photos)
+		.where(and(eq(photos.make, make), eq(photos.model, model)))
+		.orderBy(...photosChronologicalOrder);
+
+	const rows =
+		typeof limit === "number" ? await query.limit(limit) : await query;
+	return rows.map(rowToPhoto);
+}
+
+export async function getPhotoCountByCamera(
+	make: string,
+	model: string,
+): Promise<number> {
+	const rows = await db
+		.select({ count: count() })
+		.from(photos)
+		.where(and(eq(photos.make, make), eq(photos.model, model)));
+	return rows[0]?.count ?? 0;
 }
 
 export async function getPhotoPageDataByCamera(

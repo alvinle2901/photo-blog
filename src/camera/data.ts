@@ -1,4 +1,5 @@
 import {
+	getPhotoCountByCameraCached,
 	getPhotoPageDataByCameraCached,
 	getPhotosByCameraCached,
 } from "@/photo/cache";
@@ -12,12 +13,12 @@ export async function getPhotosCameraDataCached({
 	model: string;
 	limit?: number;
 }) {
-	const [photos, allPhotos] = await Promise.all([
+	const [photos, count] = await Promise.all([
 		getPhotosByCameraCached(make, model, limit),
-		getPhotosByCameraCached(make, model),
+		getPhotoCountByCameraCached(make, model),
 	]);
 
-	return [photos, { count: allPhotos.length }] as const;
+	return [photos, { count }] as const;
 }
 
 export const getPhotoCameraPageDataCached = (

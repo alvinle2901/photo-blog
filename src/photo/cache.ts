@@ -3,7 +3,12 @@ import { cache } from "react";
 
 import { CACHE_KEYS } from "@/cache/keys";
 import {
+	getGridPhotos,
+	getMapPhotos,
 	getPhotoById,
+	getPhotoCountByCamera,
+	getPhotoCountByFilm,
+	getPhotoCountByYear,
 	getPhotoPageData,
 	getPhotoPageDataByCamera,
 	getPhotoPageDataByFilm,
@@ -36,6 +41,18 @@ export const getPhotosPaginatedCached = (offset: number, limit: number) =>
 		{ tags: [CACHE_KEYS.photos()] },
 	)();
 
+export const getGridPhotosCached = unstable_cache(
+	getGridPhotos,
+	[CACHE_KEYS.grid()],
+	{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.grid()] },
+);
+
+export const getMapPhotosCached = unstable_cache(
+	getMapPhotos,
+	[CACHE_KEYS.map()],
+	{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.map()] },
+);
+
 export const getUniqueFilmsCached = unstable_cache(
 	getUniqueFilms,
 	[CACHE_KEYS.film("all")],
@@ -49,6 +66,13 @@ export const getPhotosByFilmCached = (film: string, limit?: number) =>
 			CACHE_KEYS.film(film),
 			`limit-${typeof limit === "number" ? limit : "all"}`,
 		],
+		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.film(film)] },
+	)();
+
+export const getPhotoCountByFilmCached = (film: string) =>
+	unstable_cache(
+		() => getPhotoCountByFilm(film),
+		[CACHE_KEYS.film(film), "count"],
 		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.film(film)] },
 	)();
 
@@ -78,6 +102,13 @@ export const getPhotosByYearCached = (year: string, limit?: number) =>
 			CACHE_KEYS.year(year),
 			`limit-${typeof limit === "number" ? limit : "all"}`,
 		],
+		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.year(year)] },
+	)();
+
+export const getPhotoCountByYearCached = (year: string) =>
+	unstable_cache(
+		() => getPhotoCountByYear(year),
+		[CACHE_KEYS.year(year), "count"],
 		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.year(year)] },
 	)();
 
@@ -111,6 +142,13 @@ export const getPhotosByCameraCached = (
 			CACHE_KEYS.camera(make, model),
 			`limit-${typeof limit === "number" ? limit : "all"}`,
 		],
+		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.camera(make, model)] },
+	)();
+
+export const getPhotoCountByCameraCached = (make: string, model: string) =>
+	unstable_cache(
+		() => getPhotoCountByCamera(make, model),
+		[CACHE_KEYS.camera(make, model), "count"],
 		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.camera(make, model)] },
 	)();
 

@@ -1,6 +1,6 @@
 import type { Photo } from "@/photo";
 import {
-	getPhotosCached,
+	getGridPhotosCached,
 	getUniqueCamerasCached,
 	getUniqueFilmsCached,
 	getUniqueYearsCached,
@@ -61,7 +61,7 @@ export async function getGridPageData(
 	sortOrder: SortOrder = DEFAULT_GRID_SORT_ORDER,
 ) {
 	const [photos, years, cameras, films] = await Promise.all([
-		getPhotosCached(),
+		getGridPhotosCached(),
 		getUniqueYearsCached(),
 		getUniqueCamerasCached(),
 		getUniqueFilmsCached(),

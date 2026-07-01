@@ -1,5 +1,7 @@
 export const CACHE_KEYS = {
 	photos: () => "photos",
+	grid: () => "grid",
+	map: () => "map",
 	photo: (id: string) => `photo-${id}`,
 	album: (id: string) => `album-${id}`,
 	albums: () => "albums",

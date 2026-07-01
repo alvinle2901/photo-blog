@@ -1,4 +1,4 @@
-import { getPhotosForRequest } from "@/photo/cache";
+import { getMapPhotosCached } from "@/photo/cache";
 
 import MapPageClient from "./MapPageClient";
 
@@ -9,10 +9,7 @@ export const metadata = {
 
 const getMapPhotos = async () => {
 	try {
-		const photos = await getPhotosForRequest();
-		return photos.filter(
-			(photo) => photo.latitude !== null && photo.longitude !== null,
-		);
+		return getMapPhotosCached();
 	} catch (error) {
 		if (process.env.NODE_ENV !== "production") {
 			console.error("Failed to load map photos:", error);
