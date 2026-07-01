@@ -1,10 +1,19 @@
-import { desc, eq, isNotNull } from "drizzle-orm";
+import { desc, eq, isNotNull, sql } from "drizzle-orm";
+
 import { db } from "../db/client";
 import { photos } from "../db/schema";
 import { type Photo, rowToPhoto } from "./index";
 
+const photosChronologicalOrder = [
+	sql`${photos.takenAt} desc nulls last`,
+	desc(photos.createdAt),
+] as const;
+
 export async function getPhotos(): Promise<Photo[]> {
-	const rows = await db.select().from(photos).orderBy(desc(photos.createdAt));
+	const rows = await db
+		.select()
+		.from(photos)
+		.orderBy(...photosChronologicalOrder);
 	return rows.map(rowToPhoto);
 }
 
@@ -23,7 +32,7 @@ export async function getPhotosPaginatedByOffset(
 	const rows = await db
 		.select()
 		.from(photos)
-		.orderBy(desc(photos.createdAt))
+		.orderBy(...photosChronologicalOrder)
 		.limit(limit)
 		.offset(offset);
 	return rows.map(rowToPhoto);
@@ -91,7 +100,7 @@ export async function getPhotosByFilm(
 		.select()
 		.from(photos)
 		.where(eq(photos.filmSimulation, film))
-		.orderBy(desc(photos.createdAt));
+		.orderBy(...photosChronologicalOrder);
 
 	const rows =
 		typeof limit === "number" ? await query.limit(limit) : await query;

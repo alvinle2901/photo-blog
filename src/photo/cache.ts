@@ -8,7 +8,6 @@ import {
 	getPhotoPageDataByCamera,
 	getPhotoPageDataByFilm,
 	getPhotoPageDataByYear,
-	getPhotos,
 	getPhotosByCamera,
 	getPhotosByFilm,
 	getPhotosByYear,
@@ -17,12 +16,6 @@ import {
 	getUniqueFilms,
 	getUniqueYears,
 } from "@/photo/query";
-
-export const getPhotosCached = unstable_cache(
-	getPhotos,
-	[CACHE_KEYS.photos()],
-	{ tags: [CACHE_KEYS.photos()] },
-);
 
 export const getPhotoCached = (id: string) =>
 	unstable_cache(() => getPhotoById(id), [CACHE_KEYS.photo(id)], {
@@ -138,8 +131,6 @@ export const getPhotoPageDataByCameraCached = (
 			],
 		},
 	)();
-
-export const getPhotosForRequest = cache(getPhotosCached);
 
 export const getPhotoPageDataForRequest = cache((id: string, nextLimit = 12) =>
 	getPhotoPageDataCached(id, nextLimit),

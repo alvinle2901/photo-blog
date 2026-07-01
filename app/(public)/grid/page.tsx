@@ -1,5 +1,22 @@
-import { redirect } from "next/navigation";
+import PhotoGridPage from "@/photo/components/PhotoGridPage";
 
-export default function GridPage() {
-	redirect("/grid/takenAt/desc");
+import {
+	DEFAULT_GRID_SORT_ORDER,
+	DEFAULT_GRID_SORT_TYPE,
+	getGridPageData,
+} from "./data";
+
+export default async function GridPage() {
+	const { photos, years, cameras, films } = await getGridPageData();
+
+	return (
+		<PhotoGridPage
+			photos={photos}
+			sortType={DEFAULT_GRID_SORT_TYPE}
+			sortOrder={DEFAULT_GRID_SORT_ORDER}
+			years={years}
+			cameras={cameras}
+			films={films}
+		/>
+	);
 }
