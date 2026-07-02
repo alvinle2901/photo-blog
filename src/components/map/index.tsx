@@ -8,10 +8,10 @@ import { useEffect, useState } from "react";
 import ReactMap, {
 	Marker,
 	NavigationControl,
-	Popup,
 	useMap,
 } from "react-map-gl/mapbox";
 
+import SharedHover from "@/components/shared-hover/SharedHover";
 import type { Photo } from "@/photo";
 import { getOptimizedUrl } from "@/storage/utils";
 
@@ -22,9 +22,53 @@ interface Props {
 	photos?: Photo[];
 }
 
+const PIN_HOVER_WIDTH_LANDSCAPE = 390;
+const PIN_HOVER_WIDTH_PORTRAIT = 270;
+const PIN_HOVER_WIDTH_SQUARE = 250;
+
+function dimensionsForPinHover(photo: Photo) {
+	const width =
+		photo.aspectRatio > 1.1
+			? PIN_HOVER_WIDTH_LANDSCAPE
+			: photo.aspectRatio < 0.9
+				? PIN_HOVER_WIDTH_PORTRAIT
+				: PIN_HOVER_WIDTH_SQUARE;
+
+	return {
+		width,
+		height: Math.round(width / photo.aspectRatio),
+	};
+}
+
+function MapPinHoverContent({ photo }: { photo: Photo }) {
+	const { width } = dimensionsForPinHover(photo);
+
+	return (
+		<div className="relative h-full w-full">
+			<Image
+				src={getOptimizedUrl(photo.url, "md")}
+				alt={photo.title || "Map pin preview"}
+				fill
+				sizes={`${width}px`}
+				className="object-cover"
+				placeholder={photo.blurData ? "blur" : "empty"}
+				blurDataURL={photo.blurData || undefined}
+			/>
+			<div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/5 to-black/20" />
+			<div className="absolute inset-x-0 bottom-0 p-2.5">
+				<div
+					className="truncate text-[0.7rem] uppercase tracking-[0.08em] text-white/90 drop-shadow"
+					style={{ fontFamily: "'DM Mono', monospace" }}
+				>
+					{photo.title || photo.id}
+				</div>
+			</div>
+		</div>
+	);
+}
+
 const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 	const { map } = useMap();
-	const [hoveredPhoto, setHoveredPhoto] = useState<Photo | null>(null);
 	const [coords, setCoords] = useState<{
 		latitude: number | null;
 		longitude: number | null;
@@ -76,30 +120,6 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 			mapStyle="mapbox://styles/mapbox/streets-v12"
 		>
 			<NavigationControl />
-			{hoveredPhoto?.latitude != null && hoveredPhoto?.longitude != null && (
-				<Popup
-					className="p-0"
-					longitude={hoveredPhoto.longitude}
-					latitude={hoveredPhoto.latitude}
-					anchor="bottom-left"
-					closeButton={false}
-					closeOnClick={false}
-					offset={5}
-				>
-					<div className="w-50 overflow-hidden bg-white">
-						<Image
-							src={getOptimizedUrl(hoveredPhoto.url, "md")}
-							alt={hoveredPhoto.title || "Photo thumbnail"}
-							className="h-30 w-full object-cover"
-							width={180}
-							height={108}
-						/>
-						<p className="truncate text-xs pt-1 text-gray-700">
-							{hoveredPhoto.title || hoveredPhoto.id}
-						</p>
-					</div>
-				</Popup>
-			)}
 			{coords.latitude && coords.longitude && (
 				<Marker
 					longitude={coords.longitude}
@@ -114,6 +134,8 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 			)}
 			{photos.map((photo) => {
 				if (photo.latitude == null || photo.longitude == null) return null;
+				const hoverDimensions = dimensionsForPinHover(photo);
+
 				return (
 					<Marker
 						key={photo.id}
@@ -121,18 +143,23 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 						latitude={photo.latitude}
 						anchor="bottom"
 					>
-						<button
-							type="button"
-							aria-label={photo.title || photo.id}
-							className="relative flex h-3 w-3 cursor-pointer border-0 bg-transparent p-0"
-							onMouseEnter={() => setHoveredPhoto(photo)}
-							onMouseLeave={() =>
-								setHoveredPhoto((prev) => (prev?.id === photo.id ? null : prev))
-							}
+						<SharedHover
+							hoverKey={`map-pin-${photo.id}`}
+							width={hoverDimensions.width}
+							height={hoverDimensions.height}
+							offsetAbove={-4}
+							offsetBelow={2}
+							content={<MapPinHoverContent photo={photo} />}
 						>
-							<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
-							<span className="relative inline-flex h-3 w-3 rounded-full bg-sky-500"></span>
-						</button>
+							<button
+								type="button"
+								aria-label={photo.title || photo.id}
+								className="relative flex h-3 w-3 cursor-pointer border-0 bg-transparent p-0"
+							>
+								<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
+								<span className="relative inline-flex h-3 w-3 rounded-full bg-sky-500"></span>
+							</button>
+						</SharedHover>
 					</Marker>
 				);
 			})}
