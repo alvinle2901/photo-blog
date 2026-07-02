@@ -2,23 +2,48 @@ import Link from "next/link";
 
 import { Icons } from "@/components/icons";
 import { labelForFilm } from "@/film";
+import GridSortDropdown from "@/photo/components/GridSortDropdown";
 
 type FilmItem = { film: string; count: number };
 type YearItem = { year: string; count: number };
 type CameraItem = { make: string; model: string; count: number };
+type SortType = "createdAt" | "takenAt" | "title";
+type SortOrder = "asc" | "desc";
 
 const sectionTitleClass =
 	"text-[11px] uppercase tracking-[0.14em] text-[#8f877c] flex items-center gap-1.5";
 
 const listClass = "mt-2 flex flex-wrap gap-1.5";
 const itemClass =
-	"rounded border border-[#ddd5ca] bg-[#f7f5f2] px-2 py-1 text-[11px] uppercase tracking-[0.06em] text-[#61594f] hover:bg-[#ece7df] hover:text-[#18170f] transition-colors";
+	"inline-flex max-w-full items-center gap-1.5 rounded border border-[#ddd5ca] bg-[#f7f5f2] px-2 py-1 text-[11px] uppercase tracking-[0.06em] text-[#61594f] transition-colors hover:bg-[#ece7df] hover:text-[#18170f]";
+
+function TotalCount({ count }: { count: number }) {
+	const photoLabel = count === 1 ? "image" : "images";
+
+	return (
+		<div
+			className="pt-3 text-left text-[13px] tracking-[0.1em] text-[#8f877c]"
+			style={{ fontFamily: "'DM Mono', monospace" }}
+		>
+			<span className="font-semibold text-[#2b2824]">
+				{count.toLocaleString()}
+			</span>{" "}
+			{photoLabel}
+		</div>
+	);
+}
 
 export default function GridFilterSidebar({
+	photoCount,
+	sortType,
+	sortOrder,
 	years,
 	cameras,
 	films,
 }: {
+	photoCount: number;
+	sortType: SortType;
+	sortOrder: SortOrder;
 	years: YearItem[];
 	cameras: CameraItem[];
 	films: FilmItem[];
@@ -35,6 +60,8 @@ export default function GridFilterSidebar({
 					</summary>
 
 					<div className="mt-3 space-y-3">
+						<GridSortDropdown sortType={sortType} sortOrder={sortOrder} />
+
 						<div>
 							<div
 								className={sectionTitleClass}
@@ -97,12 +124,16 @@ export default function GridFilterSidebar({
 								))}
 							</div>
 						</div>
+
+						<TotalCount count={photoCount} />
 					</div>
 				</details>
 			</section>
 
 			<aside className="hidden lg:block w-[250px] shrink-0 pl-4">
 				<div className="sticky top-6 space-y-5 pb-6">
+					<GridSortDropdown sortType={sortType} sortOrder={sortOrder} />
+
 					<section>
 						<h3
 							className={sectionTitleClass}
@@ -119,7 +150,7 @@ export default function GridFilterSidebar({
 										className={itemClass}
 										style={{ fontFamily: "'DM Mono', monospace" }}
 									>
-										<span>{item.year}</span>
+										{item.year}
 									</Link>
 								</li>
 							))}
@@ -173,6 +204,8 @@ export default function GridFilterSidebar({
 							))}
 						</ul>
 					</section>
+
+					<TotalCount count={photoCount} />
 				</div>
 			</aside>
 		</>
