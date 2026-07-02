@@ -4,6 +4,8 @@ import Link from "next/link";
 import PhotoDetail from "@/components/images/PhotoDetail";
 import type { Photo } from "@/photo";
 import PhotoDetailEnhancements from "@/photo/components/PhotoDetailEnhancements";
+import PhotoDetailNavLink from "@/photo/components/PhotoDetailNavLink";
+import PhotoDetailTransition from "@/photo/components/PhotoDetailTransition";
 import { getOptimizedUrl } from "@/storage/utils";
 
 export default function FilmPhotoDetailPage({
@@ -39,13 +41,13 @@ export default function FilmPhotoDetailPage({
 					style={{ fontFamily: "'DM Mono', monospace" }}
 				>
 					{prevPhoto ? (
-						<Link
+						<PhotoDetailNavLink
 							href={prevHref ?? "#"}
-							prefetch
-							className="hover:text-gray-900 transition-colors"
+							direction="prev"
+							imageUrl={getOptimizedUrl(prevPhoto.url, "lg")}
 						>
 							prev
-						</Link>
+						</PhotoDetailNavLink>
 					) : (
 						<span className="opacity-40">prev</span>
 					)}
@@ -59,24 +61,26 @@ export default function FilmPhotoDetailPage({
 					</Link>
 
 					{nextPhoto ? (
-						<Link
+						<PhotoDetailNavLink
 							href={nextHref ?? "#"}
-							prefetch
-							className="hover:text-gray-900 transition-colors"
+							direction="next"
+							imageUrl={getOptimizedUrl(nextPhoto.url, "lg")}
 						>
 							next
-						</Link>
+						</PhotoDetailNavLink>
 					) : (
 						<span className="opacity-40">next</span>
 					)}
 				</div>
 			</div>
 
-			<PhotoDetail photo={photo} priority />
+			<PhotoDetailTransition>
+				<PhotoDetail photo={photo} priority />
+			</PhotoDetailTransition>
 
 			{nextPhotos.length > 0 && (
 				<section className="pb-4">
-					<div className="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-6">
+					<div className="grid grid-cols-2 gap-2 md:grid-cols-4">
 						{nextPhotos.map((item, index) => (
 							<Link
 								key={item.id}

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import type { Photo } from "@/photo";
+import { setPhotoDetailDirection } from "@/photo/components/PhotoDetailTransition";
 import { getOptimizedUrl } from "@/storage/utils";
 
 const shouldIgnoreKeydown = (target: EventTarget | null) => {
@@ -22,6 +23,8 @@ const preloadImage = (url: string | null | undefined) => {
 	if (!url) return;
 	const image = new window.Image();
 	image.decoding = "async";
+	(image as HTMLImageElement & { fetchPriority?: "high" }).fetchPriority =
+		"high";
 	image.src = url;
 };
 
@@ -46,11 +49,15 @@ export default function PhotoDetailEnhancements({
 
 			if (event.key === "ArrowLeft" && prevHref) {
 				event.preventDefault();
+				setPhotoDetailDirection("prev");
+				router.prefetch(prevHref);
 				router.push(prevHref);
 			}
 
 			if (event.key === "ArrowRight" && nextHref) {
 				event.preventDefault();
+				setPhotoDetailDirection("next");
+				router.prefetch(nextHref);
 				router.push(nextHref);
 			}
 		};
@@ -71,11 +78,56 @@ export default function PhotoDetailEnhancements({
 			router.prefetch(nextHref);
 		}
 
-		// Preload a few upcoming thumbnails to warm browser cache
-		nextPhotos.slice(0, 6).forEach((photo) => {
+		// Warm a few full-size next images for fast keyboard/link navigation.
+		nextPhotos.slice(0, 3).forEach((photo) => {
+			preloadImage(getOptimizedUrl(photo.url, "lg"));
+		});
+
+		// Preload additional upcoming thumbnails for the related grid.
+		nextPhotos.slice(3, 9).forEach((photo) => {
 			preloadImage(getOptimizedUrl(photo.url, "md"));
 		});
 	}, [router, prevPhoto, nextPhoto, nextPhotos, prevHref, nextHref]);
+
+	useEffect(() => {
+		const onPointerEnter = (event: PointerEvent | FocusEvent) => {
+			const link = (event.target as HTMLElement | null)?.closest(
+				"[data-preload-image]",
+			);
+			if (!(link instanceof HTMLElement)) return;
+
+			const href = link.getAttribute("data-prefetch-href");
+			const imageUrl = link.getAttribute("data-preload-image");
+
+			if (href) {
+				router.prefetch(href);
+			}
+			preloadImage(imageUrl);
+		};
+
+		document.addEventListener("pointerenter", onPointerEnter, true);
+		document.addEventListener("focusin", onPointerEnter, true);
+		return () => {
+			document.removeEventListener("pointerenter", onPointerEnter, true);
+			document.removeEventListener("focusin", onPointerEnter, true);
+		};
+	}, [router]);
+
+	useEffect(() => {
+		const onClick = (event: MouseEvent) => {
+			const link = (event.target as HTMLElement | null)?.closest(
+				"[data-transition-direction]",
+			);
+			if (!(link instanceof HTMLElement)) return;
+			const direction = link.getAttribute("data-transition-direction");
+			if (direction === "prev" || direction === "next") {
+				setPhotoDetailDirection(direction);
+			}
+		};
+
+		document.addEventListener("click", onClick, true);
+		return () => document.removeEventListener("click", onClick, true);
+	}, []);
 
 	return null;
 }

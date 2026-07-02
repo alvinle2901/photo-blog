@@ -5,7 +5,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import type { Projection } from "mapbox-gl";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import Map, {
+import ReactMap, {
 	Marker,
 	NavigationControl,
 	Popup,
@@ -13,6 +13,7 @@ import Map, {
 } from "react-map-gl/mapbox";
 
 import type { Photo } from "@/photo";
+import { getOptimizedUrl } from "@/storage/utils";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -59,7 +60,7 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 	}, [map, showLocal]);
 
 	return (
-		<Map
+		<ReactMap
 			id="map"
 			mapboxAccessToken={TOKEN}
 			initialViewState={{
@@ -87,7 +88,7 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 				>
 					<div className="w-50 overflow-hidden bg-white">
 						<Image
-							src={hoveredPhoto.url}
+							src={getOptimizedUrl(hoveredPhoto.url, "md")}
 							alt={hoveredPhoto.title || "Photo thumbnail"}
 							className="h-30 w-full object-cover"
 							width={180}
@@ -120,8 +121,10 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 						latitude={photo.latitude}
 						anchor="bottom"
 					>
-						<span
-							className="relative flex h-3 w-3 cursor-pointer"
+						<button
+							type="button"
+							aria-label={photo.title || photo.id}
+							className="relative flex h-3 w-3 cursor-pointer border-0 bg-transparent p-0"
 							onMouseEnter={() => setHoveredPhoto(photo)}
 							onMouseLeave={() =>
 								setHoveredPhoto((prev) => (prev?.id === photo.id ? null : prev))
@@ -129,11 +132,11 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 						>
 							<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
 							<span className="relative inline-flex h-3 w-3 rounded-full bg-sky-500"></span>
-						</span>
+						</button>
 					</Marker>
 				);
 			})}
-		</Map>
+		</ReactMap>
 	);
 };
 

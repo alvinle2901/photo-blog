@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import { getOptimizedUrl } from "@/storage/utils";
 
 // Height determined by intrinsic photo aspect ratio
@@ -14,7 +15,6 @@ export default function ImageLarge({
 	aspectRatio,
 	alt,
 	priority,
-	id,
 	blurData,
 }: {
 	className?: string;
@@ -32,8 +32,10 @@ export default function ImageLarge({
 				src: getOptimizedUrl(src, "lg"),
 				alt,
 				priority,
+				fetchPriority: priority ? "high" : "auto",
 				blurDataURL: blurData,
 				placeholder: "blur",
+				sizes: "(max-width: 1024px) 100vw, calc(100vw - 360px)",
 				width: IMAGE_LARGE_WIDTH,
 				height: Math.round(IMAGE_LARGE_WIDTH / aspectRatio),
 			}}

@@ -3,6 +3,8 @@ import Link from "next/link";
 
 import Photo35mmDetailEnhancements from "@/35mm/Photo35mmDetailEnhancements";
 import type { FilmPhoto } from "@/35mm/query";
+import PhotoDetailNavLink from "@/photo/components/PhotoDetailNavLink";
+import PhotoDetailTransition from "@/photo/components/PhotoDetailTransition";
 import { getOptimizedUrl } from "@/storage/utils";
 
 export default function Photo35mmDetailPage({
@@ -29,13 +31,13 @@ export default function Photo35mmDetailPage({
 					style={{ fontFamily: "'DM Mono', monospace" }}
 				>
 					{prevPhoto ? (
-						<Link
+						<PhotoDetailNavLink
 							href={`/35mm/${prevPhoto.id}`}
-							prefetch
-							className="hover:text-gray-900 transition-colors"
+							direction="prev"
+							imageUrl={getOptimizedUrl(prevPhoto.url, "lg")}
 						>
 							prev
-						</Link>
+						</PhotoDetailNavLink>
 					) : (
 						<span className="opacity-40">prev</span>
 					)}
@@ -49,50 +51,52 @@ export default function Photo35mmDetailPage({
 					</Link>
 
 					{nextPhoto ? (
-						<Link
+						<PhotoDetailNavLink
 							href={`/35mm/${nextPhoto.id}`}
-							prefetch
-							className="hover:text-gray-900 transition-colors"
+							direction="next"
+							imageUrl={getOptimizedUrl(nextPhoto.url, "lg")}
 						>
 							next
-						</Link>
+						</PhotoDetailNavLink>
 					) : (
 						<span className="opacity-40">next</span>
 					)}
 				</div>
 			</div>
 
-			<div className="px-4 md:px-6 lg:px-8">
-				<div className="grid gap-6 lg:grid-cols-[1fr_280px]">
-					<div className="overflow-hidden rounded-md bg-[#ebe7df]">
-						<Image
-							src={getOptimizedUrl(photo.url, "lg")}
-							alt={photo.title || photo.id}
-							width={photo.width}
-							height={photo.height}
-							priority
-							className="h-auto w-full object-contain"
-							sizes="(max-width: 1024px) 100vw, calc(100vw - 360px)"
-						/>
-					</div>
+			<PhotoDetailTransition>
+				<div className="px-4 md:px-6 lg:px-8">
+					<div className="grid gap-6 lg:grid-cols-[1fr_280px]">
+						<div className="overflow-hidden rounded-md bg-[#ebe7df]">
+							<Image
+								src={getOptimizedUrl(photo.url, "lg")}
+								alt={photo.title || photo.id}
+								width={photo.width}
+								height={photo.height}
+								priority
+								className="h-auto w-full object-contain"
+								sizes="(max-width: 1024px) 100vw, calc(100vw - 360px)"
+							/>
+						</div>
 
-					<aside
-						className="space-y-3 text-sm text-gray-600"
-						style={{ fontFamily: "'DM Mono', monospace" }}
-					>
-						<h1
-							className="text-2xl text-[#18170f] leading-tight"
-							style={{ fontFamily: "'Cormorant', serif" }}
+						<aside
+							className="space-y-3 text-sm text-gray-600"
+							style={{ fontFamily: "'DM Mono', monospace" }}
 						>
-							{photo.title || "Untitled"}
-						</h1>
-						{photo.film && <p className="uppercase">{photo.film}</p>}
-						{photo.description && (
-							<p className="text-gray-700">{photo.description}</p>
-						)}
-					</aside>
+							<h1
+								className="text-2xl text-[#18170f] leading-tight"
+								style={{ fontFamily: "'Cormorant', serif" }}
+							>
+								{photo.title || "Untitled"}
+							</h1>
+							{photo.film && <p className="uppercase">{photo.film}</p>}
+							{photo.description && (
+								<p className="text-gray-700">{photo.description}</p>
+							)}
+						</aside>
+					</div>
 				</div>
-			</div>
+			</PhotoDetailTransition>
 
 			{nextPhotos.length > 0 && (
 				<section className="px-4 pb-4 md:px-6 lg:px-8">
