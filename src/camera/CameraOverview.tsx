@@ -32,6 +32,7 @@ export default function CameraOverview({
 					<Link
 						key={photo.id}
 						href={`/shot-on/${encodeURIComponent(make)}/${encodeURIComponent(model)}/${photo.id}`}
+						prefetch={false}
 						className="relative overflow-hidden bg-[#ebe7df]"
 						style={{ aspectRatio: "1 / 1" }}
 					>

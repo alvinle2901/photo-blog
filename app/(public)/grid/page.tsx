@@ -7,11 +7,15 @@ import {
 } from "./data";
 
 export default async function GridPage() {
-	const { photos, years, cameras, films } = await getGridPageData();
+	const { photos, photoCount, hasMore, nextOffset, years, cameras, films } =
+		await getGridPageData();
 
 	return (
 		<PhotoGridPage
 			photos={photos}
+			photoCount={photoCount}
+			initialHasMore={hasMore}
+			initialNextOffset={nextOffset}
 			sortType={DEFAULT_GRID_SORT_TYPE}
 			sortOrder={DEFAULT_GRID_SORT_ORDER}
 			years={years}

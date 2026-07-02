@@ -15,6 +15,7 @@ export default function ImageSquare({
 		<Link
 			key={photo.id}
 			href={`/p/${photo.id}`}
+			prefetch={false}
 			className="relative overflow-hidden bg-[#ebe7df]"
 			style={{ aspectRatio: "1 / 1" }}
 		>

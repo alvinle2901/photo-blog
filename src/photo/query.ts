@@ -1,4 +1,13 @@
-import { and, count, desc, eq, inArray, isNotNull, sql } from "drizzle-orm";
+import {
+	and,
+	asc,
+	count,
+	desc,
+	eq,
+	inArray,
+	isNotNull,
+	sql,
+} from "drizzle-orm";
 
 import { db, pool } from "../db/client";
 import { photos } from "../db/schema";
@@ -11,22 +20,77 @@ const photosChronologicalOrder = [
 
 const photoYearExpression = sql<string>`extract(year from coalesce(${photos.takenAt}, ${photos.createdAt}))`;
 
+export type GridSortType = "createdAt" | "takenAt" | "title";
+export type GridSortOrder = "asc" | "desc";
+
+function getGridPhotoOrder(
+	sortType: GridSortType = "takenAt",
+	sortOrder: GridSortOrder = "desc",
+) {
+	if (sortType === "createdAt") {
+		return sortOrder === "asc"
+			? [asc(photos.createdAt)]
+			: [desc(photos.createdAt)];
+	}
+
+	if (sortType === "title") {
+		return sortOrder === "asc"
+			? [sql`lower(coalesce(${photos.title}, '')) asc`]
+			: [sql`lower(coalesce(${photos.title}, '')) desc`];
+	}
+
+	return sortOrder === "asc"
+		? [sql`${photos.takenAt} asc nulls last`, desc(photos.createdAt)]
+		: [...photosChronologicalOrder];
+}
+
 type NearbyPhotoRow = {
 	id: string;
 	row_number: string;
 	current_row_number: string;
 };
 
-export async function getPhotos(): Promise<Photo[]> {
-	const rows = await db
+export async function getPhotos(
+	sortType?: GridSortType,
+	sortOrder?: GridSortOrder,
+): Promise<Photo[]> {
+	return getGridPhotos(sortType, sortOrder);
+}
+
+export async function getPhotoCount(): Promise<number> {
+	const rows = await db.select({ count: count() }).from(photos);
+	return rows[0]?.count ?? 0;
+}
+
+export async function getGridPhotos(
+	sortType?: GridSortType,
+	sortOrder?: GridSortOrder,
+	offset?: number,
+	limit?: number,
+): Promise<Photo[]> {
+	const query = db
 		.select()
 		.from(photos)
-		.orderBy(...photosChronologicalOrder);
+		.orderBy(...getGridPhotoOrder(sortType, sortOrder));
+
+	const rows =
+		typeof limit === "number"
+			? await query.limit(limit).offset(offset ?? 0)
+			: await query;
 	return rows.map(rowToPhoto);
 }
 
-export async function getGridPhotos(): Promise<Photo[]> {
-	return getPhotos();
+export async function getPhotosPaginatedByOffset(
+	offset: number,
+	limit: number,
+): Promise<Photo[]> {
+	const rows = await db
+		.select()
+		.from(photos)
+		.orderBy(...photosChronologicalOrder)
+		.limit(limit)
+		.offset(offset);
+	return rows.map(rowToPhoto);
 }
 
 export async function getMapPhotos(): Promise<Photo[]> {
@@ -44,19 +108,6 @@ export async function getPhotosPaginated(
 ): Promise<Photo[]> {
 	const offset = (page - 1) * limit;
 	return getPhotosPaginatedByOffset(offset, limit);
-}
-
-export async function getPhotosPaginatedByOffset(
-	offset: number,
-	limit: number,
-): Promise<Photo[]> {
-	const rows = await db
-		.select()
-		.from(photos)
-		.orderBy(...photosChronologicalOrder)
-		.limit(limit)
-		.offset(offset);
-	return rows.map(rowToPhoto);
 }
 
 export async function getPhotoById(id: string): Promise<Photo | null> {

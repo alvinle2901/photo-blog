@@ -29,6 +29,7 @@ export default function YearOverview({
 					<Link
 						key={photo.id}
 						href={`/year/${encodeURIComponent(year)}/${photo.id}`}
+						prefetch={false}
 						className="relative overflow-hidden bg-[#ebe7df]"
 						style={{ aspectRatio: "1 / 1" }}
 					>

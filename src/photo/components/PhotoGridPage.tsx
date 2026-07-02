@@ -1,12 +1,15 @@
-import ImageSquare from "@/components/images/ImageSquare";
 import type { Photo } from "@/photo";
 import GridFilterSidebar from "@/photo/components/GridFilterSidebar";
+import PhotoGridInfinite from "@/photo/components/PhotoGridInfinite";
 
 type SortType = "createdAt" | "takenAt" | "title";
 type SortOrder = "asc" | "desc";
 
 type Props = {
 	photos: Photo[];
+	photoCount: number;
+	initialHasMore: boolean;
+	initialNextOffset: number;
 	sortType: SortType;
 	sortOrder: SortOrder;
 	years: Array<{ year: string; count: number }>;
@@ -16,23 +19,26 @@ type Props = {
 
 export default function PhotoGridPage({
 	photos,
+	photoCount,
+	initialHasMore,
+	initialNextOffset,
 	sortType,
 	sortOrder,
 	years,
 	cameras,
 	films,
 }: Props) {
-	const photoCount = photos.length;
-
 	return (
 		<div className="py-8">
 			<div className="flex flex-col gap-4 lg:flex-row">
 				<div className="min-w-0 flex-1">
-					<div className="grid grid-cols-2 gap-1 sm:grid-cols-4 sm:gap-2 md:grid-cols-4">
-						{photos.map((photo, index) => (
-							<ImageSquare key={photo.id} photo={photo} index={index} />
-						))}
-					</div>
+					<PhotoGridInfinite
+						initialPhotos={photos}
+						initialHasMore={initialHasMore}
+						initialNextOffset={initialNextOffset}
+						sortType={sortType}
+						sortOrder={sortOrder}
+					/>
 				</div>
 
 				<div className="order-first lg:order-0 lg:shrink-0 lg:sticky lg:top-8 lg:self-start">

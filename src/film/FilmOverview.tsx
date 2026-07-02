@@ -22,7 +22,9 @@ export default function FilmOverview({
 				category="Film"
 				title={labelForFilm(film)}
 				count={count}
-				icon={<PhotoFilmIcon film={film} className="text-[#3d3a35]" height={14} />}
+				icon={
+					<PhotoFilmIcon film={film} className="text-[#3d3a35]" height={14} />
+				}
 			/>
 
 			<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-1 sm:gap-2 pr-2">
@@ -30,6 +32,7 @@ export default function FilmOverview({
 					<Link
 						key={photo.id}
 						href={`/film/${encodeURIComponent(film)}/${photo.id}`}
+						prefetch={false}
 						className="relative overflow-hidden bg-[#ebe7df]"
 						style={{ aspectRatio: "1 / 1" }}
 					>

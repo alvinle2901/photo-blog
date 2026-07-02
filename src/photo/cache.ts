@@ -6,6 +6,7 @@ import {
 	getGridPhotos,
 	getMapPhotos,
 	getPhotoById,
+	getPhotoCount,
 	getPhotoCountByCamera,
 	getPhotoCountByFilm,
 	getPhotoCountByYear,
@@ -20,6 +21,8 @@ import {
 	getUniqueCameras,
 	getUniqueFilms,
 	getUniqueYears,
+	type GridSortOrder,
+	type GridSortType,
 } from "@/photo/query";
 
 export const getPhotoCached = (id: string) =>
@@ -41,10 +44,27 @@ export const getPhotosPaginatedCached = (offset: number, limit: number) =>
 		{ tags: [CACHE_KEYS.photos()] },
 	)();
 
-export const getGridPhotosCached = unstable_cache(
-	getGridPhotos,
-	[CACHE_KEYS.grid()],
-	{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.grid()] },
+export const getGridPhotosCached = (
+	sortType: GridSortType = "takenAt",
+	sortOrder: GridSortOrder = "desc",
+	offset?: number,
+	limit?: number,
+) =>
+	unstable_cache(
+		() => getGridPhotos(sortType, sortOrder, offset, limit),
+		[
+			CACHE_KEYS.grid(),
+			`${sortType}-${sortOrder}`,
+			`offset-${typeof offset === "number" ? offset : "all"}`,
+			`limit-${typeof limit === "number" ? limit : "all"}`,
+		],
+		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.grid()] },
+	)();
+
+export const getPhotoCountCached = unstable_cache(
+	getPhotoCount,
+	[CACHE_KEYS.photos(), "count"],
+	{ tags: [CACHE_KEYS.photos()] },
 );
 
 export const getMapPhotosCached = unstable_cache(

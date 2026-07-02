@@ -71,7 +71,7 @@ export default function PhotoShareModal() {
 				if (!open) handleClose();
 			}}
 		>
-			<DialogContent className="w-[94vw] max-w-[720px] rounded-lg border-[#d8d0c5] bg-[#f7f5f2] p-4 shadow-xl sm:p-5">
+			<DialogContent className="max-h-[92dvh] w-[calc(100vw-1rem)] max-w-[min(720px,calc(100vw-1rem))] overflow-y-auto rounded-lg border-[#d8d0c5] bg-[#f7f5f2] p-3 shadow-xl sm:w-[94vw] sm:p-5">
 				<div className="space-y-3">
 					<div className="flex items-center gap-2 pr-8 text-[#18170f]">
 						<TbPhotoShare size={20} />
@@ -86,7 +86,7 @@ export default function PhotoShareModal() {
 					{showQR ? (
 						<div
 							className={cn(
-								"mx-auto flex h-[300px] w-[300px] items-center justify-center rounded-lg",
+								"mx-auto flex aspect-square w-full max-w-[300px] items-center justify-center rounded-lg",
 								"border border-[#ddd5ca] bg-white p-3 shadow-sm",
 							)}
 						>
@@ -113,16 +113,19 @@ export default function PhotoShareModal() {
 						</div>
 					)}
 
-					<div className="flex items-stretch gap-2">
+					<div className="flex min-w-0 flex-wrap items-stretch gap-2">
 						<div
 							className={cn(
-								"flex min-w-0 flex-1 items-center overflow-hidden rounded-md",
+								"flex h-10 min-w-0 flex-[1_1_220px] items-center overflow-hidden rounded-md",
 								"border border-[#ddd5ca] bg-[#fbfaf7] text-sm text-[#3b352e]",
 							)}
 							style={{ fontFamily: "'DM Mono', monospace" }}
 						>
-							<div className="min-w-0 flex-1 truncate px-3">
-								{shortenUrl(pathShare)}
+							<div
+								className="min-w-0 flex-1 truncate px-3 text-xs sm:text-sm"
+								title={pathShare}
+							>
+								{shortenUrl(pathShare, 44)}
 							</div>
 							{renderIcon(
 								<BiCopy size={18} />,
@@ -135,33 +138,35 @@ export default function PhotoShareModal() {
 							)}
 						</div>
 
-						{renderIcon(
-							showQR ? <TbPhotoShare size={18} /> : <TbQrcode size={18} />,
-							() => setShowQR((value) => !value),
-							false,
-							showQR ? "Show photo preview" : "Show QR code",
-						)}
-						{renderIcon(
-							<PiFacebookLogo size={18} />,
-							() => window.open(createFacebookShareLink(pathShare), "_blank"),
-							false,
-							"Share on Facebook",
-						)}
-						{canUseNativeShare &&
-							renderIcon(
-								<TbPhotoShare size={18} />,
-								() => {
-									navigator
-										.share({
-											title: socialText,
-											text: photo.caption || undefined,
-											url: pathShare,
-										})
-										.catch(() => undefined);
-								},
+						<div className="flex shrink-0 flex-wrap gap-2">
+							{renderIcon(
+								showQR ? <TbPhotoShare size={18} /> : <TbQrcode size={18} />,
+								() => setShowQR((value) => !value),
 								false,
-								"Share",
+								showQR ? "Show photo preview" : "Show QR code",
 							)}
+							{renderIcon(
+								<PiFacebookLogo size={18} />,
+								() => window.open(createFacebookShareLink(pathShare), "_blank"),
+								false,
+								"Share on Facebook",
+							)}
+							{canUseNativeShare &&
+								renderIcon(
+									<TbPhotoShare size={18} />,
+									() => {
+										navigator
+											.share({
+												title: socialText,
+												text: photo.caption || undefined,
+												url: pathShare,
+											})
+											.catch(() => undefined);
+									},
+									false,
+									"Share",
+								)}
+						</div>
 					</div>
 				</div>
 			</DialogContent>

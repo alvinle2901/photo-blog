@@ -75,6 +75,7 @@ export default function GridFilterSidebar({
 									<Link
 										key={item.year}
 										href={`/year/${encodeURIComponent(item.year)}`}
+										prefetch={false}
 										className="rounded border border-[#ddd5ca] bg-[#f7f5f2] px-2 py-1 text-[11px] uppercase tracking-[0.06em] text-[#61594f]"
 									>
 										{item.year}
@@ -96,6 +97,7 @@ export default function GridFilterSidebar({
 									<Link
 										key={`${item.make}-${item.model}`}
 										href={`/shot-on/${encodeURIComponent(item.make)}/${encodeURIComponent(item.model)}`}
+										prefetch={false}
 										className="rounded border border-[#ddd5ca] bg-[#f7f5f2] px-2 py-1 text-[11px] uppercase tracking-[0.06em] text-[#61594f]"
 									>
 										{item.make} {item.model}
@@ -117,6 +119,7 @@ export default function GridFilterSidebar({
 									<Link
 										key={item.film}
 										href={`/film/${encodeURIComponent(item.film)}`}
+										prefetch={false}
 										className="rounded border border-[#ddd5ca] bg-[#f7f5f2] px-2 py-1 text-[11px] uppercase tracking-[0.06em] text-[#61594f]"
 									>
 										{labelForFilm(item.film)}
@@ -147,6 +150,7 @@ export default function GridFilterSidebar({
 								<li key={item.year}>
 									<Link
 										href={`/year/${encodeURIComponent(item.year)}`}
+										prefetch={false}
 										className={itemClass}
 										style={{ fontFamily: "'DM Mono', monospace" }}
 									>
@@ -170,6 +174,7 @@ export default function GridFilterSidebar({
 								<li key={`${item.make}-${item.model}`}>
 									<Link
 										href={`/shot-on/${encodeURIComponent(item.make)}/${encodeURIComponent(item.model)}`}
+										prefetch={false}
 										className={itemClass}
 										style={{ fontFamily: "'DM Mono', monospace" }}
 									>
@@ -195,6 +200,7 @@ export default function GridFilterSidebar({
 								<li key={item.film}>
 									<Link
 										href={`/film/${encodeURIComponent(item.film)}`}
+										prefetch={false}
 										className={itemClass}
 										style={{ fontFamily: "'DM Mono', monospace" }}
 									>
