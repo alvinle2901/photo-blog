@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { JSX } from "react";
+
 import { absolutePathForCamera } from "@/camera";
 import { Icons } from "@/components/icons";
 import ImageLarge from "@/components/images/ImageLarge";
@@ -87,14 +88,14 @@ const PhotoLarge = ({
 						<>
 							<ul className={cn("text-gray-500", "dark:text-gray-400")}>
 								<li>
-									{photo.focalLength ? photo.focalLength + "mm" : "-"}{" "}
+									{photo.focalLength ? `${photo.focalLength}mm` : "-"}{" "}
 									<span
 										className={cn("text-gray-400/80", "dark:text-gray-400/50")}
 									>
-										{photo.focalLength35mm ? photo.focalLength35mm + "mm" : "-"}
+										{photo.focalLength35mm ? `${photo.focalLength35mm}mm` : "-"}
 									</span>
 								</li>
-								<li>{photo.fStop ? "ƒ/" + photo.fStop : "-"}</li>
+								<li>{photo.fStop ? `ƒ/${photo.fStop}` : "-"}</li>
 								<li>ISO {photo.iso}</li>
 								<li>{formatExposureTime(photo.exposureTime || 0)}</li>
 								{photo.locationName && photo.locationName !== "unknown" ? (
@@ -103,7 +104,7 @@ const PhotoLarge = ({
 									</li>
 								) : null}
 								{photo.gpsAltitude ? (
-									<li className="hidden lg:block">{photo.gpsAltitude + "m"}</li>
+									<li className="hidden lg:block">{`${photo.gpsAltitude}m`}</li>
 								) : null}
 							</ul>
 							{/* FILM SIMULATION */}
@@ -135,7 +136,7 @@ const PhotoLarge = ({
 						</>,
 					)}
 					{/* Share button */}
-					<PhotoShareButton />
+					<PhotoShareButton photo={photo} />
 				</div>
 			}
 		/>

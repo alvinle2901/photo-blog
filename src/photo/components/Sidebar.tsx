@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import { Flourish } from "@/components/icons/Flourish";
 import { Flower } from "@/components/icons/Flower";
 import { isPathGrid } from "@/utils/string";
+
 import LinksItem from "./LinksItem";
 import SocialLinks from "./SocialLinks";
 import ViewSwitcher, { type SwitcherSelection } from "./ViewSwitcher";

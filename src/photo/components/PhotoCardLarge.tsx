@@ -126,10 +126,7 @@ const PhotoCardLarge = ({
 									<span className="underline-offset-4 group-hover/film:underline">
 										{labelForFilm(photo.filmSimulation)}
 									</span>
-									<PhotoFilmIcon
-										film={photo.filmSimulation}
-										height={14}
-									/>
+									<PhotoFilmIcon film={photo.filmSimulation} height={14} />
 								</button>
 							)}
 							<div
@@ -151,7 +148,7 @@ const PhotoCardLarge = ({
 						</>,
 					)}
 					{/* Share button */}
-					<PhotoShareButton />
+					<PhotoShareButton photo={photo} />
 				</div>
 			}
 		/>

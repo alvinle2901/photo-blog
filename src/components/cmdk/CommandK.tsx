@@ -1,9 +1,10 @@
-import CommandKClient, { CommandKSection } from "./CommandKClient";
 import {
 	getUniqueCamerasCached,
 	getUniqueFilmsCached,
 	getUniqueYearsCached,
 } from "@/photo/cache";
+
+import CommandKClient, { type CommandKSection } from "./CommandKClient";
 
 export default async function CommandK() {
 	const [years, cameras, films] = await Promise.all([

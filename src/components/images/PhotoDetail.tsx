@@ -1,9 +1,11 @@
 import Link from "next/link";
 import type { JSX } from "react";
+
 import { Icons } from "@/components/icons";
 import ImageLarge from "@/components/images/ImageLarge";
 import PhotoShareButton from "@/components/images/PhotoShareButton";
 import SiteGrid from "@/components/ui/SiteGrid";
+import type { Photo } from "@/photo";
 import type { FujifilmSimulation } from "@/platforms/fujifilm/simulation";
 import { labelForFujifilmSimulation } from "@/platforms/fujifilm/simulation";
 import { cn } from "@/utils/cn";
@@ -15,7 +17,7 @@ const PhotoDetail = ({
 	photo,
 	priority,
 }: {
-	photo: any;
+	photo: Photo & { gpsAltitude?: number | null };
 	priority?: boolean;
 }) => {
 	const renderMiniGrid = (children: JSX.Element) => (
@@ -87,14 +89,14 @@ const PhotoDetail = ({
 						<>
 							<ul className={cn("text-gray-500", "dark:text-gray-400")}>
 								<li>
-									{photo.focalLength ? photo.focalLength + "mm" : "-"}{" "}
+									{photo.focalLength ? `${photo.focalLength}mm` : "-"}{" "}
 									<span
 										className={cn("text-gray-400/80", "dark:text-gray-400/50")}
 									>
-										{photo.focalLength35mm ? photo.focalLength35mm + "mm" : "-"}
+										{photo.focalLength35mm ? `${photo.focalLength35mm}mm` : "-"}
 									</span>
 								</li>
-								<li>{photo.fStop ? "ƒ/" + photo.fStop : "-"}</li>
+								<li>{photo.fStop ? `ƒ/${photo.fStop}` : "-"}</li>
 								<li>ISO {photo.iso}</li>
 								<li>{formatExposureTime(photo.exposureTime || 0)}</li>
 								{photo.locationName && photo.locationName !== "unknown" ? (
@@ -103,7 +105,7 @@ const PhotoDetail = ({
 									</li>
 								) : null}
 								{photo.gpsAltitude ? (
-									<li className="hidden lg:block">{photo.gpsAltitude + "m"}</li>
+									<li className="hidden lg:block">{`${photo.gpsAltitude}m`}</li>
 								) : null}
 							</ul>
 							<div
@@ -125,7 +127,7 @@ const PhotoDetail = ({
 						</>,
 					)}
 					{/* Share button */}
-					<PhotoShareButton />
+					<PhotoShareButton photo={photo} />
 				</div>
 			}
 		/>
