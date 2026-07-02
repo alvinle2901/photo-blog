@@ -19,7 +19,7 @@ export const shortenUrl = (url?: string) =>
 		: undefined;
 
 export const getPathShare = (id: string) => {
-	return process.env.NEXT_PUBLIC_APP_URL + "p/" + id;
+	return process.env.NEXT_PUBLIC_SITE_URL + "/p/" + id;
 };
 
 export const generateXPostText = (path: string, text: string) => {

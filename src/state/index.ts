@@ -1,5 +1,11 @@
 import { createContext, useContext } from "react";
+
 import type { AnimationConfig } from "@/components/AnimateItems";
+import type { Photo } from "@/photo";
+
+export type PhotoShareData = {
+	photo: Photo;
+};
 
 export interface AppStateContext {
 	previousPathname?: string;
@@ -12,6 +18,9 @@ export interface AppStateContext {
 	nextPhotoAnimation?: AnimationConfig;
 	setNextPhotoAnimation?: (animation?: AnimationConfig) => void;
 	clearNextPhotoAnimation?: () => void;
+	photoShareData?: PhotoShareData;
+	setPhotoShareData?: (data?: PhotoShareData) => void;
+	supportsHover?: boolean;
 }
 
 export const AppStateContext = createContext<AppStateContext>({});
