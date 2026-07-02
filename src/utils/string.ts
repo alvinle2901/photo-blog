@@ -13,10 +13,21 @@ export const getShortenLocation = (location?: string | null) => {
 	} else return location;
 };
 
-export const shortenUrl = (url?: string) =>
-	url
-		? url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").replace(/\/$/, "")
-		: undefined;
+export const shortenUrl = (url?: string, maxLength = 56) => {
+	if (!url) return undefined;
+
+	const formatted = url
+		.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "")
+		.replace(/\/$/, "");
+
+	if (formatted.length <= maxLength) return formatted;
+
+	const visibleCharacters = Math.max(maxLength - 1, 12);
+	const frontLength = Math.ceil(visibleCharacters * 0.62);
+	const endLength = visibleCharacters - frontLength;
+
+	return `${formatted.slice(0, frontLength)}…${formatted.slice(-endLength)}`;
+};
 
 export const getPathShare = (id: string) => {
 	return process.env.NEXT_PUBLIC_SITE_URL + "/p/" + id;
