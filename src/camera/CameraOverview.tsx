@@ -43,7 +43,7 @@ export default function CameraOverview({
 							className="object-cover"
 							placeholder={photo.blurData ? "blur" : "empty"}
 							blurDataURL={photo.blurData || undefined}
-							priority={index < 8}
+							priority={index < 4}
 						/>
 					</Link>
 				))}

@@ -4,6 +4,7 @@ import { cache } from "react";
 import { generateMetaForYear, YEAR_GRID_INITIAL } from "@/year";
 import { getPhotosYearDataCached } from "@/year/data";
 import YearOverview from "@/year/YearOverview";
+import { getUniqueYearsCached } from "@/photo/cache";
 
 const getPhotosYearDataCachedCached = cache((year: string) =>
 	getPhotosYearDataCached({ year, limit: YEAR_GRID_INITIAL }),
@@ -11,6 +12,12 @@ const getPhotosYearDataCachedCached = cache((year: string) =>
 
 interface YearProps {
 	params: Promise<{ year: string }>;
+}
+
+export async function generateStaticParams() {
+	const years = await getUniqueYearsCached();
+
+	return years.map(({ year }) => ({ year }));
 }
 
 export async function generateMetadata({

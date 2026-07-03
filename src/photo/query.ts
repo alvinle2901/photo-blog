@@ -1,4 +1,16 @@
-import { and, count, desc, eq, inArray, isNotNull, sql } from "drizzle-orm";
+import {
+	and,
+	count,
+	desc,
+	eq,
+	gte,
+	inArray,
+	isNotNull,
+	isNull,
+	lt,
+	or,
+	sql,
+} from "drizzle-orm";
 
 import { db, pool } from "../db/client";
 import { photos } from "../db/schema";
@@ -10,6 +22,28 @@ const photosChronologicalOrder = [
 ] as const;
 
 const photoYearExpression = sql<string>`extract(year from coalesce(${photos.takenAt}, ${photos.createdAt}))`;
+
+function getYearRange(year: string): { start: Date; end: Date } {
+	const yearNumber = Number(year);
+
+	return {
+		start: new Date(Date.UTC(yearNumber, 0, 1)),
+		end: new Date(Date.UTC(yearNumber + 1, 0, 1)),
+	};
+}
+
+function photosInYear(year: string) {
+	const { start, end } = getYearRange(year);
+
+	return or(
+		and(gte(photos.takenAt, start), lt(photos.takenAt, end)),
+		and(
+			isNull(photos.takenAt),
+			gte(photos.createdAt, start),
+			lt(photos.createdAt, end),
+		),
+	);
+}
 
 type NearbyPhotoRow = {
 	id: string;
@@ -235,7 +269,7 @@ export async function getPhotosByYear(
 	const query = db
 		.select()
 		.from(photos)
-		.where(sql`${photoYearExpression} = ${Number(year)}`)
+		.where(photosInYear(year))
 		.orderBy(...photosChronologicalOrder);
 
 	const rows =
@@ -247,7 +281,7 @@ export async function getPhotoCountByYear(year: string): Promise<number> {
 	const rows = await db
 		.select({ count: count() })
 		.from(photos)
-		.where(sql`${photoYearExpression} = ${Number(year)}`);
+		.where(photosInYear(year));
 	return rows[0]?.count ?? 0;
 }
 

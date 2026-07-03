@@ -1,0 +1,1 @@
+CREATE INDEX "photos_taken_created_idx" ON "photos" USING btree ("taken_at" DESC NULLS LAST,"created_at" DESC NULLS LAST);
