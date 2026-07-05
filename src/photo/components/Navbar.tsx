@@ -21,7 +21,7 @@ const Nav = () => {
 	return (
 		<div
 			className={cn(
-				"md:hidden ml-5 mt-5",
+				"md:hidden ml-5 md:mt-5 py-3",
 				pathname === "/map" && "mb-5",
 				pathname.startsWith("/p/") && "hidden",
 			)}

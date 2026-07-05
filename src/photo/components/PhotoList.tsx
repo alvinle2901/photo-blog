@@ -5,6 +5,8 @@ import useSWRInfinite from "swr/infinite";
 
 import AnimateItems from "@/components/AnimateItems";
 import { Icons } from "@/components/icons";
+import PhotoLarge from "@/components/images/PhotoLarge";
+import { useMediaQuery } from "@/utils/use-media-query";
 
 import type { Photo } from "..";
 import PhotoCardLarge from "./PhotoCardLarge";
@@ -25,6 +27,8 @@ type PhotoListProps = {
 	initialNextOffset?: number;
 };
 
+const DESKTOP_PHOTO_LIST_QUERY = "(min-width: 1024px)";
+
 const fetcher = async (url: string): Promise<PhotosPage> => {
 	const response = await fetch(url);
 
@@ -40,6 +44,7 @@ const PhotoList = ({
 	initialHasMore = true,
 	initialNextOffset = INITIAL_LIMIT,
 }: PhotoListProps) => {
+	const isDesktop = useMediaQuery(DESKTOP_PHOTO_LIST_QUERY);
 	const fallbackData: PhotosPage[] | undefined = initialPhotos
 		? [
 				{
@@ -72,7 +77,7 @@ const PhotoList = ({
 	const loadMore = () => setSize((size) => size + 1);
 
 	return (
-		<div className="space-y-4">
+		<div className="space-y-4 mx-3 lg:mx-0">
 			<InfiniteScroll
 				dataLength={photos.length}
 				next={loadMore}
@@ -94,9 +99,13 @@ const PhotoList = ({
 					staggerDelay={0.15}
 					distanceOffset={0}
 					staggerOnFirstLoadOnly
-					items={photos.map((photo) => (
-						<PhotoCardLarge key={photo.id} photo={photo} />
-					))}
+					items={photos.map((photo) =>
+						isDesktop ? (
+							<PhotoCardLarge key={photo.id} photo={photo} />
+						) : (
+							<PhotoLarge key={photo.id} photo={photo} />
+						),
+					)}
 				/>
 			</InfiniteScroll>
 		</div>

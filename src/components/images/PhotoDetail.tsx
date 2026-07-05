@@ -26,7 +26,7 @@ const PhotoDetail = ({
 				"flex gap-y-4",
 				"flex-col sm:flex-row lg:flex-col",
 				"[&>*]:sm:flex-grow",
-				"pr-2",
+				"md:pr-2",
 			)}
 		>
 			{children}
@@ -62,7 +62,7 @@ const PhotoDetail = ({
 							{/* TITLE  */}
 							<Link href={`/p/${photo.id}`}>
 								<h2
-									className="italic text-2xl text-[#18170f] font-normal leading-tight"
+									className="italic text-xl md:text-2xl text-[#18170f] font-normal leading-tight"
 									style={{ fontFamily: "'Cormorant', serif" }}
 								>
 									{photo.title}
