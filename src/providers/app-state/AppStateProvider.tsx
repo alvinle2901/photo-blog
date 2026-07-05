@@ -1,47 +1,24 @@
 "use client";
 
-import {
-	type ReactNode,
-	useEffect,
-	useState,
-	useSyncExternalStore,
-} from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 import type { AnimationConfig } from "@/components/AnimateItems";
+import { useHoverSupport } from "@/hooks/use-hover-support";
 
 import { AppStateContext, type PhotoShareData } from ".";
 
-const hoverMediaQuery = "(hover: hover) and (pointer: fine)";
-
-function subscribeToHoverSupport(callback: () => void) {
-	if (typeof window === "undefined") return () => {};
-
-	const mediaQuery = window.matchMedia(hoverMediaQuery);
-	mediaQuery.addEventListener("change", callback);
-
-	return () => {
-		mediaQuery.removeEventListener("change", callback);
-	};
-}
-
-function getHoverSupportSnapshot() {
-	return (
-		typeof window !== "undefined" && window.matchMedia(hoverMediaQuery).matches
-	);
-}
-
-export default function StateProvider({ children }: { children: ReactNode }) {
+export default function AppStateProvider({
+	children,
+}: {
+	children: ReactNode;
+}) {
 	const [hasLoaded, setHasLoaded] = useState(false);
 	const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 	const [isCommandKOpen, setIsCommandKOpen] = useState(false);
 	const [nextPhotoAnimation, setNextPhotoAnimation] =
 		useState<AnimationConfig>();
 	const [photoShareData, setPhotoShareData] = useState<PhotoShareData>();
-	const supportsHover = useSyncExternalStore(
-		subscribeToHoverSupport,
-		getHoverSupportSnapshot,
-		() => false,
-	);
+	const supportsHover = useHoverSupport();
 
 	useEffect(() => {
 		const frame = requestAnimationFrame(() => {

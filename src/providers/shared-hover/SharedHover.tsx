@@ -2,10 +2,10 @@
 
 import { type CSSProperties, type ReactNode, useEffect, useRef } from "react";
 
-import { useAppState } from "@/state";
+import { useHoverSupport } from "@/hooks/use-hover-support";
 import { cn } from "@/utils/cn";
 
-import { useSharedHoverState } from "./state";
+import { useSharedHoverState } from ".";
 
 export default function SharedHover({
 	hoverKey,
@@ -29,7 +29,7 @@ export default function SharedHover({
 	style?: CSSProperties;
 }) {
 	const ref = useRef<HTMLDivElement>(null);
-	const { supportsHover } = useAppState();
+	const supportsHover = useHoverSupport();
 	const { showHover, dismissHover, renderHover, isHoverBeingShown } =
 		useSharedHoverState();
 

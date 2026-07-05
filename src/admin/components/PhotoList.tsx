@@ -1,14 +1,13 @@
 "use client";
 
+import type { FilmPhoto } from "@/35mm/query";
 import { Icons } from "@/components/icons";
 import type { Photo } from "@/photo";
-import type { FilmPhoto } from "@/35mm/query";
 
 import PhotoOtherCard from "./PhotoCard/Card35mm";
 import PhotoCard from "./PhotoCard/CardNormal";
 
-export type { Photo };
-export type { FilmPhoto };
+export type { FilmPhoto, Photo };
 
 interface Props {
 	type: "digital" | "35mm";

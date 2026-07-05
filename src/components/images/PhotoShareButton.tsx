@@ -3,7 +3,7 @@
 import { TbPhotoShare } from "react-icons/tb";
 
 import type { Photo } from "@/photo";
-import { useAppState } from "@/state";
+import { useAppState } from "@/providers/app-state";
 import { getOptimizedUrl } from "@/storage/utils";
 
 let prefetchedImage: HTMLImageElement | null = null;
@@ -21,7 +21,6 @@ export default function PhotoShareButton({
 		<button
 			type="button"
 			className="hover:text-gray-500 cursor-pointer"
-
 			onMouseEnter={() => {
 				prefetchedImage = new Image();
 				prefetchedImage.src = getOptimizedUrl(photo.url, "lg");

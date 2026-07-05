@@ -1,6 +1,6 @@
+import { NextResponse } from "next/server";
 import { getFilmPhotos } from "@/35mm/query";
 import { getIsAdmin } from "@/auth/session";
-import { NextResponse } from "next/server";
 
 export async function GET() {
 	const isAdmin = await getIsAdmin();

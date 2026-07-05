@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { AspectRatio } from "@/components/ui/AspectRatio";
 import type { FilmPhoto } from "@/35mm/query";
+import { AspectRatio } from "@/components/ui/AspectRatio";
 
 const PhotoOtherCard = ({ photo }: { photo: FilmPhoto }) => {
 	return (

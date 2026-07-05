@@ -6,7 +6,7 @@ import useSWRInfinite from "swr/infinite";
 import AnimateItems from "@/components/AnimateItems";
 import { Icons } from "@/components/icons";
 import PhotoLarge from "@/components/images/PhotoLarge";
-import { useMediaQuery } from "@/utils/use-media-query";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 import type { Photo } from "..";
 import PhotoCardLarge from "./PhotoCardLarge";

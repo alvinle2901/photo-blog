@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 import type { Metadata } from "next/types";
 import { cache } from "react";
+import { getUniqueYearsCached } from "@/photo/cache";
 import { generateMetaForYear, YEAR_GRID_INITIAL } from "@/year";
 import { getPhotosYearDataCached } from "@/year/data";
 import YearOverview from "@/year/YearOverview";
-import { getUniqueYearsCached } from "@/photo/cache";
 
 const getPhotosYearDataCachedCached = cache((year: string) =>
 	getPhotosYearDataCached({ year, limit: YEAR_GRID_INITIAL }),

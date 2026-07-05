@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import type { ReactElement } from "react";
 import { useRef } from "react";
 
-import { useAppState } from "@/state";
+import { useAppState } from "@/providers/app-state";
 
 export type AnimationType = "none" | "scale" | "left" | "right";
 

@@ -1,8 +1,8 @@
 "use client";
 
+import type { FilmPhoto } from "@/35mm/query";
 import { TabContent, TabList, Tabs, TabTrigger } from "@/components/ui/Tabs";
 import type { Photo } from "@/photo";
-import type { FilmPhoto } from "@/35mm/query";
 
 import PhotoList from "./PhotoList";
 

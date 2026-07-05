@@ -1,10 +1,8 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Suspense } from "react";
 
-import SharedHoverProvider from "@/components/shared-hover/SharedHoverProvider";
-import AppStateProvider from "@/state/AppStateProvider";
+import AppProviders from "@/providers/AppProviders";
 
 export const metadata: Metadata = {
 	title: {
@@ -20,11 +18,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" className="h-full antialiased">
 			<body>
-				<Suspense>
-					<AppStateProvider>
-						<SharedHoverProvider>{children}</SharedHoverProvider>
-					</AppStateProvider>
-				</Suspense>
+				<AppProviders>{children}</AppProviders>
 			</body>
 		</html>
 	);

@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { Icons } from "@/components/icons";
 import IconFeed from "@/components/icons/IconFeed";
 import IconGrid from "@/components/icons/IconGrid";
-
-import { useAppState } from "@/state";
+import { useAppState } from "@/providers/app-state";
 
 import Switcher from "./Switcher";
 import SwitcherItem from "./Switcher/SwitcherItem";

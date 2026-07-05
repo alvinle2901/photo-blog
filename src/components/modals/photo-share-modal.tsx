@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { type ReactNode, useState, useSyncExternalStore } from "react";
+import { type ReactNode, useState } from "react";
 import { BiCopy } from "react-icons/bi";
 import { PiFacebookLogo } from "react-icons/pi";
 import { TbPhotoShare, TbQrcode } from "react-icons/tb";
 import { toast } from "sonner";
 
-import { useAppState } from "@/state";
+import { useNativeShare } from "@/hooks/use-native-share";
+import { useAppState } from "@/providers/app-state";
 import { getOptimizedUrl } from "@/storage/utils";
 import { cn } from "@/utils/cn";
 import {
@@ -21,11 +22,7 @@ import { Dialog, DialogContent, DialogTitle } from "../ui/Dialog";
 export default function PhotoShareModal() {
 	const { photoShareData, setPhotoShareData } = useAppState();
 	const [showQR, setShowQR] = useState(false);
-	const canUseNativeShare = useSyncExternalStore(
-		() => () => undefined,
-		() => typeof navigator !== "undefined" && !!navigator.share,
-		() => false,
-	);
+	const canUseNativeShare = useNativeShare();
 
 	const renderIcon = (
 		icon: ReactNode,

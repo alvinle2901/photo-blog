@@ -11,8 +11,8 @@ import ReactMap, {
 	useMap,
 } from "react-map-gl/mapbox";
 
-import SharedHover from "@/components/shared-hover/SharedHover";
 import type { Photo } from "@/photo";
+import SharedHover from "@/providers/shared-hover/SharedHover";
 import { getOptimizedUrl } from "@/storage/utils";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;

@@ -16,7 +16,7 @@ import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { BiLockAlt, BiSolidUser } from "react-icons/bi";
 import { HiDocumentText } from "react-icons/hi";
 
-import { useAppState } from "@/state";
+import { useAppState } from "@/providers/app-state";
 import { cn } from "@/utils/cn";
 
 import { Icons } from "../icons";

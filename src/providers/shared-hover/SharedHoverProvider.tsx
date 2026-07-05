@@ -12,7 +12,7 @@ import {
 
 import { cn } from "@/utils/cn";
 
-import { SharedHoverContext, type SharedHoverProps } from "./state";
+import { SharedHoverContext, type SharedHoverProps } from ".";
 
 const WINDOW_CHANGE_EVENTS = ["mouseup", "mousewheel", "resize", "scroll"];
 

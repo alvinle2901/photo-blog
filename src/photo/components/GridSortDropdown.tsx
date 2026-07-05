@@ -70,15 +70,16 @@ export default function GridSortDropdown({
 						option.sortType === sortType && option.sortOrder === sortOrder;
 
 					return (
-						<DropdownMenuItem key={`${option.sortType}-${option.sortOrder}`} asChild>
+						<DropdownMenuItem
+							key={`${option.sortType}-${option.sortOrder}`}
+							asChild
+						>
 							<Link
 								href={getSortHref(option.sortType, option.sortOrder)}
 								aria-current={isActive ? "page" : undefined}
 								className={cn(
 									"flex cursor-pointer items-center justify-between rounded px-2.5 py-2 text-[11px] uppercase tracking-[0.08em] outline-none transition-colors focus:bg-[#ece7df]",
-									isActive
-										? "bg-[#ece7df] text-[#18170f]"
-										: "text-[#61594f]",
+									isActive ? "bg-[#ece7df] text-[#18170f]" : "text-[#61594f]",
 								)}
 								style={{ fontFamily: "'DM Mono', monospace" }}
 							>

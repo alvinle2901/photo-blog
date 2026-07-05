@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { MapProvider } from "react-map-gl/mapbox";
+import type { FilmPhoto } from "@/35mm/query";
 import PhotoTabs from "@/admin/components/PhotoTabs";
 import Mapbox from "@/components/map";
 import type { Photo } from "@/photo";
-import type { FilmPhoto } from "@/35mm/query";
 import { fetchAllPhotos } from "@/photo/actions";
 
 export default function AdminPhotoListPage() {
