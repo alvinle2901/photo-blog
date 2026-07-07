@@ -3,6 +3,10 @@ import Link from "next/link";
 
 import Photo35mmDetailEnhancements from "@/35mm/Photo35mmDetailEnhancements";
 import type { FilmPhoto } from "@/35mm/query";
+import {
+	LightboxButton,
+	LightboxTrigger,
+} from "@/components/images/ImageLightbox";
 import PhotoDetailNavLink from "@/photo/components/PhotoDetailNavLink";
 import PhotoDetailTransition from "@/photo/components/PhotoDetailTransition";
 import { getOptimizedUrl } from "@/storage/utils";
@@ -18,6 +22,12 @@ export default function Photo35mmDetailPage({
 	nextPhoto: FilmPhoto | null;
 	nextPhotos: FilmPhoto[];
 }) {
+	const lightboxImage = {
+		src: photo.url,
+		alt: photo.title || photo.id,
+		aspectRatio: photo.width / photo.height,
+	};
+
 	return (
 		<div className="space-y-6 md:space-y-8">
 			<Photo35mmDetailEnhancements
@@ -66,35 +76,38 @@ export default function Photo35mmDetailPage({
 
 			<PhotoDetailTransition>
 				<div className="px-4 md:px-6 lg:px-8">
-					<div className="grid gap-6 lg:grid-cols-[1fr_280px]">
-						<div className="overflow-hidden rounded-md bg-[#ebe7df]">
-							<Image
-								src={getOptimizedUrl(photo.url, "lg")}
-								alt={photo.title || photo.id}
-								width={photo.width}
-								height={photo.height}
-								priority
-								className="h-auto w-full object-contain"
-								sizes="(max-width: 1024px) 100vw, calc(100vw - 360px)"
-							/>
-						</div>
+						<div className="grid gap-6 lg:grid-cols-[1fr_280px]">
+							<div className="overflow-hidden rounded-md bg-[#ebe7df]">
+								<LightboxTrigger image={lightboxImage}>
+									<Image
+										src={getOptimizedUrl(photo.url, "lg")}
+										alt={photo.title || photo.id}
+										width={photo.width}
+										height={photo.height}
+										priority
+										className="h-auto w-full object-contain"
+										sizes="(max-width: 1024px) 100vw, calc(100vw - 360px)"
+									/>
+								</LightboxTrigger>
+							</div>
 
-						<aside
-							className="space-y-3 text-sm text-gray-600"
-							style={{ fontFamily: "'DM Mono', monospace" }}
-						>
-							<h1
-								className="text-2xl text-[#18170f] leading-tight"
-								style={{ fontFamily: "'Cormorant', serif" }}
+							<aside
+								className="space-y-3 text-sm text-gray-600"
+								style={{ fontFamily: "'DM Mono', monospace" }}
 							>
-								{photo.title || "Untitled"}
-							</h1>
-							{photo.film && <p className="uppercase">{photo.film}</p>}
-							{photo.description && (
-								<p className="text-gray-700">{photo.description}</p>
-							)}
-						</aside>
-					</div>
+								<h1
+									className="text-2xl text-[#18170f] leading-tight"
+									style={{ fontFamily: "'Cormorant', serif" }}
+								>
+									{photo.title || "Untitled"}
+								</h1>
+								{photo.film && <p className="uppercase">{photo.film}</p>}
+								{photo.description && (
+									<p className="text-gray-700">{photo.description}</p>
+								)}
+								<LightboxButton image={lightboxImage} />
+							</aside>
+						</div>
 				</div>
 			</PhotoDetailTransition>
 

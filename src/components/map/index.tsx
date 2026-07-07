@@ -4,7 +4,6 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import type { Projection } from "mapbox-gl";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import ReactMap, {
 	Marker,
@@ -12,13 +11,12 @@ import ReactMap, {
 	useMap,
 } from "react-map-gl/mapbox";
 
+import { LightboxTrigger } from "@/components/images/ImageLightbox";
 import { useHoverSupport } from "@/hooks/use-hover-support";
 import type { Photo } from "@/photo";
 import SharedHover from "@/providers/shared-hover/SharedHover";
 import { getOptimizedUrl } from "@/storage/utils";
 import { cn } from "@/utils/cn";
-
-import { Dialog, DialogContent, DialogTitle } from "../ui/Dialog";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -99,11 +97,9 @@ function MapPinHover({
 function MapPinThumbnail({
 	photo,
 	supportsHover,
-	onPreview,
 }: {
 	photo: Photo;
 	supportsHover: boolean;
-	onPreview: (photo: Photo) => void;
 }) {
 	const className = cn(
 		"group relative block h-12 w-12 overflow-hidden rounded-[4px] border-2 border-white bg-[#ebe7df] shadow-md shadow-black/25",
@@ -123,23 +119,19 @@ function MapPinThumbnail({
 			<span className="pointer-events-none absolute inset-0 rounded-[2px] border border-black/10" />
 		</>
 	);
-	const trigger = supportsHover ? (
-		<Link
-			href={`/p/${photo.id}`}
-			aria-label={photo.title || photo.id}
-			className={className}
+	const trigger = (
+		<LightboxTrigger
+			image={{
+				src: photo.url,
+				alt: photo.title || photo.id,
+				aspectRatio: photo.aspectRatio,
+				blurData: photo.blurData,
+			}}
 		>
-			{thumbnail}
-		</Link>
-	) : (
-		<button
-			type="button"
-			aria-label={photo.title || photo.id}
-			className={className}
-			onClick={() => onPreview(photo)}
-		>
-			{thumbnail}
-		</button>
+			<span className={className} aria-label={photo.title || photo.id}>
+				{thumbnail}
+			</span>
+		</LightboxTrigger>
 	);
 
 	return supportsHover ? (
@@ -149,57 +141,9 @@ function MapPinThumbnail({
 	);
 }
 
-function MapPinPreviewDialog({
-	photo,
-	onClose,
-}: {
-	photo?: Photo;
-	onClose: () => void;
-}) {
-	const isOpen = Boolean(photo);
-	const previewWidth = photo && photo.aspectRatio < 1 ? 360 : 640;
-	const previewHeight =
-		photo && previewWidth ? Math.round(previewWidth / photo.aspectRatio) : 420;
-
-	return (
-		<Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-			<DialogContent className="w-[calc(100vw-1rem)] max-w-[min(680px,calc(100vw-1rem))] rounded-lg border-[#d8d0c5] bg-[#f7f5f2] p-3 shadow-xl sm:p-4">
-				{photo ? (
-					<div className="space-y-3">
-						<DialogTitle
-							className="pr-8 italic text-2xl font-normal leading-tight text-[#18170f]"
-							style={{ fontFamily: "'Cormorant', serif" }}
-						>
-							{photo.title || "photo"}
-						</DialogTitle>
-						<div className="flex justify-center overflow-hidden rounded-md bg-[#ebe7df]">
-							<Image
-								src={getOptimizedUrl(photo.url, "lg")}
-								alt={photo.title || "Map pin preview"}
-								width={previewWidth}
-								height={previewHeight}
-								className="max-h-[70dvh] w-auto object-contain"
-								placeholder={photo.blurData ? "blur" : "empty"}
-								blurDataURL={photo.blurData || undefined}
-							/>
-						</div>
-						<Link
-							href={`/p/${photo.id}`}
-							className="block rounded-md border border-[#ddd5ca] bg-[#fbfaf7] px-3 py-2 text-center text-sm text-[#3b352e] active:bg-[#efe8dd]"
-						>
-							view photo
-						</Link>
-					</div>
-				) : null}
-			</DialogContent>
-		</Dialog>
-	);
-}
-
 const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 	const { map } = useMap();
 	const supportsHover = useHoverSupport();
-	const [previewPhoto, setPreviewPhoto] = useState<Photo>();
 	const [coords, setCoords] = useState<{
 		latitude: number | null;
 		longitude: number | null;
@@ -277,16 +221,11 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 							<MapPinThumbnail
 								photo={photo}
 								supportsHover={supportsHover}
-								onPreview={setPreviewPhoto}
 							/>
 						</Marker>
 					);
 				})}
 			</ReactMap>
-			<MapPinPreviewDialog
-				photo={previewPhoto}
-				onClose={() => setPreviewPhoto(undefined)}
-			/>
 		</>
 	);
 };
