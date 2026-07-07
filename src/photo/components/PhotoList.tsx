@@ -7,6 +7,7 @@ import AnimateItems from "@/components/AnimateItems";
 import { Icons } from "@/components/icons";
 import PhotoLarge from "@/components/images/PhotoLarge";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import type { SortOrder, SortType } from "@/photo/sort";
 
 import type { Photo } from "..";
 import PhotoCardLarge from "./PhotoCardLarge";
@@ -25,6 +26,9 @@ type PhotoListProps = {
 	initialPhotos?: Photo[];
 	initialHasMore?: boolean;
 	initialNextOffset?: number;
+	sortType: SortType;
+	sortOrder: SortOrder;
+	seed: string;
 };
 
 const DESKTOP_PHOTO_LIST_QUERY = "(min-width: 1024px)";
@@ -43,6 +47,9 @@ const PhotoList = ({
 	initialPhotos,
 	initialHasMore = true,
 	initialNextOffset = INITIAL_LIMIT,
+	sortType,
+	sortOrder,
+	seed,
 }: PhotoListProps) => {
 	const isDesktop = useMediaQuery(DESKTOP_PHOTO_LIST_QUERY);
 	const fallbackData: PhotosPage[] | undefined = initialPhotos
@@ -62,7 +69,14 @@ const PhotoList = ({
 
 			const offset = pageIndex === 0 ? 0 : (previousPageData?.nextOffset ?? 0);
 			const limit = pageIndex === 0 ? INITIAL_LIMIT : PAGE_LIMIT;
-			return `/api/photos?offset=${offset}&limit=${limit}`;
+			const params = new URLSearchParams({
+				offset: String(offset),
+				limit: String(limit),
+				sortType,
+				sortOrder,
+				seed,
+			});
+			return `/api/photos?${params.toString()}`;
 		},
 		fetcher,
 		{
@@ -79,6 +93,7 @@ const PhotoList = ({
 	return (
 		<div className="space-y-4 mx-3 lg:mx-0">
 			<InfiniteScroll
+				key={`${sortType}-${sortOrder}-${seed}`}
 				dataLength={photos.length}
 				next={loadMore}
 				hasMore={hasMore}

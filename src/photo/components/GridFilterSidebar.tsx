@@ -3,12 +3,11 @@ import Link from "next/link";
 import { Icons } from "@/components/icons";
 import { labelForFilm } from "@/film";
 import GridSortDropdown from "@/photo/components/GridSortDropdown";
+import type { SortOrder, SortType } from "@/photo/sort";
 
 type FilmItem = { film: string; count: number };
 type YearItem = { year: string; count: number };
 type CameraItem = { make: string; model: string; count: number };
-type SortType = "createdAt" | "takenAt" | "title";
-type SortOrder = "asc" | "desc";
 
 const sectionTitleClass =
 	"text-[11px] uppercase tracking-[0.14em] text-[#8f877c] flex items-center gap-1.5";

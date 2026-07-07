@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { Flourish } from "@/components/icons/Flourish";
 import { Flower } from "@/components/icons/Flower";
+import PhotoSortDropdown from "@/photo/components/PhotoSortDropdown";
+import { parseSortOrder, parseSortType } from "@/photo/sort";
 import { isPathGrid } from "@/utils/string";
 
 import LinksItem from "./LinksItem";
@@ -13,6 +15,9 @@ import ViewSwitcher, { type SwitcherSelection } from "./ViewSwitcher";
 
 const Sidebar = () => {
 	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const sortType = parseSortType(searchParams.get("sortType"));
+	const sortOrder = parseSortOrder(searchParams.get("sortOrder"));
 
 	const homeRoutes = [
 		{
@@ -59,6 +64,16 @@ const Sidebar = () => {
 					<Flourish />
 				</div>
 				<ViewSwitcher currentSelection={switcherSelectionForPath()} />
+				{pathname === "/" && (
+					<div className="mt-1">
+						<PhotoSortDropdown
+							basePath="/"
+							sortType={sortType}
+							sortOrder={sortOrder}
+							align="start"
+						/>
+					</div>
+				)}
 				{/* Navs */}
 				<nav className="flex flex-1 flex-col gap-0.5 mt-2">
 					{homeRoutes.map((route) => (

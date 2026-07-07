@@ -5,24 +5,49 @@ import {
 	getUniqueFilmsCached,
 	getUniqueYearsCached,
 } from "@/photo/cache";
+import {
+	DEFAULT_RANDOM_SEED,
+	DEFAULT_SORT_ORDER,
+	DEFAULT_SORT_TYPE,
+	type SortOrder,
+	type SortType,
+	VALID_SORT_ORDERS,
+	VALID_SORT_TYPES,
+} from "@/photo/sort";
 
-export type SortType = "createdAt" | "takenAt" | "title";
-export type SortOrder = "asc" | "desc";
+export {
+	DEFAULT_SORT_ORDER as DEFAULT_GRID_SORT_ORDER,
+	DEFAULT_SORT_TYPE as DEFAULT_GRID_SORT_TYPE,
+	VALID_SORT_ORDERS,
+	VALID_SORT_TYPES,
+};
 
-export const DEFAULT_GRID_SORT_TYPE: SortType = "takenAt";
-export const DEFAULT_GRID_SORT_ORDER: SortOrder = "desc";
+export type { SortOrder, SortType };
 
-export const VALID_SORT_TYPES: SortType[] = ["createdAt", "takenAt", "title"];
-export const VALID_SORT_ORDERS: SortOrder[] = ["asc", "desc"];
+function randomValue(id: string, seed: string) {
+	let hash = 0;
+	const value = `${seed}:${id}`;
+
+	for (let index = 0; index < value.length; index += 1) {
+		hash = (hash * 31 + value.charCodeAt(index)) | 0;
+	}
+
+	return Math.abs(hash);
+}
 
 function sortPhotos(
 	photos: Photo[],
 	sortType: SortType,
 	sortOrder: SortOrder,
+	seed = DEFAULT_RANDOM_SEED,
 ): Photo[] {
 	const sorted = [...photos];
 
 	sorted.sort((a, b) => {
+		if (sortType === "random") {
+			return randomValue(a.id, seed) - randomValue(b.id, seed);
+		}
+
 		let aValue: string | number | Date | null = null;
 		let bValue: string | number | Date | null = null;
 
@@ -57,8 +82,9 @@ function sortPhotos(
 }
 
 export async function getGridPageData(
-	sortType: SortType = DEFAULT_GRID_SORT_TYPE,
-	sortOrder: SortOrder = DEFAULT_GRID_SORT_ORDER,
+	sortType: SortType = DEFAULT_SORT_TYPE,
+	sortOrder: SortOrder = DEFAULT_SORT_ORDER,
+	seed = DEFAULT_RANDOM_SEED,
 ) {
 	const [photos, years, cameras, films] = await Promise.all([
 		getGridPhotosCached(),
@@ -68,7 +94,7 @@ export async function getGridPageData(
 	]);
 
 	return {
-		photos: sortPhotos(photos, sortType, sortOrder),
+		photos: sortPhotos(photos, sortType, sortOrder, seed),
 		years,
 		cameras,
 		films,

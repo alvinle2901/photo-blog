@@ -1,9 +1,7 @@
 import ImageSquare from "@/components/images/ImageSquare";
 import type { Photo } from "@/photo";
 import GridFilterSidebar from "@/photo/components/GridFilterSidebar";
-
-type SortType = "createdAt" | "takenAt" | "title";
-type SortOrder = "asc" | "desc";
+import type { SortOrder, SortType } from "@/photo/sort";
 
 type Props = {
 	photos: Photo[];

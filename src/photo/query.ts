@@ -1,5 +1,6 @@
 import {
 	and,
+	asc,
 	count,
 	desc,
 	eq,
@@ -15,11 +16,46 @@ import {
 import { db, pool } from "../db/client";
 import { photos } from "../db/schema";
 import { type Photo, rowToPhoto } from "./index";
+import { DEFAULT_RANDOM_SEED, type SortOrder, type SortType } from "./sort";
 
 const photosChronologicalOrder = [
 	sql`${photos.takenAt} desc nulls last`,
 	desc(photos.createdAt),
 ] as const;
+
+function getPhotosOrder(
+	sortType: SortType,
+	sortOrder: SortOrder,
+	seed = DEFAULT_RANDOM_SEED,
+) {
+	if (sortType === "random") {
+		return [sql`md5(${photos.id} || ${seed})`, desc(photos.id)];
+	}
+
+	if (sortType === "createdAt") {
+		return sortOrder === "asc"
+			? [asc(photos.createdAt), asc(photos.id)]
+			: [desc(photos.createdAt), desc(photos.id)];
+	}
+
+	if (sortType === "title") {
+		return sortOrder === "asc"
+			? [asc(photos.title), asc(photos.id)]
+			: [desc(photos.title), desc(photos.id)];
+	}
+
+	return sortOrder === "asc"
+		? [
+				sql`${photos.takenAt} asc nulls last`,
+				asc(photos.createdAt),
+				asc(photos.id),
+			]
+		: [
+				sql`${photos.takenAt} desc nulls last`,
+				desc(photos.createdAt),
+				desc(photos.id),
+			];
+}
 
 const photoYearExpression = sql<string>`extract(year from coalesce(${photos.takenAt}, ${photos.createdAt}))`;
 
@@ -83,11 +119,14 @@ export async function getPhotosPaginated(
 export async function getPhotosPaginatedByOffset(
 	offset: number,
 	limit: number,
+	sortType: SortType = "takenAt",
+	sortOrder: SortOrder = "desc",
+	seed = DEFAULT_RANDOM_SEED,
 ): Promise<Photo[]> {
 	const rows = await db
 		.select()
 		.from(photos)
-		.orderBy(...photosChronologicalOrder)
+		.orderBy(...getPhotosOrder(sortType, sortOrder, seed))
 		.limit(limit)
 		.offset(offset);
 	return rows.map(rowToPhoto);
