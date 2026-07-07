@@ -8,6 +8,8 @@ import { setPhotoDetailDirection } from "@/photo/components/PhotoDetailTransitio
 import { getOptimizedUrl } from "@/storage/utils";
 
 const shouldIgnoreKeydown = (target: EventTarget | null) => {
+	if (document.body.dataset.photoLightboxOpen === "true") return true;
+
 	const el = target as HTMLElement | null;
 	if (!el) return false;
 	const tagName = el.tagName?.toLowerCase();

@@ -3,6 +3,7 @@ import type { JSX } from "react";
 
 import { Icons } from "@/components/icons";
 import ImageLarge from "@/components/images/ImageLarge";
+import ImageLightbox from "@/components/images/ImageLightbox";
 import PhotoShareButton from "@/components/images/PhotoShareButton";
 import SiteGrid from "@/components/ui/SiteGrid";
 import type { Photo } from "@/photo";
@@ -36,15 +37,22 @@ const PhotoDetail = ({
 	return (
 		<SiteGrid
 			contentMain={
-				<ImageLarge
-					className="w-full max-h-[80vh] object-contain"
-					alt={photo.title}
+				<ImageLightbox
 					src={photo.url}
+					alt={photo.title}
 					aspectRatio={photo.aspectRatio}
-					priority={priority}
-					id={photo.id}
 					blurData={photo.blurData}
-				/>
+				>
+					<ImageLarge
+						className="w-full max-h-[80vh] object-contain"
+						alt={photo.title}
+						src={photo.url}
+						aspectRatio={photo.aspectRatio}
+						priority={priority}
+						id={photo.id}
+						blurData={photo.blurData}
+					/>
+				</ImageLightbox>
 			}
 			contentSide={
 				<div
