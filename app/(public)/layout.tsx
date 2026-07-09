@@ -1,9 +1,9 @@
 import CommandK from "@/components/cmdk/CommandK";
-import LightboxProvider from "@/components/images/ImageLightbox";
 import PhotoShareModal from "@/components/modals/photo-share-modal";
 import FloatingDockMobile from "@/photo/components/FloatingDockHome";
 import Nav from "@/photo/components/Navbar";
 import Sidebar from "@/photo/components/Sidebar";
+import LightboxProvider from "@/providers/lightbox/LightboxProvider";
 
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
 	return (

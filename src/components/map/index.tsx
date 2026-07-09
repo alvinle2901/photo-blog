@@ -11,7 +11,7 @@ import ReactMap, {
 	useMap,
 } from "react-map-gl/mapbox";
 
-import { LightboxTrigger } from "@/components/images/ImageLightbox";
+import { LightboxTrigger } from "@/components/images/LightboxTrigger";
 import { useHoverSupport } from "@/hooks/use-hover-support";
 import type { Photo } from "@/photo";
 import SharedHover from "@/providers/shared-hover/SharedHover";
@@ -218,10 +218,7 @@ const Mapbox = ({ showLocal = true, photos = [] }: Props) => {
 							latitude={photo.latitude}
 							anchor="bottom"
 						>
-							<MapPinThumbnail
-								photo={photo}
-								supportsHover={supportsHover}
-							/>
+							<MapPinThumbnail photo={photo} supportsHover={supportsHover} />
 						</Marker>
 					);
 				})}
