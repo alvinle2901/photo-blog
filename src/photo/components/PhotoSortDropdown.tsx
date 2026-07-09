@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowUpDown } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -11,6 +12,11 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
 import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/Tooltip";
+import {
 	getSortLabel,
 	isDefaultSort,
 	SORT_OPTIONS,
@@ -19,9 +25,14 @@ import {
 } from "@/photo/sort";
 import { cn } from "@/utils/cn";
 
-function getSortHref(basePath: "/" | "/grid", sortType: SortType, sortOrder: SortOrder) {
+function getSortHref(
+	basePath: "/" | "/grid",
+	sortType: SortType,
+	sortOrder: SortOrder,
+) {
 	if (basePath === "/" && isDefaultSort(sortType, sortOrder)) return "/";
-	if (basePath === "/grid" && isDefaultSort(sortType, sortOrder)) return "/grid";
+	if (basePath === "/grid" && isDefaultSort(sortType, sortOrder))
+		return "/grid";
 
 	const params = new URLSearchParams({ sortType, sortOrder });
 
@@ -33,25 +44,44 @@ export default function PhotoSortDropdown({
 	sortType,
 	sortOrder,
 	align = "end",
+	triggerVariant = "default",
 }: {
 	basePath: "/" | "/grid";
 	sortType: SortType;
 	sortOrder: SortOrder;
 	align?: "start" | "end";
+	triggerVariant?: "default" | "icon";
 }) {
 	const router = useRouter();
 	const activeLabel = getSortLabel(sortType, sortOrder);
+	const isIconTrigger = triggerVariant === "icon";
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger
-				aria-label={`Sort photos by ${activeLabel}`}
-				className="inline-flex h-8 w-fit items-center gap-1.5 rounded border border-[#ddd5ca] bg-[#fffdf9] px-2.5 text-[10px] uppercase tracking-[0.08em] text-[#61594f] outline-none transition-colors hover:bg-[#ece7df] hover:text-[#18170f] focus-visible:ring-2 focus-visible:ring-[#d8ccbd]"
-				style={{ fontFamily: "'DM Mono', monospace" }}
-			>
-				<span>Sort</span>
-				<Icons.chevronDown size={11} className="text-[#2b2824]" />
-			</DropdownMenuTrigger>
+			<Tooltip>
+				<TooltipTrigger asChild>
+					<DropdownMenuTrigger
+						aria-label={`Sort photos by ${activeLabel}`}
+						className={cn(
+							"inline-flex h-8 items-center rounded border border-[#ddd5ca] bg-[#fffdf9] text-[#61594f] outline-none transition-colors hover:bg-[#ece7df] hover:text-[#18170f] focus-visible:ring-2 focus-visible:ring-[#d8ccbd]",
+							isIconTrigger
+								? "w-8 justify-center"
+								: "w-fit gap-1.5 px-2.5 text-[10px] uppercase tracking-[0.08em]",
+						)}
+						style={{ fontFamily: "'DM Mono', monospace" }}
+					>
+						{isIconTrigger ? (
+							<ArrowUpDown size={15} className="text-[#2b2824]" />
+						) : (
+							<>
+								<span>Sort</span>
+								<Icons.chevronDown size={11} className="text-[#2b2824]" />
+							</>
+						)}
+					</DropdownMenuTrigger>
+				</TooltipTrigger>
+				<TooltipContent>sort</TooltipContent>
+			</Tooltip>
 			<DropdownMenuContent
 				align={align}
 				className="min-w-[210px] border-[#ddd5ca] bg-[#fffdf9] p-1.5 text-[#4b4640]"

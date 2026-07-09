@@ -1,11 +1,17 @@
 import Link from "next/link";
 import type { ReactElement } from "react";
 
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/Tooltip";
 import { cn } from "@/utils/cn";
 
 const SwitcherItem = ({
 	icon,
 	title,
+	shortcut,
 	href,
 	className: classNameProp,
 	onClick,
@@ -14,6 +20,7 @@ const SwitcherItem = ({
 }: {
 	icon: ReactElement;
 	title?: string;
+	shortcut?: string;
 	href?: string;
 	className?: string;
 	onClick?: () => void;
@@ -38,10 +45,30 @@ const SwitcherItem = ({
 			</div>
 		);
 
-	return href ? (
-		<Link {...{ title, href, className }}>{renderIcon()}</Link>
+	const item = href ? (
+		<Link href={href} className={className} aria-label={title}>
+			{renderIcon()}
+		</Link>
 	) : (
-		<div {...{ title, onClick, className }}>{renderIcon()}</div>
+		<button
+			type="button"
+			onClick={onClick}
+			className={className}
+			aria-label={title}
+		>
+			{renderIcon()}
+		</button>
+	);
+
+	if (!title) return item;
+
+	return (
+		<Tooltip>
+			<TooltipTrigger asChild>{item}</TooltipTrigger>
+			<TooltipContent>
+				{shortcut ? `${title} ${shortcut}` : title}
+			</TooltipContent>
+		</Tooltip>
 	);
 };
 
