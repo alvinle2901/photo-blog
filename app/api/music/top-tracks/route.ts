@@ -1,8 +1,12 @@
+import { connection } from "next/server";
+
 import { getSpotifyTopTracks } from "@/music/spotify";
 
 const CACHE_CONTROL = "public, s-maxage=900, stale-while-revalidate=3600";
 
 export async function GET() {
+	await connection();
+
 	try {
 		const tracks = await getSpotifyTopTracks();
 

@@ -23,13 +23,14 @@ export async function GET(request: NextRequest) {
 		);
 	}
 
+	const redirectUri = getSpotifyRedirectUri();
 	const state = randomUUID();
 	const spotifyAuthorizeUrl = new URL("https://accounts.spotify.com/authorize");
 	spotifyAuthorizeUrl.search = new URLSearchParams({
 		client_id: authorization.clientId,
-		redirect_uri: getSpotifyRedirectUri(),
+		redirect_uri: redirectUri,
 		response_type: "code",
-		scope: "user-top-read",
+		scope: "streaming user-read-email user-read-private user-modify-playback-state user-top-read",
 		state,
 	}).toString();
 

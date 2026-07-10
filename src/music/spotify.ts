@@ -20,6 +20,46 @@ type SpotifyTopTracksResponse = {
 	}>;
 };
 
+async function refreshSpotifyAccessToken() {
+	const credentials = getSpotifyCredentials();
+	if (!credentials) return null;
+
+	const tokenBody = new URLSearchParams({
+		grant_type: "refresh_token",
+		refresh_token: credentials.refreshToken,
+	});
+	const tokenHeaders = new Headers({
+		"Content-Type": "application/x-www-form-urlencoded",
+	});
+
+	if (credentials.clientSecret) {
+		tokenHeaders.set(
+			"Authorization",
+			`Basic ${Buffer.from(
+				`${credentials.clientId}:${credentials.clientSecret}`,
+			).toString("base64")}`,
+		);
+	} else {
+		tokenBody.set("client_id", credentials.clientId);
+	}
+
+	const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
+		method: "POST",
+		headers: tokenHeaders,
+		body: tokenBody,
+		cache: "no-store",
+	});
+
+	if (!tokenResponse.ok) {
+		throw new Error(`Spotify token refresh failed: ${tokenResponse.status}`);
+	}
+
+	const token = (await tokenResponse.json()) as SpotifyTokenResponse;
+	if (!token.access_token) throw new Error("Spotify returned no access token");
+
+	return token.access_token;
+}
+
 function getSpotifyCredentials() {
 	const clientId = process.env.SPOTIFY_CLIENT_ID;
 	const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
@@ -73,47 +113,58 @@ export async function exchangeSpotifyAuthorizationCode(code: string) {
 	return (await tokenResponse.json()) as SpotifyTokenResponse;
 }
 
-export async function getSpotifyTopTracks(): Promise<MusicTrack[] | null> {
-	const credentials = getSpotifyCredentials();
-	if (!credentials) return null;
+export async function getSpotifyPlaybackAccessToken() {
+	return refreshSpotifyAccessToken();
+}
 
-	const tokenBody = new URLSearchParams({
-		grant_type: "refresh_token",
-		refresh_token: credentials.refreshToken,
-	});
-	const tokenHeaders = new Headers({
-		"Content-Type": "application/x-www-form-urlencoded",
-	});
+export async function playSpotifyTrack(deviceId: string, trackId: string) {
+	const accessToken = await refreshSpotifyAccessToken();
+	if (!accessToken) return false;
 
-	if (credentials.clientSecret) {
-		tokenHeaders.set(
-			"Authorization",
-			`Basic ${Buffer.from(
-				`${credentials.clientId}:${credentials.clientSecret}`,
-			).toString("base64")}`,
-		);
-	} else {
-		tokenBody.set("client_id", credentials.clientId);
-	}
-
-	const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
-		method: "POST",
-		headers: tokenHeaders,
-		body: tokenBody,
+	const headers = {
+		Authorization: `Bearer ${accessToken}`,
+		"Content-Type": "application/json",
+	};
+	const transferResponse = await fetch("https://api.spotify.com/v1/me/player", {
+		method: "PUT",
+		headers,
+		body: JSON.stringify({ device_ids: [deviceId], play: false }),
 		cache: "no-store",
 	});
 
-	if (!tokenResponse.ok) {
-		throw new Error(`Spotify token refresh failed: ${tokenResponse.status}`);
+	if (!transferResponse.ok) {
+		throw new Error(
+			`Spotify playback transfer failed: ${transferResponse.status}`,
+		);
 	}
 
-	const token = (await tokenResponse.json()) as SpotifyTokenResponse;
-	if (!token.access_token) throw new Error("Spotify returned no access token");
+	const playbackResponse = await fetch(
+		`https://api.spotify.com/v1/me/player/play?device_id=${encodeURIComponent(deviceId)}`,
+		{
+			method: "PUT",
+			headers,
+			body: JSON.stringify({ uris: [`spotify:track:${trackId}`] }),
+			cache: "no-store",
+		},
+	);
+
+	if (!playbackResponse.ok) {
+		throw new Error(
+			`Spotify playback start failed: ${playbackResponse.status}`,
+		);
+	}
+
+	return true;
+}
+
+export async function getSpotifyTopTracks(): Promise<MusicTrack[] | null> {
+	const accessToken = await refreshSpotifyAccessToken();
+	if (!accessToken) return null;
 
 	const tracksResponse = await fetch(
 		"https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=20",
 		{
-			headers: { Authorization: `Bearer ${token.access_token}` },
+			headers: { Authorization: `Bearer ${accessToken}` },
 			cache: "no-store",
 		},
 	);
