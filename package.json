@@ -69,6 +69,7 @@
 		"tailwind-merge": "^3.6.0",
 		"ts-exif-parser": "^0.2.2",
 		"use-debounce": "^10.1.1",
+		"youtubei.js": "^17.2.0",
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {

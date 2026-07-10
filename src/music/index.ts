@@ -9,4 +9,5 @@ export type MusicTrack = {
 
 export type TopTracksResponse = {
 	tracks: MusicTrack[];
+	sourceLabel?: string;
 };

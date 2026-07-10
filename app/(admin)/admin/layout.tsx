@@ -7,6 +7,7 @@ const NAV_LINKS = [
 	{ href: "/admin/albums", label: "Albums" },
 	{ href: "/admin/tags", label: "Tags" },
 	{ href: "/admin/storage", label: "Storage" },
+	{ href: "/admin/music", label: "Music" },
 	{ href: "/admin/configuration", label: "Config" },
 ];
 

@@ -2,7 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	/* config options here */
+	output: "standalone",
 	cacheComponents: true,
+	serverExternalPackages: ["youtubei.js"],
 	images: {
 		remotePatterns: [
 			new URL("https://pub-2f67f9df6e7d4b1ba80499084f0127ba.r2.dev/photos/**"),

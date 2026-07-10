@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 		client_id: authorization.clientId,
 		redirect_uri: redirectUri,
 		response_type: "code",
-		scope: "streaming user-read-email user-read-private user-modify-playback-state user-top-read",
+		scope: "streaming user-read-email user-read-private user-modify-playback-state user-top-read playlist-read-private playlist-read-collaborative",
 		state,
 	}).toString();
 

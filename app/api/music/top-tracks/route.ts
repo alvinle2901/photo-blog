@@ -1,6 +1,6 @@
 import { connection } from "next/server";
 
-import { getSpotifyTopTracks } from "@/music/spotify";
+import { getMusicBarTracks } from "@/music/spotify";
 
 const CACHE_CONTROL = "public, s-maxage=900, stale-while-revalidate=3600";
 
@@ -8,7 +8,7 @@ export async function GET() {
 	await connection();
 
 	try {
-		const tracks = await getSpotifyTopTracks();
+		const tracks = await getMusicBarTracks();
 
 		if (!tracks) {
 			return Response.json(
@@ -18,7 +18,7 @@ export async function GET() {
 		}
 
 		return Response.json(
-			{ tracks },
+			{ tracks: tracks.tracks, sourceLabel: tracks.sourceLabel },
 			{ headers: { "Cache-Control": CACHE_CONTROL } },
 		);
 	} catch (error) {

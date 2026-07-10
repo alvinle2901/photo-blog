@@ -104,3 +104,23 @@ export const albumPhotos = pgTable(
 		pk: primaryKey({ columns: [t.albumId, t.photoId] }),
 	}),
 );
+
+export const appConfig = pgTable("app_config", {
+	key: varchar("key", { length: 100 }).primaryKey(),
+	value: text("value").notNull(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const musicTracks = pgTable("music_tracks", {
+	id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+	spotifyId: varchar("spotify_id", { length: 50 }).notNull(),
+	name: varchar("name", { length: 255 }).notNull(),
+	artistNames: text("artist_names").notNull(),
+	albumName: varchar("album_name", { length: 255 }).notNull().default(""),
+	albumArtUrl: text("album_art_url"),
+	spotifyUrl: text("spotify_url"),
+	youtubeVideoId: varchar("youtube_video_id", { length: 20 }),
+	playlistSpotifyId: varchar("playlist_spotify_id", { length: 100 }).notNull(),
+	position: integer("position").notNull().default(0),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+});
