@@ -16,9 +16,13 @@ RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Render exposes configured variables as Docker build arguments. The app
+# prerenders database-backed photo routes, so its build needs this real URL.
+ARG DATABASE_URL
+
 # Build-time env stubs (real values are injected at runtime)
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV DATABASE_URL=postgresql://placeholder:placeholder@localhost/placeholder
+ENV DATABASE_URL=${DATABASE_URL:-postgresql://placeholder:placeholder@localhost/placeholder}
 ENV AUTH_SECRET=placeholder_placeholder_placeholder_placeholder
 ENV ADMIN_EMAIL=placeholder@placeholder.com
 ENV ADMIN_PASSWORD=placeholder123
