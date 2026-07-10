@@ -38,12 +38,6 @@ function getPhotosOrder(
 			: [desc(photos.createdAt), desc(photos.id)];
 	}
 
-	if (sortType === "title") {
-		return sortOrder === "asc"
-			? [asc(photos.title), asc(photos.id)]
-			: [desc(photos.title), desc(photos.id)];
-	}
-
 	return sortOrder === "asc"
 		? [
 				sql`${photos.takenAt} asc nulls last`,

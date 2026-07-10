@@ -15,14 +15,13 @@ import {
 	VALID_SORT_TYPES,
 } from "@/photo/sort";
 
+export type { SortOrder, SortType };
 export {
 	DEFAULT_SORT_ORDER as DEFAULT_GRID_SORT_ORDER,
 	DEFAULT_SORT_TYPE as DEFAULT_GRID_SORT_TYPE,
 	VALID_SORT_ORDERS,
 	VALID_SORT_TYPES,
 };
-
-export type { SortOrder, SortType };
 
 function randomValue(id: string, seed: string) {
 	let hash = 0;
@@ -59,11 +58,6 @@ function sortPhotos(
 		if (sortType === "takenAt") {
 			aValue = a.takenAt;
 			bValue = b.takenAt;
-		}
-
-		if (sortType === "title") {
-			aValue = (a.title || "").toLowerCase();
-			bValue = (b.title || "").toLowerCase();
 		}
 
 		if (aValue == null && bValue == null) return 0;
