@@ -1,6 +1,7 @@
 import CommandK from "@/components/cmdk/CommandK";
 import PhotoShareModal from "@/components/modals/photo-share-modal";
 import FloatingDockMobile from "@/photo/components/FloatingDockHome";
+import MusicBar from "@/photo/components/MusicBar";
 import Nav from "@/photo/components/Navbar";
 import Sidebar from "@/photo/components/Sidebar";
 import LightboxProvider from "@/providers/lightbox/LightboxProvider";
@@ -16,6 +17,7 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
 					<div className="flex-1 min-w-0">{children}</div>
 				</div>
 				<FloatingDockMobile />
+				<MusicBar />
 				<CommandK />
 				<PhotoShareModal />
 			</main>
