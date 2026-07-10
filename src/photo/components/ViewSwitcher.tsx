@@ -9,7 +9,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/Tooltip";
 import PhotoSortDropdown from "@/photo/components/PhotoSortDropdown";
-import { parseSortOrder, parseSortType } from "@/photo/sort";
+import { isDefaultSort, parseSortOrder, parseSortType } from "@/photo/sort";
 import { useAppState } from "@/providers/app-state";
 
 import Switcher from "./Switcher";
@@ -27,6 +27,24 @@ const ViewSwitcher = ({
 	const searchParams = useSearchParams();
 	const sortType = parseSortType(searchParams.get("sortType"));
 	const sortOrder = parseSortOrder(searchParams.get("sortOrder"));
+	const seed = searchParams.get("seed");
+
+	const getViewHref = (basePath: "/" | "/grid") => {
+		const params = new URLSearchParams();
+
+		if (!isDefaultSort(sortType, sortOrder)) {
+			params.set("sortType", sortType);
+			params.set("sortOrder", sortOrder);
+		}
+
+		if (sortType === "random" && seed) {
+			params.set("seed", seed);
+		}
+
+		const query = params.toString();
+
+		return query ? `${basePath}?${query}` : basePath;
+	};
 
 	return (
 		<div className="flex gap-1 md:mt-2">
@@ -61,14 +79,14 @@ const ViewSwitcher = ({
 			<Switcher>
 				<SwitcherItem
 					icon={<IconFeed />}
-					href={"/"}
+					href={getViewHref("/")}
 					title="feed"
 					active={currentSelection === "feed"}
 					noPadding
 				/>
 				<SwitcherItem
 					icon={<IconGrid />}
-					href={"/grid"}
+					href={getViewHref("/grid")}
 					title="grid"
 					active={currentSelection === "grid"}
 					noPadding

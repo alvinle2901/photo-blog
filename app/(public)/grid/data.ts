@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import type { Photo } from "@/photo";
 import {
 	getGridPhotosCached,
@@ -24,14 +26,7 @@ export {
 };
 
 function randomValue(id: string, seed: string) {
-	let hash = 0;
-	const value = `${seed}:${id}`;
-
-	for (let index = 0; index < value.length; index += 1) {
-		hash = (hash * 31 + value.charCodeAt(index)) | 0;
-	}
-
-	return Math.abs(hash);
+	return createHash("md5").update(`${id}${seed}`).digest("hex");
 }
 
 function sortPhotos(
@@ -44,7 +39,13 @@ function sortPhotos(
 
 	sorted.sort((a, b) => {
 		if (sortType === "random") {
-			return randomValue(a.id, seed) - randomValue(b.id, seed);
+			const aValue = randomValue(a.id, seed);
+			const bValue = randomValue(b.id, seed);
+
+			if (aValue < bValue) return -1;
+			if (aValue > bValue) return 1;
+
+			return b.id.localeCompare(a.id);
 		}
 
 		let aValue: string | number | Date | null = null;

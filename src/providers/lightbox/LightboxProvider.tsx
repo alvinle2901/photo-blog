@@ -1,6 +1,7 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Minus, Plus, RotateCcw, X } from "lucide-react";
 import Image from "next/image";
 import type { ReactNode } from "react";
@@ -16,7 +17,6 @@ import {
 	ZOOM_MIN,
 	ZOOM_STEP,
 } from "@/hooks/use-lightbox-view";
-import { getOptimizedUrl } from "@/storage/utils";
 import { cn } from "@/utils/cn";
 
 import { LightboxContext, type LightboxImage } from ".";
@@ -28,6 +28,7 @@ export default function LightboxProvider({
 }) {
 	const [open, setOpen] = useState(false);
 	const [image, setImage] = useState<LightboxImage | null>(null);
+	const prefersReducedMotion = useReducedMotion();
 	const {
 		handlePointerDown,
 		handlePointerEnd,
@@ -58,7 +59,6 @@ export default function LightboxProvider({
 	}, [resetView]);
 
 	const contextValue = useMemo(() => ({ openLightbox }), [openLightbox]);
-	const optimizedSrc = image ? getOptimizedUrl(image.src, "lg") : "";
 
 	return (
 		<TooltipProvider>
@@ -74,84 +74,110 @@ export default function LightboxProvider({
 						}
 					}}
 				>
-					<Dialog.Portal>
-						<Dialog.Overlay className="fixed inset-0 z-50 bg-black/95" />
-						<Dialog.Content
-							data-photo-lightbox-open="true"
-							className="fixed inset-0 z-50 overflow-hidden outline-none"
-							onOpenAutoFocus={(event) => event.preventDefault()}
-						>
-							<Dialog.Title className="sr-only">
-								{image?.alt || "Image lightbox"}
-							</Dialog.Title>
-							<div className="absolute left-1/2 top-4 z-10 flex -translate-x-1/2 items-center gap-2">
-								<LightboxIconButton
-									label="Zoom out"
-									onClick={() => zoomTo(zoom - ZOOM_STEP)}
-									disabled={zoom <= ZOOM_MIN}
+					<AnimatePresence>
+						{open && (
+							<Dialog.Portal forceMount>
+								<Dialog.Overlay asChild forceMount>
+									<motion.div
+										className="fixed inset-0 z-50 bg-black/95"
+										initial={prefersReducedMotion ? false : { opacity: 0 }}
+										animate={{ opacity: 1 }}
+										exit={{ opacity: 0 }}
+										transition={{ duration: 0.2, ease: "easeOut" }}
+									/>
+								</Dialog.Overlay>
+								<Dialog.Content
+									asChild
+									forceMount
+									onOpenAutoFocus={(event) => event.preventDefault()}
 								>
-									<Minus className="h-4 w-4" />
-								</LightboxIconButton>
-								<LightboxIconButton label="Reset zoom" onClick={resetView}>
-									<RotateCcw className="h-4 w-4" />
-								</LightboxIconButton>
-								<LightboxIconButton
-									label="Zoom in"
-									onClick={() => zoomTo(zoom + ZOOM_STEP)}
-									disabled={zoom >= ZOOM_MAX}
-								>
-									<Plus className="h-4 w-4" />
-								</LightboxIconButton>
-							</div>
-							<Dialog.Close asChild>
-								<Button
-									type="button"
-									variant="ghost"
-									size="icon"
-									aria-label="Close lightbox"
-									className="absolute right-4 top-4 z-10 h-10 w-10 rounded-full border border-white/15 bg-black/45 text-white shadow-sm backdrop-blur-md hover:bg-black/70 hover:text-white focus-visible:ring-white/70 focus-visible:ring-offset-0"
-								>
-									<X className="h-5 w-5" />
-								</Button>
-							</Dialog.Close>
-
-							<div className="flex h-full w-full items-center justify-center overflow-hidden p-4 pt-20">
-								{image ? (
-									<div
-										className={cn(
-											"relative max-h-full max-w-full origin-center touch-none select-none",
-											zoom > ZOOM_MIN
-												? "cursor-grab active:cursor-grabbing"
-												: "cursor-default",
-										)}
-										onPointerDown={handlePointerDown}
-										onPointerMove={handlePointerMove}
-										onPointerUp={handlePointerEnd}
-										onPointerCancel={handlePointerEnd}
-										style={{
-											width: "min(96vw, 1600px)",
-											aspectRatio: image.aspectRatio,
-											transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`,
-											transition: isDragging
-												? "none"
-												: "transform 150ms ease-out",
-										}}
+									<motion.div
+										data-photo-lightbox-open="true"
+										className="fixed inset-0 z-50 overflow-hidden outline-none"
+										initial={
+											prefersReducedMotion ? false : { opacity: 0, scale: 0.95 }
+										}
+										animate={{ opacity: 1, scale: 1 }}
+										exit={{ opacity: 0, scale: 0.95 }}
+										transition={{ duration: 0.2, ease: "easeOut" }}
 									>
-										<Image
-											src={optimizedSrc}
-											alt={image.alt}
-											fill
-											priority
-											sizes="100vw"
-											placeholder={image.blurData ? "blur" : undefined}
-											blurDataURL={image.blurData ?? undefined}
-											className="object-contain"
-										/>
-									</div>
-								) : null}
-							</div>
-						</Dialog.Content>
-					</Dialog.Portal>
+										<Dialog.Title className="sr-only">
+											{image?.alt || "Image lightbox"}
+										</Dialog.Title>
+										<div className="absolute left-1/2 top-4 z-10 flex -translate-x-1/2 items-center gap-2">
+											<LightboxIconButton
+												label="Zoom out"
+												onClick={() => zoomTo(zoom - ZOOM_STEP)}
+												disabled={zoom <= ZOOM_MIN}
+											>
+												<Minus className="h-4 w-4" />
+											</LightboxIconButton>
+											<LightboxIconButton
+												label="Reset zoom"
+												onClick={resetView}
+											>
+												<RotateCcw className="h-4 w-4" />
+											</LightboxIconButton>
+											<LightboxIconButton
+												label="Zoom in"
+												onClick={() => zoomTo(zoom + ZOOM_STEP)}
+												disabled={zoom >= ZOOM_MAX}
+											>
+												<Plus className="h-4 w-4" />
+											</LightboxIconButton>
+										</div>
+										<Dialog.Close asChild>
+											<Button
+												type="button"
+												variant="ghost"
+												size="icon"
+												aria-label="Close lightbox"
+												className="absolute right-4 top-4 z-10 h-10 w-10 rounded-full border border-white/15 bg-black/45 text-white shadow-sm backdrop-blur-md hover:bg-black/70 hover:text-white focus-visible:ring-white/70 focus-visible:ring-offset-0"
+											>
+												<X className="h-5 w-5" />
+											</Button>
+										</Dialog.Close>
+
+										<div className="flex h-full w-full items-center justify-center overflow-hidden p-4 pt-20">
+											{image ? (
+												<div
+													className={cn(
+														"relative max-h-full max-w-full origin-center touch-none select-none",
+														zoom > ZOOM_MIN
+															? "cursor-grab active:cursor-grabbing"
+															: "cursor-default",
+													)}
+													onPointerDown={handlePointerDown}
+													onPointerMove={handlePointerMove}
+													onPointerUp={handlePointerEnd}
+													onPointerCancel={handlePointerEnd}
+													style={{
+														width: "min(96vw, 1600px)",
+														aspectRatio: image.aspectRatio,
+														transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`,
+														transition: isDragging
+															? "none"
+															: "transform 150ms ease-out",
+													}}
+												>
+													<Image
+														src={image.src}
+														alt={image.alt}
+														fill
+														priority
+														sizes="100vw"
+														placeholder={image.blurData ? "blur" : undefined}
+														blurDataURL={image.blurData ?? undefined}
+														className="object-contain"
+													/>
+												</div>
+											) : null}
+										</div>
+									</motion.div>
+								</Dialog.Content>
+							</Dialog.Portal>
+						)}
+					</AnimatePresence>
 				</Dialog.Root>
 			</LightboxContext.Provider>
 		</TooltipProvider>
