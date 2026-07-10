@@ -63,15 +63,14 @@ export default function PhotoSortDropdown({
 					<DropdownMenuTrigger
 						aria-label={`Sort photos by ${activeLabel}`}
 						className={cn(
-							"inline-flex h-8 items-center rounded border border-[#ddd5ca] bg-[#fffdf9] text-[#61594f] outline-none transition-colors hover:bg-[#ece7df] hover:text-[#18170f] focus-visible:ring-2 focus-visible:ring-[#d8ccbd]",
 							isIconTrigger
-								? "w-8 justify-center"
-								: "w-fit gap-1.5 px-2.5 text-[10px] uppercase tracking-[0.08em]",
+								? "inline-flex h-8 w-8 appearance-none cursor-pointer items-center justify-center rounded border-0 bg-transparent text-gray-400 outline-none transition-colors hover:bg-gray-100/60 hover:text-gray-700 active:bg-gray-100"
+								: "inline-flex h-8 w-fit items-center gap-1.5 rounded border border-[#ddd5ca] bg-[#fffdf9] px-2.5 text-[10px] uppercase tracking-[0.08em] text-[#61594f] outline-none transition-colors hover:bg-[#ece7df] hover:text-[#18170f] focus-visible:ring-2 focus-visible:ring-[#d8ccbd]",
 						)}
 						style={{ fontFamily: "'DM Mono', monospace" }}
 					>
 						{isIconTrigger ? (
-							<ArrowUpDown size={15} className="text-[#2b2824]" />
+							<ArrowUpDown size={18} />
 						) : (
 							<>
 								<span>Sort</span>

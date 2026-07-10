@@ -11,7 +11,6 @@ import { cn } from "@/utils/cn";
 const SwitcherItem = ({
 	icon,
 	title,
-	shortcut,
 	href,
 	className: classNameProp,
 	onClick,
@@ -20,7 +19,6 @@ const SwitcherItem = ({
 }: {
 	icon: ReactElement;
 	title?: string;
-	shortcut?: string;
 	href?: string;
 	className?: string;
 	onClick?: () => void;
@@ -33,7 +31,7 @@ const SwitcherItem = ({
 		"cursor-pointer",
 		"hover:bg-gray-100/60 active:bg-gray-100",
 		active ? "text-black" : "text-gray-400",
-		active ? "hover:text-black" : "hover:text-gray-700",
+		active ? "hover:text-black" : "hover:text-gray-500",
 	);
 
 	const renderIcon = () =>
@@ -65,9 +63,7 @@ const SwitcherItem = ({
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>{item}</TooltipTrigger>
-			<TooltipContent>
-				{shortcut ? `${title} ${shortcut}` : title}
-			</TooltipContent>
+			<TooltipContent>{title}</TooltipContent>
 		</Tooltip>
 	);
 };

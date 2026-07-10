@@ -3,6 +3,11 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { Icons } from "@/components/icons";
 import IconFeed from "@/components/icons/IconFeed";
 import IconGrid from "@/components/icons/IconGrid";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/Tooltip";
 import PhotoSortDropdown from "@/photo/components/PhotoSortDropdown";
 import { parseSortOrder, parseSortType } from "@/photo/sort";
 import { useAppState } from "@/providers/app-state";
@@ -25,17 +30,34 @@ const ViewSwitcher = ({
 
 	return (
 		<div className="flex gap-1 md:mt-2">
-			<Switcher type="borderless">
-				<SwitcherItem
-					className="px-0.5"
-					icon={<Icons.search size={18} />}
-					title="search"
-					shortcut="⌘K"
-					onClick={() => {
-						setIsCommandKOpen?.(true);
-					}}
-				/>
-			</Switcher>
+			<Tooltip>
+				<TooltipTrigger asChild>
+					<button
+						type="button"
+						aria-label="search"
+						aria-keyshortcuts="Meta+K Control+K"
+						className="inline-flex h-8 w-8 appearance-none cursor-pointer items-center justify-center rounded border-0 bg-transparent text-gray-400 transition-colors hover:bg-gray-100/60 hover:text-gray-700 active:bg-gray-100"
+						onClick={() => {
+							setIsCommandKOpen?.(true);
+						}}
+					>
+						<Icons.search size={18} />
+					</button>
+				</TooltipTrigger>
+				<TooltipContent>
+					<span className="inline-flex items-center gap-1.5">
+						<span>search</span>
+						{["Cmd", "K"].map((key) => (
+							<span
+								key={key}
+								className="rounded border border-[#e2d8cb] bg-[#fffdf9] px-1.5 py-0.5"
+							>
+								{key}
+							</span>
+						))}
+					</span>
+				</TooltipContent>
+			</Tooltip>
 			<Switcher>
 				<SwitcherItem
 					icon={<IconFeed />}
