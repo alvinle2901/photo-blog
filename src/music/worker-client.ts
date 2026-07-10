@@ -1,4 +1,6 @@
-const WORKER_TIMEOUT_MS = 55_000;
+// Keep this below Vercel's function timeout so the music bar gets a useful
+// error response instead of a platform-level 504 while Render is cold.
+const WORKER_TIMEOUT_MS = 8_000;
 
 export class MusicWorkerError extends Error {
 	constructor(

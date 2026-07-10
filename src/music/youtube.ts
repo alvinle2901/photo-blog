@@ -75,6 +75,7 @@ const YT_DLP =
 		}
 	}) ??
 	"yt-dlp";
+const YT_DLP_TIMEOUT_MS = 15_000;
 
 // In-memory cache: videoId → { url, expiresAt, mimeType }
 const streamCache = new Map<
@@ -135,7 +136,7 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 			const raw = execSync(
 				`${YT_DLP} --cookies "${cookiesFile}" -f bestaudio -g --no-playlist -- "${videoId}"`,
 				{
-					timeout: 30_000,
+					timeout: YT_DLP_TIMEOUT_MS,
 					encoding: "utf8",
 					stdio: ["ignore", "pipe", "pipe"],
 				},
@@ -149,17 +150,17 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 			);
 		}
 	} else {
-		console.warn("[stream] No cookies in DB — falling back to browser cookies");
+		console.warn("[stream] No cookies in DB");
 	}
 
 	// ── 2. Fall back to browser cookies (local dev) ───────────────────────────
-	if (!streamUrl) {
+	if (!streamUrl && process.env.NODE_ENV !== "production") {
 		for (const browser of ["chrome", "firefox", "safari", "edge"]) {
 			try {
 				const raw = execSync(
 					`${YT_DLP} --cookies-from-browser ${browser} -f bestaudio -g --no-playlist -- "${videoId}"`,
 					{
-						timeout: 30_000,
+						timeout: YT_DLP_TIMEOUT_MS,
 						encoding: "utf8",
 						stdio: ["ignore", "pipe", "pipe"],
 					},
