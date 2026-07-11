@@ -77,6 +77,21 @@ const YT_DLP =
 	"yt-dlp";
 const YT_DLP_TIMEOUT_MS = 15_000;
 
+export class YouTubeStreamResolutionError extends Error {}
+
+function getYtDlpErrorDetail(error: unknown) {
+	const commandError = error as { message?: string; stderr?: string | Buffer };
+	const detail =
+		commandError.stderr?.toString().trim() ??
+		commandError.message ??
+		"Unknown error";
+
+	return detail
+		.replaceAll(/https?:\/\/\S+/g, "[url]")
+		.replaceAll(/\s+/g, " ")
+		.slice(0, 1_000);
+}
+
 // In-memory cache: videoId → { url, expiresAt, mimeType }
 const streamCache = new Map<
 	string,
@@ -128,6 +143,7 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 	}
 
 	let streamUrl: string | null = null;
+	let failureDetail = "No YouTube cookies are stored in the database.";
 
 	// ── 1. Try DB-stored cookies ──────────────────────────────────────────────
 	const cookiesFile = await getCookiesFile();
@@ -143,11 +159,8 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 			).trim();
 			streamUrl = raw.split("\n")[0].trim() || null;
 		} catch (e) {
-			console.error(
-				"[stream] DB-cookies yt-dlp failed:",
-				(e as { stderr?: string; message: string }).stderr ??
-					(e as Error).message,
-			);
+			failureDetail = getYtDlpErrorDetail(e);
+			console.error(`[stream] DB-cookies yt-dlp failed: ${failureDetail}`);
 		}
 	} else {
 		console.warn("[stream] No cookies in DB");
@@ -168,16 +181,13 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 				streamUrl = raw.split("\n")[0].trim() || null;
 				if (streamUrl) break;
 			} catch (e) {
-				console.error(
-					`[stream] ${browser} cookies failed:`,
-					(e as { stderr?: string; message: string }).stderr?.slice(0, 120) ??
-						(e as Error).message.slice(0, 120),
-				);
+				failureDetail = getYtDlpErrorDetail(e);
+				console.error(`[stream] ${browser} cookies failed: ${failureDetail}`);
 			}
 		}
 	}
 
-	if (!streamUrl) return null;
+	if (!streamUrl) throw new YouTubeStreamResolutionError(failureDetail);
 
 	const mimeType =
 		streamUrl.includes("mime=audio%2Fwebm") ||
