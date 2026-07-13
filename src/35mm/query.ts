@@ -1,4 +1,5 @@
 import { desc, eq } from "drizzle-orm";
+
 import { db } from "../db/client";
 import { filmPhotos } from "../db/schema";
 
@@ -33,7 +34,7 @@ export async function getFilmPhotoById(id: string): Promise<FilmPhoto | null> {
 
 export async function getFilmPhotoPageData(
 	id: string,
-	nextLimit = 12,
+	nextLimit = 10,
 ): Promise<{
 	photo: FilmPhoto;
 	prevPhoto: FilmPhoto | null;

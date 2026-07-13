@@ -29,7 +29,7 @@ export default function PhotoDetailPage({
 	const nextHref = nextPhoto ? `${photoPathBase}/${nextPhoto.id}` : null;
 
 	return (
-		<div className="space-y-6 md:space-y-8">
+		<div className="space-y-4 md:space-y-8">
 			<PhotoDetailEnhancements
 				prevPhoto={prevPhoto}
 				nextPhoto={nextPhoto}
@@ -82,7 +82,7 @@ export default function PhotoDetailPage({
 
 			{nextPhotos.length > 0 && (
 				<section className="pb-4">
-					<div className="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-5 pr-2">
+					<div className="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-5 px-2">
 						{nextPhotos.map((next, index) => (
 							<ImageSquare
 								key={next.id}

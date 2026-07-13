@@ -199,7 +199,7 @@ async function getPhotosNearId(
 
 export async function getPhotoPageData(
 	id: string,
-	nextLimit = 12,
+	nextLimit = 10,
 ): Promise<{
 	photo: Photo;
 	prevPhoto: Photo | null;
@@ -258,7 +258,7 @@ export async function getPhotoCountByFilm(film: string): Promise<number> {
 export async function getPhotoPageDataByFilm(
 	id: string,
 	film: string,
-	nextLimit = 12,
+	nextLimit = 10,
 ): Promise<{
 	photo: Photo;
 	prevPhoto: Photo | null;
@@ -321,7 +321,7 @@ export async function getPhotoCountByYear(year: string): Promise<number> {
 export async function getPhotoPageDataByYear(
 	id: string,
 	year: string,
-	nextLimit = 12,
+	nextLimit = 10,
 ): Promise<{
 	photo: Photo;
 	prevPhoto: Photo | null;
@@ -395,7 +395,7 @@ export async function getPhotoPageDataByCamera(
 	id: string,
 	make: string,
 	model: string,
-	nextLimit = 12,
+	nextLimit = 10,
 ): Promise<{
 	photo: Photo;
 	prevPhoto: Photo | null;
