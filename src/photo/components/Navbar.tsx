@@ -26,7 +26,6 @@ const Nav = () => {
 			className={cn(
 				"sticky top-0 z-40 w-full bg-[#f7f5f2] px-5 py-3 transition-transform duration-300 ease-out will-change-transform md:hidden",
 				!isVisible && "-translate-y-full",
-				pathname === "/map" && "mb-5",
 				pathname.startsWith("/p/") && "hidden",
 			)}
 		>

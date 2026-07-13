@@ -23,10 +23,10 @@ export default function PhotoGridPage({
 	const photoCount = photos.length;
 
 	return (
-		<div className="py-8">
+		<div className="px-3 py-4 sm:px-4 sm:py-6 lg:px-0 lg:py-8">
 			<div className="flex flex-col gap-4 lg:flex-row">
 				<div className="min-w-0 flex-1">
-					<div className="grid grid-cols-2 gap-1 sm:grid-cols-4 sm:gap-2 md:grid-cols-4">
+					<div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-2 md:grid-cols-4">
 						{photos.map((photo, index) => (
 							<ImageSquare key={photo.id} photo={photo} index={index} />
 						))}

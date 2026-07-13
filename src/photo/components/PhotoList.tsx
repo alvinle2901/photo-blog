@@ -91,7 +91,7 @@ const PhotoList = ({
 	const loadMore = () => setSize((size) => size + 1);
 
 	return (
-		<div className="space-y-4 mx-3 lg:mx-0">
+		<div className="space-y-4 lg:mx-0">
 			<InfiniteScroll
 				key={`${sortType}-${sortOrder}-${seed}`}
 				dataLength={photos.length}

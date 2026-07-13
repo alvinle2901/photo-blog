@@ -49,13 +49,13 @@ export default function GridFilterSidebar({
 }) {
 	return (
 		<>
-			<section className="lg:hidden mb-4 rounded border border-[#e5e0d9] bg-[#f3efe8] p-3">
-				<details open>
+			<section className="mb-4 rounded border border-[#e5e0d9] bg-[#f3efe8] p-3 lg:hidden">
+				<details>
 					<summary
-						className="cursor-pointer list-none text-[11px] uppercase tracking-[0.14em] text-[#6f675d]"
+						className="flex min-h-11 cursor-pointer list-none items-center justify-between text-[11px] uppercase tracking-[0.14em] text-[#6f675d] marker:content-none after:text-base after:leading-none after:content-['+'] open:after:content-['−'] [&::-webkit-details-marker]:hidden"
 						style={{ fontFamily: "'DM Mono', monospace" }}
 					>
-						Grid Filters
+						<span>Grid Filters</span>
 					</summary>
 
 					<div className="mt-3 space-y-3">

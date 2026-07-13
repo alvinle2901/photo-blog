@@ -10,14 +10,13 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<LightboxProvider>
 			<main className="max-w-[1400px] mx-auto bg-[#f7f5f2]">
-				{/* <QueryProvider> */}
 				<Nav />
 				<div className="flex">
 					<Sidebar />
 					<div className="flex-1 min-w-0">{children}</div>
 				</div>
 				<FloatingDockMobile />
-				<MusicBar />
+				{/* <MusicBar /> */}
 				<CommandK />
 				<PhotoShareModal />
 			</main>

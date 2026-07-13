@@ -28,7 +28,7 @@ const PhotoLarge = ({
 				"flex gap-y-4",
 				"flex-col sm:flex-row lg:flex-col",
 				"[&>*]:sm:flex-grow",
-				"pr-2",
+				"md:pr-2",
 			)}
 		>
 			{children}
@@ -65,7 +65,8 @@ const PhotoLarge = ({
 						"grid grid-cols-2 lg:grid-cols-1",
 						"gap-y-4",
 						"-translate-y-1",
-						"my-4",
+						"my-2 md:my-4",
+						"px-3 md:px-4",
 					)}
 					style={{ fontFamily: "'DM Mono', monospace" }}
 				>
@@ -74,7 +75,7 @@ const PhotoLarge = ({
 							{/* TITLE  */}
 							<Link href={`/p/${photo.id}`}>
 								<h2
-									className="italic text-2xl text-[#18170f] font-normal leading-tight"
+									className="italic text-xl md:text-2xl text-[#18170f] font-normal leading-tight"
 									style={{ fontFamily: "'Cormorant', serif" }}
 								>
 									{photo.title}
