@@ -74,6 +74,8 @@ export default async function PhotoYearPage({ params }: PhotoYearProps) {
 			nextPhoto={nextPhoto}
 			nextPhotos={nextPhotos}
 			photoPathBase={absolutePathForYear(year)}
+			backHref={absolutePathForYear(year)}
+			backLabel="back to year"
 		/>
 	);
 }

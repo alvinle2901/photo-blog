@@ -14,12 +14,16 @@ export default function PhotoDetailPage({
 	nextPhoto,
 	nextPhotos,
 	photoPathBase = "/p",
+	backHref = "/",
+	backLabel = "back to feed",
 }: {
 	photo: Photo;
 	prevPhoto: Photo | null;
 	nextPhoto: Photo | null;
 	nextPhotos: Photo[];
 	photoPathBase?: string;
+	backHref?: string;
+	backLabel?: string;
 }) {
 	const prevHref = prevPhoto ? `${photoPathBase}/${prevPhoto.id}` : null;
 	const nextHref = nextPhoto ? `${photoPathBase}/${nextPhoto.id}` : null;
@@ -51,11 +55,11 @@ export default function PhotoDetailPage({
 					)}
 
 					<Link
-						href="/"
+						href={backHref}
 						prefetch
 						className="hover:text-gray-900 transition-colors"
 					>
-						back to feed
+						{backLabel}
 					</Link>
 
 					{nextPhoto ? (
@@ -80,7 +84,12 @@ export default function PhotoDetailPage({
 				<section className="pb-4">
 					<div className="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-5 pr-2">
 						{nextPhotos.map((next, index) => (
-							<ImageSquare key={next.id} photo={next} index={index} />
+							<ImageSquare
+								key={next.id}
+								photo={next}
+								index={index}
+								href={`${photoPathBase}/${next.id}`}
+							/>
 						))}
 					</div>
 				</section>
