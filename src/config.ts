@@ -22,11 +22,6 @@ const schema = z.object({
 
 	// Public
 	NEXT_PUBLIC_SITE_URL: z.string().url(),
-	NEXT_PUBLIC_MUSIC_WORKER_HEALTH_URL: z.string().url().optional(),
-
-	// Music worker
-	MUSIC_WORKER_SECRET: z.string().min(32).optional(),
-	MUSIC_WORKER_URL: z.string().url().optional(),
 });
 
 export const config = schema.parse(process.env);

@@ -39,16 +39,8 @@ RUN pnpm build
 FROM node:22-alpine AS runner
 WORKDIR /app
 
-# Install yt-dlp + ffmpeg (ffmpeg needed for audio format conversion)
-RUN apk add --no-cache python3 py3-pip curl ffmpeg && \
-    curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
-      -o /usr/local/bin/yt-dlp && \
-    chmod +x /usr/local/bin/yt-dlp && \
-    yt-dlp --version
-
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV YT_DLP_PATH=/usr/local/bin/yt-dlp
 
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs

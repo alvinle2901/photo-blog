@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type SyncStatus =
 	| { state: "idle" }
@@ -30,12 +30,13 @@ export default function MusicSettingsPage() {
 	} | null>(null);
 	const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-	// Load current playlist info and sync status on mount
-	useEffect(() => {
-		void loadStatus();
+	const stopPolling = useCallback(() => {
+		if (!pollRef.current) return;
+		clearInterval(pollRef.current);
+		pollRef.current = null;
 	}, []);
 
-	async function loadStatus() {
+	const loadStatus = useCallback(async () => {
 		const [tracksRes, statusRes] = await Promise.all([
 			fetch("/api/music/tracks"),
 			fetch("/api/music/sync"),
@@ -58,7 +59,13 @@ export default function MusicSettingsPage() {
 			const { status } = (await statusRes.json()) as { status: string };
 			setSyncStatus(parseSyncStatus(status ?? "idle"));
 		}
-	}
+	}, []);
+
+	// Load current playlist info and sync status on mount
+	useEffect(() => {
+		const timer = setTimeout(() => void loadStatus(), 0);
+		return () => clearTimeout(timer);
+	}, [loadStatus]);
 
 	function startPolling() {
 		if (pollRef.current) return;
@@ -69,8 +76,7 @@ export default function MusicSettingsPage() {
 			const parsed = parseSyncStatus(status ?? "idle");
 			setSyncStatus(parsed);
 			if (parsed.state !== "running") {
-				clearInterval(pollRef.current!);
-				pollRef.current = null;
+				stopPolling();
 				if (parsed.state === "done") void loadStatus();
 			}
 		}, 2000);
@@ -102,17 +108,9 @@ export default function MusicSettingsPage() {
 
 		if (!res.ok) {
 			setSyncStatus({ state: "failed", message: data.error ?? "Sync failed" });
-			clearInterval(pollRef.current!);
-			pollRef.current = null;
+			stopPolling();
 		} else {
-			setSyncStatus({
-				state: "done",
-				matched: data.matched ?? 0,
-				total: data.total ?? 0,
-			});
-			clearInterval(pollRef.current!);
-			pollRef.current = null;
-			void loadStatus();
+			setSyncStatus({ state: "running" });
 		}
 	}
 
