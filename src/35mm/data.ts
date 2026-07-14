@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+
 import { getFilmPhotoPageData, getFilmPhotos } from "@/35mm/query";
 
 const FILM_PHOTOS_TAG = "35mm-photos";
@@ -9,7 +10,7 @@ export const getFilmPhotosCached = unstable_cache(
 	{ tags: [FILM_PHOTOS_TAG] },
 );
 
-export const getFilmPhotoPageDataCached = (photoId: string, nextLimit = 12) =>
+export const getFilmPhotoPageDataCached = (photoId: string, nextLimit = 10) =>
 	unstable_cache(
 		() => getFilmPhotoPageData(photoId, nextLimit),
 		[`35mm-photo-${photoId}`, `next-${nextLimit}`],

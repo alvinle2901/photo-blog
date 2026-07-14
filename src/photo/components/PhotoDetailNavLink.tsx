@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import type { ComponentProps } from "react";
 
-import type { PhotoDetailDirection } from "@/photo/components/PhotoDetailTransition";
+import {
+	type PhotoDetailDirection,
+	startPhotoDetailNavigation,
+} from "@/photo/components/PhotoDetailTransition";
 import { cn } from "@/utils/cn";
 
 type PhotoDetailNavLinkProps = ComponentProps<typeof Link> & {
@@ -15,6 +20,7 @@ export default function PhotoDetailNavLink({
 	direction,
 	href,
 	imageUrl,
+	onClick,
 	...props
 }: PhotoDetailNavLinkProps) {
 	const arrow = direction === "prev" ? "←" : "→";
@@ -24,6 +30,20 @@ export default function PhotoDetailNavLink({
 		<Link
 			{...props}
 			href={href}
+			onClick={(event) => {
+				onClick?.(event);
+				if (
+					event.defaultPrevented ||
+					event.button !== 0 ||
+					event.metaKey ||
+					event.ctrlKey ||
+					event.shiftKey ||
+					event.altKey
+				)
+					return;
+
+				startPhotoDetailNavigation();
+			}}
 			prefetch
 			data-prefetch-href={typeof href === "string" ? href : undefined}
 			data-preload-image={imageUrl}

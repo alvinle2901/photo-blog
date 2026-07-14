@@ -28,7 +28,7 @@ export const getPhotoCached = (id: string) =>
 		tags: [CACHE_KEYS.photos(), CACHE_KEYS.photo(id)],
 	})();
 
-export const getPhotoPageDataCached = (id: string, nextLimit = 12) =>
+export const getPhotoPageDataCached = (id: string, nextLimit = 10) =>
 	unstable_cache(
 		() => getPhotoPageData(id, nextLimit),
 		[CACHE_KEYS.photo(id), `next-${nextLimit}`],
@@ -85,7 +85,7 @@ export const getPhotoCountByFilmCached = (film: string) =>
 export const getPhotoPageDataByFilmCached = (
 	id: string,
 	film: string,
-	nextLimit = 12,
+	nextLimit = 10,
 ) =>
 	unstable_cache(
 		() => getPhotoPageDataByFilm(id, film, nextLimit),
@@ -121,7 +121,7 @@ export const getPhotoCountByYearCached = (year: string) =>
 export const getPhotoPageDataByYearCached = (
 	id: string,
 	year: string,
-	nextLimit = 12,
+	nextLimit = 10,
 ) =>
 	unstable_cache(
 		() => getPhotoPageDataByYear(id, year, nextLimit),
@@ -162,7 +162,7 @@ export const getPhotoPageDataByCameraCached = (
 	id: string,
 	make: string,
 	model: string,
-	nextLimit = 12,
+	nextLimit = 10,
 ) =>
 	unstable_cache(
 		() => getPhotoPageDataByCamera(id, make, model, nextLimit),
@@ -176,6 +176,6 @@ export const getPhotoPageDataByCameraCached = (
 		},
 	)();
 
-export const getPhotoPageDataForRequest = cache((id: string, nextLimit = 12) =>
+export const getPhotoPageDataForRequest = cache((id: string, nextLimit = 10) =>
 	getPhotoPageDataCached(id, nextLimit),
 );

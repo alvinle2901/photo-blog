@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+
 import { cn } from "@/utils/cn";
 
 const SiteGrid = ({
@@ -25,7 +26,7 @@ const SiteGrid = ({
 		>
 			<div
 				className={cn(
-					"col-span-1 lg:col-span-9",
+					"col-span-1 min-w-0 lg:col-span-9",
 					sideFirstOnMobile && "order-2 lg:order-none",
 				)}
 			>
@@ -34,7 +35,7 @@ const SiteGrid = ({
 			{contentSide && (
 				<div
 					className={cn(
-						"col-span-1 lg:col-span-3",
+						"col-span-1 min-w-0 lg:col-span-3",
 						sideFirstOnMobile && "order-1 lg:order-none",
 						sideHiddenOnMobile && "hidden lg:block",
 					)}

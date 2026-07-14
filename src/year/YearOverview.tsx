@@ -16,7 +16,7 @@ export default function YearOverview({
 	count: number;
 }) {
 	return (
-		<section className="space-y-5 py-6">
+		<section className="space-y-5 pb-6 md:py-6">
 			<OverviewHeader
 				category="Year"
 				title={year}
@@ -24,7 +24,7 @@ export default function YearOverview({
 				icon={<Icons.time size={14} strokeWidth={1.8} />}
 			/>
 
-			<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-1 sm:gap-2 pr-2">
+			<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 sm:gap-2 md:gap-1 px-2">
 				{photos.map((photo, index) => (
 					<Link
 						key={photo.id}

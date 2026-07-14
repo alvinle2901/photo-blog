@@ -7,14 +7,16 @@ import { getOptimizedUrl } from "@/storage/utils";
 export default function ImageSquare({
 	photo,
 	index,
+	href,
 }: {
 	photo: Photo;
 	index: number;
+	href?: string;
 }) {
 	return (
 		<Link
 			key={photo.id}
-			href={`/p/${photo.id}`}
+			href={href ?? `/p/${photo.id}`}
 			className="relative overflow-hidden bg-[#ebe7df]"
 			style={{ aspectRatio: "1 / 1" }}
 		>

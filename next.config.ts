@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
 	/* config options here */
 	output: "standalone",
+	allowedDevOrigins: ['192.168.117.67'],
 	cacheComponents: true,
 	serverExternalPackages: ["youtubei.js"],
 	images: {

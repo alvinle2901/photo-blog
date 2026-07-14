@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-import { CAMERA_GRID_INITIAL, decodeCameraParams } from "@/camera";
+import { decodeCameraParams } from "@/camera";
 import CameraImageResponse from "@/camera/CameraImageResponse";
 import { getPhotosByCameraCached } from "@/photo/cache";
 
@@ -10,11 +10,7 @@ export async function GET(
 ) {
 	const { make, model } = decodeCameraParams(await context.params);
 
-	const photos = await getPhotosByCameraCached(
-		make,
-		model,
-		CAMERA_GRID_INITIAL,
-	);
+	const photos = await getPhotosByCameraCached(make, model);
 
 	const width = 1200;
 	const height = 630;

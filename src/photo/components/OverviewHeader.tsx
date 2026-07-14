@@ -16,7 +16,7 @@ export default function OverviewHeader({
 	const noun = count === 1 ? "photo" : "photos";
 
 	return (
-		<header className="border-b border-[#ddd7ce] px-4 py-6 md:px-6 lg:px-8">
+		<header className="border-b border-[#ddd7ce] px-4 py-3 md:py-6 md:px-6 lg:px-8">
 			<div className="min-w-0">
 				<div
 					className="mb-2 flex items-center gap-2 text-[11px] font-medium uppercase text-[#81786d]"

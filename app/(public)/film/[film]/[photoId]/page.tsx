@@ -1,13 +1,14 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next/types";
 import { cache } from "react";
+
 import {
 	absolutePathForPhoto,
 	descriptionForPhoto,
 	titleForPhoto,
 } from "@/film";
 import { getPhotoFilmPageDataCached } from "@/film/data";
-import FilmPhotoDetailPage from "@/film/FilmPhotoDetailPage";
+import PhotoDetailPage from "@/photo/components/PhotoDetailPage";
 
 const getPhotosNearIdCachedCached = cache((photoId: string, film: string) =>
 	getPhotoFilmPageDataCached(photoId, film),
@@ -65,15 +66,17 @@ export default async function PhotoFilmPage({ params }: PhotoFilmProps) {
 
 	const { photo, prevPhoto, nextPhoto, nextPhotos } = data;
 
+	const filmPath = `/film/${encodeURIComponent(film)}`;
+
 	return (
-		<FilmPhotoDetailPage
-			{...{
-				film,
-				photo,
-				prevPhoto,
-				nextPhoto,
-				nextPhotos,
-			}}
+		<PhotoDetailPage
+			photo={photo}
+			prevPhoto={prevPhoto}
+			nextPhoto={nextPhoto}
+			nextPhotos={nextPhotos}
+			photoPathBase={filmPath}
+			backHref={filmPath}
+			backLabel="back to film"
 		/>
 	);
 }

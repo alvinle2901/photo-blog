@@ -1,10 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import type { Photo } from "@/photo";
-import { setPhotoDetailDirection } from "@/photo/components/PhotoDetailTransition";
+import {
+	setPhotoDetailDirection,
+	startPhotoDetailNavigation,
+} from "@/photo/components/PhotoDetailTransition";
 import { getOptimizedUrl } from "@/storage/utils";
 
 const shouldIgnoreKeydown = (target: EventTarget | null) => {
@@ -44,6 +47,7 @@ export default function PhotoDetailEnhancements({
 	nextHref: string | null;
 }) {
 	const router = useRouter();
+	const swipeStart = useRef<{ x: number; y: number } | null>(null);
 
 	useEffect(() => {
 		const onKeyDown = (event: KeyboardEvent) => {
@@ -51,6 +55,7 @@ export default function PhotoDetailEnhancements({
 
 			if (event.key === "ArrowLeft" && prevHref) {
 				event.preventDefault();
+				startPhotoDetailNavigation();
 				setPhotoDetailDirection("prev");
 				router.prefetch(prevHref);
 				router.push(prevHref);
@@ -58,6 +63,7 @@ export default function PhotoDetailEnhancements({
 
 			if (event.key === "ArrowRight" && nextHref) {
 				event.preventDefault();
+				startPhotoDetailNavigation();
 				setPhotoDetailDirection("next");
 				router.prefetch(nextHref);
 				router.push(nextHref);
@@ -92,10 +98,71 @@ export default function PhotoDetailEnhancements({
 	}, [router, prevPhoto, nextPhoto, nextPhotos, prevHref, nextHref]);
 
 	useEffect(() => {
+		const onTouchStart = (event: TouchEvent) => {
+			if (
+				!window.matchMedia("(max-width: 767px)").matches ||
+				document.body.dataset.photoLightboxOpen === "true" ||
+				event.touches.length !== 1 ||
+				!(event.target instanceof Element) ||
+				!event.target.closest("[data-photo-navigation-surface]")
+			)
+				return;
+
+			const [touch] = event.touches;
+			swipeStart.current = { x: touch.clientX, y: touch.clientY };
+		};
+
+		const onTouchEnd = (event: TouchEvent) => {
+			const start = swipeStart.current;
+			swipeStart.current = null;
+			const [touch] = event.changedTouches;
+			if (!start || !touch) return;
+
+			const horizontalDistance = touch.clientX - start.x;
+			const verticalDistance = touch.clientY - start.y;
+			if (
+				Math.abs(horizontalDistance) < 72 ||
+				Math.abs(horizontalDistance) <= Math.abs(verticalDistance)
+			)
+				return;
+
+			if (horizontalDistance > 0 && prevHref) {
+				event.preventDefault();
+				startPhotoDetailNavigation();
+				setPhotoDetailDirection("prev");
+				router.push(prevHref);
+			}
+
+			if (horizontalDistance < 0 && nextHref) {
+				event.preventDefault();
+				startPhotoDetailNavigation();
+				setPhotoDetailDirection("next");
+				router.push(nextHref);
+			}
+		};
+
+		const resetSwipe = () => {
+			swipeStart.current = null;
+		};
+
+		document.addEventListener("touchstart", onTouchStart, true);
+		document.addEventListener("touchend", onTouchEnd, {
+			capture: true,
+			passive: false,
+		});
+		document.addEventListener("touchcancel", resetSwipe, true);
+		return () => {
+			document.removeEventListener("touchstart", onTouchStart, true);
+			document.removeEventListener("touchend", onTouchEnd, true);
+			document.removeEventListener("touchcancel", resetSwipe, true);
+		};
+	}, [router, prevHref, nextHref]);
+
+	useEffect(() => {
 		const onPointerEnter = (event: PointerEvent | FocusEvent) => {
-			const link = (event.target as HTMLElement | null)?.closest(
-				"[data-preload-image]",
-			);
+			if (!(event.target instanceof Element)) return;
+
+			const link = event.target.closest("[data-preload-image]");
 			if (!(link instanceof HTMLElement)) return;
 
 			const href = link.getAttribute("data-prefetch-href");
@@ -117,9 +184,9 @@ export default function PhotoDetailEnhancements({
 
 	useEffect(() => {
 		const onClick = (event: MouseEvent) => {
-			const link = (event.target as HTMLElement | null)?.closest(
-				"[data-transition-direction]",
-			);
+			if (!(event.target instanceof Element)) return;
+
+			const link = event.target.closest("[data-transition-direction]");
 			if (!(link instanceof HTMLElement)) return;
 			const direction = link.getAttribute("data-transition-direction");
 			if (direction === "prev" || direction === "next") {

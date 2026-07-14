@@ -78,6 +78,8 @@ export default async function PhotoCameraPage({ params }: PhotoCameraProps) {
 			nextPhoto={nextPhoto}
 			nextPhotos={nextPhotos}
 			photoPathBase={absolutePathForCamera(make, model)}
+			backHref={absolutePathForCamera(make, model)}
+			backLabel="back to camera"
 		/>
 	);
 }
