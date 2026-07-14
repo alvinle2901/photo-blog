@@ -38,41 +38,49 @@ const Sidebar = () => {
 	};
 
 	return (
-		<div className="h-screen w-[20%] shrink-0 py-8 px-8 sticky top-0 md:flex flex-col justify-between hidden">
-			<div className="flex flex-col gap-6">
-				<div>
-					<Link href={"/"}>
-						<p
-							className="italic text-4xl text-[#18170f] font-light leading-none"
-							style={{ fontFamily: "'Cormorant', serif" }}
-						>
-							momento
-						</p>
-						<p
-							className="text-[#b5b0a8] mt-1 tracking-[0.14em]"
-							style={{ fontFamily: "'DM Mono', monospace" }}
-						>
-							by alv.
-						</p>
-					</Link>
-					{/* Flourish */}
-					<Flourish />
+		<div className="hidden w-[20%] shrink-0 md:block">
+			<div
+				className="fixed top-0 flex h-dvh flex-col justify-between px-8 py-8"
+				style={{
+					left: "max(0px, calc((100vw - 1400px) / 2))",
+					width: "min(20vw, 280px)",
+				}}
+			>
+				<div className="flex flex-col gap-6">
+					<div>
+						<Link href={"/"}>
+							<p
+								className="italic text-4xl text-[#18170f] font-light leading-none"
+								style={{ fontFamily: "'Cormorant', serif" }}
+							>
+								momento
+							</p>
+							<p
+								className="text-[#b5b0a8] mt-1 tracking-[0.14em]"
+								style={{ fontFamily: "'DM Mono', monospace" }}
+							>
+								by alv.
+							</p>
+						</Link>
+						{/* Flourish */}
+						<Flourish />
+					</div>
+					<ViewSwitcher currentSelection={switcherSelectionForPath()} />
+					{/* Navs */}
+					<nav className="flex flex-1 flex-col gap-0.5 mt-2">
+						{homeRoutes.map((route) => (
+							<LinksItem
+								label={route.label}
+								href={route.href}
+								key={route.href}
+							></LinksItem>
+						))}
+					</nav>
 				</div>
-				<ViewSwitcher currentSelection={switcherSelectionForPath()} />
-				{/* Navs */}
-				<nav className="flex flex-1 flex-col gap-0.5 mt-2">
-					{homeRoutes.map((route) => (
-						<LinksItem
-							label={route.label}
-							href={route.href}
-							key={route.href}
-						></LinksItem>
-					))}
-				</nav>
+				<Flower />
+				{/* Socials */}
+				<SocialLinks />
 			</div>
-			<Flower />
-			{/* Socials */}
-			<SocialLinks />
 		</div>
 	);
 };
