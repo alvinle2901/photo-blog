@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { FILM_GRID_INITIAL } from "@/film";
+
 import FilmImageResponse from "@/film/FilmImageResponse";
 import { getPhotosByFilmCached } from "@/photo/cache";
 
@@ -9,7 +9,7 @@ export async function GET(
 ) {
 	const { film } = await context.params;
 
-	const photos = await getPhotosByFilmCached(film, FILM_GRID_INITIAL);
+	const photos = await getPhotosByFilmCached(film);
 
 	const width = 1200;
 	const height = 630;

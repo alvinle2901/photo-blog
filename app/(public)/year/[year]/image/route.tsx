@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
+
 import { getPhotosByYearCached } from "@/photo/cache";
-import { YEAR_GRID_INITIAL } from "@/year";
 import YearImageResponse from "@/year/YearImageResponse";
 
 export async function GET(
@@ -9,7 +9,7 @@ export async function GET(
 ) {
 	const { year } = await context.params;
 
-	const photos = await getPhotosByYearCached(year, YEAR_GRID_INITIAL);
+	const photos = await getPhotosByYearCached(year);
 
 	const width = 1200;
 	const height = 630;
