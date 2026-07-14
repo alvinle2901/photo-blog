@@ -19,8 +19,10 @@ export type SwitcherSelection = "feed" | "grid";
 
 const ViewSwitcher = ({
 	currentSelection,
+	showSort = true,
 }: {
 	currentSelection?: SwitcherSelection;
+	showSort?: boolean;
 }) => {
 	const { setIsCommandKOpen } = useAppState();
 	const pathname = usePathname();
@@ -92,7 +94,7 @@ const ViewSwitcher = ({
 					noPadding
 				/>
 			</Switcher>
-			{pathname === "/" && (
+			{showSort && pathname === "/" && (
 				<PhotoSortDropdown
 					basePath="/"
 					sortType={sortType}

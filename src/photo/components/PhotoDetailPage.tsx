@@ -37,22 +37,24 @@ export default function PhotoDetailPage({
 				prevHref={prevHref}
 				nextHref={nextHref}
 			/>
-			<div className="px-4 pt-8 md:px-6 lg:px-8">
+			<div className="hidden px-4 pt-8 md:block md:px-6 lg:px-8">
 				<div
 					className="flex items-center justify-between border-b border-[#e5e0d9] pb-3 text-sm tracking-wide text-gray-600"
 					style={{ fontFamily: "'DM Mono', monospace" }}
 				>
-					{prevPhoto ? (
-						<PhotoDetailNavLink
-							href={prevHref ?? "#"}
-							direction="prev"
-							imageUrl={getOptimizedUrl(prevPhoto.url, "lg")}
-						>
-							prev
-						</PhotoDetailNavLink>
-					) : (
-						<span className="opacity-40">prev</span>
-					)}
+					<span className="hidden md:inline-flex">
+						{prevPhoto ? (
+							<PhotoDetailNavLink
+								href={prevHref ?? "#"}
+								direction="prev"
+								imageUrl={getOptimizedUrl(prevPhoto.url, "lg")}
+							>
+								prev
+							</PhotoDetailNavLink>
+						) : (
+							<span className="opacity-40">prev</span>
+						)}
+					</span>
 
 					<Link
 						href={backHref}
@@ -62,22 +64,31 @@ export default function PhotoDetailPage({
 						{backLabel}
 					</Link>
 
-					{nextPhoto ? (
-						<PhotoDetailNavLink
-							href={nextHref ?? "#"}
-							direction="next"
-							imageUrl={getOptimizedUrl(nextPhoto.url, "lg")}
-						>
-							next
-						</PhotoDetailNavLink>
-					) : (
-						<span className="opacity-40">next</span>
-					)}
+					<span className="hidden md:inline-flex">
+						{nextPhoto ? (
+							<PhotoDetailNavLink
+								href={nextHref ?? "#"}
+								direction="next"
+								imageUrl={getOptimizedUrl(nextPhoto.url, "lg")}
+							>
+								next
+							</PhotoDetailNavLink>
+						) : (
+							<span className="opacity-40">next</span>
+						)}
+					</span>
 				</div>
 			</div>
 
 			<PhotoDetailTransition>
-				<PhotoDetail photo={photo} priority />
+				<PhotoDetail
+					photo={photo}
+					priority
+					prevPhoto={prevPhoto}
+					nextPhoto={nextPhoto}
+					prevHref={prevHref}
+					nextHref={nextHref}
+				/>
 			</PhotoDetailTransition>
 
 			{nextPhotos.length > 0 && (
