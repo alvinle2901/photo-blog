@@ -1,6 +1,9 @@
+import { createHmac } from "node:crypto";
+
 // Keep this below Vercel's function timeout so the music bar gets a useful
 // error response instead of a platform-level 504 while Render is cold.
 const WORKER_TIMEOUT_MS = 25_000;
+const STREAM_URL_TTL_MS = 10 * 60 * 1000;
 
 export class MusicWorkerError extends Error {
 	constructor(
@@ -20,6 +23,22 @@ function getWorkerUrl() {
 	}
 
 	return { secret, url: url.replace(/\/$/, "") };
+}
+
+function signWorkerPath(path: string, expiresAt: number, secret: string) {
+	return createHmac("sha256", secret)
+		.update(`${path}:${expiresAt}`)
+		.digest("base64url");
+}
+
+export function createMusicWorkerStreamUrl(path: string) {
+	const { secret, url } = getWorkerUrl();
+	const expiresAt = Date.now() + STREAM_URL_TTL_MS;
+	const signature = signWorkerPath(path, expiresAt, secret);
+	const streamUrl = new URL(`${url}${path}`);
+	streamUrl.searchParams.set("exp", String(expiresAt));
+	streamUrl.searchParams.set("sig", signature);
+	return streamUrl.toString();
 }
 
 export async function requestMusicWorker(path: string, init: RequestInit = {}) {

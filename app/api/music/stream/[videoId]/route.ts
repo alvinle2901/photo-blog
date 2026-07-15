@@ -2,7 +2,11 @@ import { eq } from "drizzle-orm";
 import { connection } from "next/server";
 
 import { db } from "@/db/client";
-import { MusicWorkerError, requestMusicWorker } from "@/music/worker-client";
+import {
+	createMusicWorkerStreamUrl,
+	MusicWorkerError,
+	requestMusicWorker,
+} from "@/music/worker-client";
 
 export const maxDuration = 30;
 
@@ -39,11 +43,17 @@ export async function GET(
 			mimeType: string;
 			url: string;
 		};
-		return Response.json(stream, {
-			headers: {
-				"Cache-Control": "public, s-maxage=18000, stale-while-revalidate=300",
+		return Response.json(
+			{
+				mimeType: stream.mimeType,
+				url: createMusicWorkerStreamUrl(`/api/worker/music/audio/${videoId}`),
 			},
-		});
+			{
+				headers: {
+					"Cache-Control": "public, s-maxage=18000, stale-while-revalidate=300",
+				},
+			},
+		);
 	} catch (error) {
 		const message =
 			error instanceof MusicWorkerError
