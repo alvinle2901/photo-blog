@@ -24,52 +24,102 @@ let _streamInstance: Innertube | null = null;
 let _streamInstanceAt = 0;
 const STREAM_INSTANCE_TTL = 5.5 * 60 * 60 * 1000; // refresh every 5.5h
 
+type BotGuardGlobalKey =
+	| "document"
+	| "location"
+	| "navigator"
+	| "self"
+	| "window";
+
+const BOT_GUARD_GLOBAL_KEYS: BotGuardGlobalKey[] = [
+	"document",
+	"location",
+	"navigator",
+	"self",
+	"window",
+];
+
+function restoreBotGuardGlobals(
+	target: Record<string, unknown>,
+	previous: Map<BotGuardGlobalKey, PropertyDescriptor | undefined>,
+) {
+	for (const key of BOT_GUARD_GLOBAL_KEYS) {
+		const descriptor = previous.get(key);
+		if (descriptor) {
+			Object.defineProperty(target, key, descriptor);
+		} else {
+			delete target[key];
+		}
+	}
+}
+
+function setTemporaryGlobal(
+	target: Record<string, unknown>,
+	key: BotGuardGlobalKey,
+	value: unknown,
+) {
+	const descriptor = Object.getOwnPropertyDescriptor(target, key);
+	if (!descriptor || descriptor.configurable) {
+		Object.defineProperty(target, key, {
+			configurable: true,
+			enumerable: descriptor?.enumerable ?? false,
+			value,
+			writable: true,
+		});
+		return;
+	}
+
+	target[key] = value;
+}
+
 function installBotGuardGlobals() {
 	const botGuardGlobal = globalThis as Record<string, unknown>;
-	const previous = {
-		document: botGuardGlobal.document,
-		location: botGuardGlobal.location,
-		navigator: botGuardGlobal.navigator,
-		self: botGuardGlobal.self,
-		window: botGuardGlobal.window,
-	};
+	const previous = new Map<BotGuardGlobalKey, PropertyDescriptor | undefined>(
+		BOT_GUARD_GLOBAL_KEYS.map((key) => [
+			key,
+			Object.getOwnPropertyDescriptor(botGuardGlobal, key),
+		]),
+	);
 
-	botGuardGlobal.window = botGuardGlobal;
-	botGuardGlobal.self = botGuardGlobal;
-	botGuardGlobal.navigator ??= {
-		userAgent:
-			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari",
-	};
-	botGuardGlobal.location ??= {
-		ancestorOrigins: [],
-		hash: "",
-		host: "www.youtube.com",
-		hostname: "www.youtube.com",
-		href: "https://www.youtube.com/",
-		origin: "https://www.youtube.com",
-		pathname: "/",
-		port: "",
-		protocol: "https:",
-		search: "",
-	};
-	botGuardGlobal.document ??= {
-		createElement: () => ({}),
-		getElementById: () => null,
-		head: { appendChild: () => undefined },
-	};
+	try {
+		setTemporaryGlobal(botGuardGlobal, "window", botGuardGlobal);
+		setTemporaryGlobal(botGuardGlobal, "self", botGuardGlobal);
+		if (botGuardGlobal.navigator == null) {
+			setTemporaryGlobal(botGuardGlobal, "navigator", {
+				userAgent:
+					"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari",
+			});
+		}
+		if (botGuardGlobal.location == null) {
+			setTemporaryGlobal(botGuardGlobal, "location", {
+				ancestorOrigins: [],
+				hash: "",
+				host: "www.youtube.com",
+				hostname: "www.youtube.com",
+				href: "https://www.youtube.com/",
+				origin: "https://www.youtube.com",
+				pathname: "/",
+				port: "",
+				protocol: "https:",
+				search: "",
+			});
+		}
+		if (botGuardGlobal.document == null) {
+			setTemporaryGlobal(botGuardGlobal, "document", {
+				createElement: () => ({}),
+				getElementById: () => null,
+				head: { appendChild: () => undefined },
+			});
+		}
 
-	return {
-		globalObj: botGuardGlobal,
-		restore: () => {
-			for (const key of Object.keys(previous) as Array<keyof typeof previous>) {
-				if (previous[key] === undefined) {
-					delete botGuardGlobal[key];
-				} else {
-					botGuardGlobal[key] = previous[key];
-				}
-			}
-		},
-	};
+		return {
+			globalObj: botGuardGlobal,
+			restore: () => restoreBotGuardGlobals(botGuardGlobal, previous),
+		};
+	} catch (error) {
+		restoreBotGuardGlobals(botGuardGlobal, previous);
+		throw error;
+	}
 }
 
 async function loadBotGuardVm(
