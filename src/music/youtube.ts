@@ -267,6 +267,10 @@ const YT_DLP =
 	}) ??
 	"yt-dlp";
 const YT_DLP_TIMEOUT_MS = 45_000;
+const YT_DLP_JS_RUNTIME =
+	process.env.YT_DLP_JS_RUNTIME ?? "node:/usr/local/bin/node";
+const YT_DLP_REMOTE_COMPONENT =
+	process.env.YT_DLP_REMOTE_COMPONENT ?? "ejs:github";
 
 export class YouTubeStreamResolutionError extends Error {}
 
@@ -382,6 +386,10 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 				[
 					"--cookies",
 					cookiesFile,
+					"--js-runtimes",
+					YT_DLP_JS_RUNTIME,
+					"--remote-components",
+					YT_DLP_REMOTE_COMPONENT,
 					"-f",
 					"bestaudio",
 					"-g",
@@ -413,6 +421,10 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 					[
 						"--cookies-from-browser",
 						browser,
+						"--js-runtimes",
+						YT_DLP_JS_RUNTIME,
+						"--remote-components",
+						YT_DLP_REMOTE_COMPONENT,
 						"-f",
 						"bestaudio",
 						"-g",

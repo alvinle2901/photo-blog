@@ -49,6 +49,8 @@ RUN apk add --no-cache curl python3 && \
     yt-dlp --version
 
 ENV YT_DLP_PATH=/usr/local/bin/yt-dlp
+ENV YT_DLP_JS_RUNTIME=node:/usr/local/bin/node
+ENV YT_DLP_REMOTE_COMPONENT=ejs:github
 
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
