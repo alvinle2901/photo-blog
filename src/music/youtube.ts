@@ -24,20 +24,52 @@ let _streamInstance: Innertube | null = null;
 let _streamInstanceAt = 0;
 const STREAM_INSTANCE_TTL = 5.5 * 60 * 60 * 1000; // refresh every 5.5h
 
-function getBotGuardGlobal() {
+function installBotGuardGlobals() {
 	const botGuardGlobal = globalThis as Record<string, unknown>;
-	botGuardGlobal.window ??= botGuardGlobal;
-	botGuardGlobal.self ??= botGuardGlobal;
+	const previous = {
+		document: botGuardGlobal.document,
+		location: botGuardGlobal.location,
+		navigator: botGuardGlobal.navigator,
+		self: botGuardGlobal.self,
+		window: botGuardGlobal.window,
+	};
+
+	botGuardGlobal.window = botGuardGlobal;
+	botGuardGlobal.self = botGuardGlobal;
 	botGuardGlobal.navigator ??= {
 		userAgent:
 			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari",
+	};
+	botGuardGlobal.location ??= {
+		ancestorOrigins: [],
+		hash: "",
+		host: "www.youtube.com",
+		hostname: "www.youtube.com",
+		href: "https://www.youtube.com/",
+		origin: "https://www.youtube.com",
+		pathname: "/",
+		port: "",
+		protocol: "https:",
+		search: "",
 	};
 	botGuardGlobal.document ??= {
 		createElement: () => ({}),
 		getElementById: () => null,
 		head: { appendChild: () => undefined },
 	};
-	return botGuardGlobal;
+
+	return {
+		globalObj: botGuardGlobal,
+		restore: () => {
+			for (const key of Object.keys(previous) as Array<keyof typeof previous>) {
+				if (previous[key] === undefined) {
+					delete botGuardGlobal[key];
+				} else {
+					botGuardGlobal[key] = previous[key];
+				}
+			}
+		},
+	};
 }
 
 async function loadBotGuardVm(
@@ -53,7 +85,6 @@ async function loadBotGuardVm(
 			.privateDoNotAccessOrElseTrustedResourceUrlWrappedValue;
 
 	if (script) {
-		getBotGuardGlobal();
 		Function(script)();
 		return challenge;
 	}
@@ -65,7 +96,6 @@ async function loadBotGuardVm(
 		if (!response.ok) {
 			throw new Error(`BG script fetch failed with ${response.status}`);
 		}
-		getBotGuardGlobal();
 		Function(await response.text())();
 		return challenge;
 	}
@@ -85,21 +115,30 @@ async function getStreamInstance(): Promise<Innertube> {
 
 	// 2. Generate poToken via BotGuard
 	try {
-		const botGuardGlobal = getBotGuardGlobal();
+		const botGuardGlobal = installBotGuardGlobals();
 		const bgConfig = {
 			fetch: (url: string | URL | Request, options?: RequestInit) =>
 				fetch(url, options),
-			globalObj: botGuardGlobal,
+			globalObj: botGuardGlobal.globalObj,
 			identifier: visitorData,
 			requestKey: "O43z0dpjhgX20SCx4KAo",
 		};
-		const challenge = await loadBotGuardVm(await BG.Challenge.create(bgConfig));
+		const poToken = await (async () => {
+			try {
+				const challenge = await loadBotGuardVm(
+					await BG.Challenge.create(bgConfig),
+				);
 
-		const { poToken } = await BG.PoToken.generate({
-			program: challenge.program,
-			globalName: challenge.globalName,
-			bgConfig,
-		});
+				const result = await BG.PoToken.generate({
+					program: challenge.program,
+					globalName: challenge.globalName,
+					bgConfig,
+				});
+				return result.poToken;
+			} finally {
+				botGuardGlobal.restore();
+			}
+		})();
 
 		_streamInstance = await Innertube.create({
 			po_token: poToken,
