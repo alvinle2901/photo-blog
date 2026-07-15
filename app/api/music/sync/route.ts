@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getIsAdmin } from "@/auth/session";
 import { db } from "@/db/client";
-import { startMusicPlaylistSync } from "@/music/sync-playlist";
+import { MusicWorkerError, requestMusicWorker } from "@/music/worker-client";
 
 function parsePlaylistId(value: string) {
 	const id = value.match(/playlist\/([A-Za-z0-9]+)/)?.[1] ?? value;
@@ -40,13 +40,25 @@ export async function POST(request: Request) {
 	}
 
 	try {
-		await startMusicPlaylistSync(playlistId);
+		const workerResponse = await requestMusicWorker("/api/worker/music/sync", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ playlistId }),
+		});
+
+		if (!workerResponse.ok) {
+			return NextResponse.json(
+				{ error: "Music worker could not start the sync." },
+				{ status: 502 },
+			);
+		}
+
 		return NextResponse.json({ status: "running" }, { status: 202 });
 	} catch (error) {
-		console.error("Unable to start music sync", error);
-		return NextResponse.json(
-			{ error: "Unable to start music sync." },
-			{ status: 502 },
-		);
+		const message =
+			error instanceof MusicWorkerError
+				? error.message
+				: "Music worker is unavailable.";
+		return NextResponse.json({ error: message }, { status: 502 });
 	}
 }

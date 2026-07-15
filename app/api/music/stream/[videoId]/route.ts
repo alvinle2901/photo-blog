@@ -2,10 +2,7 @@ import { eq } from "drizzle-orm";
 import { connection } from "next/server";
 
 import { db } from "@/db/client";
-import {
-	getYouTubeStreamUrl,
-	YouTubeStreamResolutionError,
-} from "@/music/youtube";
+import { MusicWorkerError, requestMusicWorker } from "@/music/worker-client";
 
 export async function GET(
 	_request: Request,
@@ -26,22 +23,30 @@ export async function GET(
 	}
 
 	try {
-		const stream = await getYouTubeStreamUrl(videoId);
+		const workerResponse = await requestMusicWorker(
+			`/api/worker/music/resolve/${videoId}`,
+		);
+		if (!workerResponse.ok) {
+			return Response.json(
+				{ error: "Music worker could not resolve this track." },
+				{ status: 502 },
+			);
+		}
+
+		const stream = (await workerResponse.json()) as {
+			mimeType: string;
+			url: string;
+		};
 		return Response.json(stream, {
 			headers: {
 				"Cache-Control": "public, s-maxage=18000, stale-while-revalidate=300",
 			},
 		});
 	} catch (error) {
-		return Response.json(
-			{
-				detail:
-					error instanceof YouTubeStreamResolutionError
-						? error.message
-						: "Unknown stream resolution error",
-				error: "Could not resolve stream URL",
-			},
-			{ status: 502 },
-		);
+		const message =
+			error instanceof MusicWorkerError
+				? error.message
+				: "Music worker is unavailable.";
+		return Response.json({ error: message }, { status: 502 });
 	}
 }

@@ -28,6 +28,8 @@ const fetcher = async (url: string): Promise<TracksResponse> => {
 	return res.json();
 };
 
+const workerHealthUrl = process.env.NEXT_PUBLIC_MUSIC_WORKER_HEALTH_URL;
+
 function trackShuffleKey(track: Track) {
 	let hash = 0;
 	for (const character of track.id) {
@@ -62,6 +64,31 @@ export default function MusicBar() {
 	useEffect(() => {
 		tracksLengthRef.current = tracks.length;
 	}, [tracks.length]);
+
+	useEffect(() => {
+		if (!workerHealthUrl) return;
+
+		let retryTimer: ReturnType<typeof setTimeout> | undefined;
+		let cancelled = false;
+
+		const warmWorker = async (shouldRetry: boolean) => {
+			try {
+				const response = await fetch(workerHealthUrl, { cache: "no-store" });
+				if (!response.ok) throw new Error("Music worker health check failed.");
+			} catch {
+				if (shouldRetry && !cancelled) {
+					retryTimer = setTimeout(() => void warmWorker(false), 3_000);
+				}
+			}
+		};
+
+		void warmWorker(true);
+
+		return () => {
+			cancelled = true;
+			if (retryTimer) clearTimeout(retryTimer);
+		};
+	}, []);
 
 	// Initialise audio element once
 	useEffect(() => {
