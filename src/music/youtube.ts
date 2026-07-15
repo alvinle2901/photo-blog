@@ -266,7 +266,7 @@ const YT_DLP =
 		}
 	}) ??
 	"yt-dlp";
-const YT_DLP_TIMEOUT_MS = 45_000;
+const YT_DLP_TIMEOUT_MS = 25_000;
 const YT_DLP_JS_RUNTIME =
 	process.env.YT_DLP_JS_RUNTIME ?? "node:/usr/local/bin/node";
 const YT_DLP_REMOTE_COMPONENT =
@@ -294,11 +294,41 @@ function getYtDlpErrorDetail(error: unknown) {
 		.slice(0, 1_000);
 }
 
+async function runYtDlpStreamUrl(args: string[]) {
+	let lastError: unknown;
+
+	for (let attempt = 1; attempt <= 2; attempt += 1) {
+		try {
+			const raw = execFileSync(YT_DLP, args, {
+				timeout: YT_DLP_TIMEOUT_MS,
+				encoding: "utf8",
+				stdio: ["ignore", "pipe", "pipe"],
+			}).trim();
+			return raw.split("\n")[0].trim() || null;
+		} catch (error) {
+			lastError = error;
+			if (attempt < 2) {
+				await new Promise((resolve) => setTimeout(resolve, 1_000));
+			}
+		}
+	}
+
+	throw lastError;
+}
+
 // In-memory cache: videoId → { url, expiresAt, mimeType }
 const streamCache = new Map<
 	string,
 	{ url: string; mimeType: string; expiresAt: number }
 >();
+const pendingStreamResolutions = new Map<
+	string,
+	Promise<{ url: string; mimeType: string } | null>
+>();
+
+export function invalidateYouTubeStreamUrl(videoId: string) {
+	streamCache.delete(videoId);
+}
 
 // Cookies temp file — written once from DB, reused across requests
 let _cookiesFile: string | null = null;
@@ -344,6 +374,23 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 		return { url: cached.url, mimeType: cached.mimeType };
 	}
 
+	const pending = pendingStreamResolutions.get(videoId);
+	if (pending) return pending;
+
+	const resolution = resolveYouTubeStreamUrl(videoId, cached).finally(() => {
+		pendingStreamResolutions.delete(videoId);
+	});
+	pendingStreamResolutions.set(videoId, resolution);
+	return resolution;
+}
+
+async function resolveYouTubeStreamUrl(
+	videoId: string,
+	staleCache?: { url: string; mimeType: string; expiresAt: number },
+): Promise<{
+	url: string;
+	mimeType: string;
+} | null> {
 	let streamUrl: string | null = null;
 	let failureDetail = "No YouTube cookies are stored in the database.";
 
@@ -381,29 +428,20 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 	const cookiesFile = await getCookiesFile();
 	if (cookiesFile) {
 		try {
-			const raw = execFileSync(
-				YT_DLP,
-				[
-					"--cookies",
-					cookiesFile,
-					"--js-runtimes",
-					YT_DLP_JS_RUNTIME,
-					"--remote-components",
-					YT_DLP_REMOTE_COMPONENT,
-					"-f",
-					"bestaudio",
-					"-g",
-					"--no-playlist",
-					"--",
-					videoId,
-				],
-				{
-					timeout: YT_DLP_TIMEOUT_MS,
-					encoding: "utf8",
-					stdio: ["ignore", "pipe", "pipe"],
-				},
-			).trim();
-			streamUrl = raw.split("\n")[0].trim() || null;
+			streamUrl = await runYtDlpStreamUrl([
+				"--cookies",
+				cookiesFile,
+				"--js-runtimes",
+				YT_DLP_JS_RUNTIME,
+				"--remote-components",
+				YT_DLP_REMOTE_COMPONENT,
+				"-f",
+				"bestaudio",
+				"-g",
+				"--no-playlist",
+				"--",
+				videoId,
+			]);
 		} catch (e) {
 			failureDetail = getYtDlpErrorDetail(e);
 			console.error(`[stream] DB-cookies yt-dlp failed: ${failureDetail}`);
@@ -416,29 +454,20 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 	if (!streamUrl && process.env.NODE_ENV !== "production") {
 		for (const browser of ["chrome", "firefox", "safari", "edge"]) {
 			try {
-				const raw = execFileSync(
-					YT_DLP,
-					[
-						"--cookies-from-browser",
-						browser,
-						"--js-runtimes",
-						YT_DLP_JS_RUNTIME,
-						"--remote-components",
-						YT_DLP_REMOTE_COMPONENT,
-						"-f",
-						"bestaudio",
-						"-g",
-						"--no-playlist",
-						"--",
-						videoId,
-					],
-					{
-						timeout: YT_DLP_TIMEOUT_MS,
-						encoding: "utf8",
-						stdio: ["ignore", "pipe", "pipe"],
-					},
-				).trim();
-				streamUrl = raw.split("\n")[0].trim() || null;
+				streamUrl = await runYtDlpStreamUrl([
+					"--cookies-from-browser",
+					browser,
+					"--js-runtimes",
+					YT_DLP_JS_RUNTIME,
+					"--remote-components",
+					YT_DLP_REMOTE_COMPONENT,
+					"-f",
+					"bestaudio",
+					"-g",
+					"--no-playlist",
+					"--",
+					videoId,
+				]);
 				if (streamUrl) break;
 			} catch (e) {
 				failureDetail = getYtDlpErrorDetail(e);
@@ -447,7 +476,17 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 		}
 	}
 
-	if (!streamUrl) throw new YouTubeStreamResolutionError(failureDetail);
+	if (!streamUrl) {
+		if (staleCache && Date.now() - staleCache.expiresAt < 30 * 60 * 1000) {
+			console.warn(
+				"[stream] YouTube resolve failed; reusing recently expired stream URL:",
+				failureDetail,
+			);
+			return { url: staleCache.url, mimeType: staleCache.mimeType };
+		}
+
+		throw new YouTubeStreamResolutionError(failureDetail);
+	}
 
 	const mimeType =
 		streamUrl.includes("mime=audio%2Fwebm") ||

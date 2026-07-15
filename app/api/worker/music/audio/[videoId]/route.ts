@@ -4,6 +4,7 @@ import { db } from "@/db/client";
 import { isMusicWorkerStreamRequestAuthorized } from "@/music/worker-auth";
 import {
 	getYouTubeStreamUrl,
+	invalidateYouTubeStreamUrl,
 	YouTubeStreamResolutionError,
 } from "@/music/youtube";
 
@@ -21,6 +22,17 @@ export function OPTIONS() {
 	return new Response(null, {
 		status: 204,
 		headers: AUDIO_RESPONSE_HEADERS,
+	});
+}
+
+async function fetchAudioStream(url: string, request: Request) {
+	return fetch(url, {
+		headers: {
+			...(request.headers.get("range")
+				? { Range: request.headers.get("range") as string }
+				: {}),
+		},
+		cache: "no-store",
 	});
 }
 
@@ -46,7 +58,7 @@ export async function GET(
 	}
 
 	try {
-		const stream = await getYouTubeStreamUrl(videoId);
+		let stream = await getYouTubeStreamUrl(videoId);
 		if (!stream) {
 			return Response.json(
 				{ error: "Could not resolve stream URL" },
@@ -54,14 +66,18 @@ export async function GET(
 			);
 		}
 
-		const upstream = await fetch(stream.url, {
-			headers: {
-				...(request.headers.get("range")
-					? { Range: request.headers.get("range") as string }
-					: {}),
-			},
-			cache: "no-store",
-		});
+		let upstream = await fetchAudioStream(stream.url, request);
+		if ([403, 404, 410, 429, 500, 502, 503, 504].includes(upstream.status)) {
+			invalidateYouTubeStreamUrl(videoId);
+			stream = await getYouTubeStreamUrl(videoId);
+			if (!stream) {
+				return Response.json(
+					{ error: "Could not refresh stream URL" },
+					{ status: 502 },
+				);
+			}
+			upstream = await fetchAudioStream(stream.url, request);
+		}
 
 		if (!upstream.ok && upstream.status !== 206) {
 			return Response.json(
