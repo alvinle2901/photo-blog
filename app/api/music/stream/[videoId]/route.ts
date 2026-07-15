@@ -4,6 +4,8 @@ import { connection } from "next/server";
 import { db } from "@/db/client";
 import { MusicWorkerError, requestMusicWorker } from "@/music/worker-client";
 
+export const maxDuration = 30;
+
 export async function GET(
 	_request: Request,
 	{ params }: { params: Promise<{ videoId: string }> },

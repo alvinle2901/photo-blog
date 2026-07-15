@@ -1,6 +1,6 @@
 // Keep this below Vercel's function timeout so the music bar gets a useful
 // error response instead of a platform-level 504 while Render is cold.
-const WORKER_TIMEOUT_MS = 25_000;
+const WORKER_TIMEOUT_MS = 8_000;
 
 export class MusicWorkerError extends Error {
 	constructor(
@@ -41,6 +41,9 @@ export async function requestMusicWorker(path: string, init: RequestInit = {}) {
 		return response;
 	} catch (error) {
 		if (error instanceof MusicWorkerError) throw error;
+		if (error instanceof Error && error.name === "AbortError") {
+			throw new MusicWorkerError("Music worker timed out. Try again.", 504);
+		}
 		throw new MusicWorkerError("Music worker is unavailable.", 502);
 	} finally {
 		clearTimeout(timeout);

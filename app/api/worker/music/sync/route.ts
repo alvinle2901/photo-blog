@@ -7,6 +7,8 @@ const requestSchema = z.object({
 	playlistId: z.string().regex(/^[A-Za-z0-9]+$/),
 });
 
+export const maxDuration = 60;
+
 export async function POST(request: Request) {
 	if (!isMusicWorkerRequestAuthorized(request)) {
 		return Response.json({ error: "Unauthorized" }, { status: 401 });

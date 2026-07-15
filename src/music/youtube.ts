@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 import { existsSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -24,6 +24,22 @@ let _streamInstance: Innertube | null = null;
 let _streamInstanceAt = 0;
 const STREAM_INSTANCE_TTL = 5.5 * 60 * 60 * 1000; // refresh every 5.5h
 
+function getBotGuardGlobal() {
+	const botGuardGlobal = globalThis as Record<string, unknown>;
+	botGuardGlobal.window ??= botGuardGlobal;
+	botGuardGlobal.self ??= botGuardGlobal;
+	botGuardGlobal.navigator ??= {
+		userAgent:
+			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari",
+	};
+	botGuardGlobal.document ??= {
+		createElement: () => ({}),
+		getElementById: () => null,
+		head: { appendChild: () => undefined },
+	};
+	return botGuardGlobal;
+}
+
 async function loadBotGuardVm(
 	challenge: Awaited<ReturnType<typeof BG.Challenge.create>>,
 ) {
@@ -37,6 +53,7 @@ async function loadBotGuardVm(
 			.privateDoNotAccessOrElseTrustedResourceUrlWrappedValue;
 
 	if (script) {
+		getBotGuardGlobal();
 		Function(script)();
 		return challenge;
 	}
@@ -48,6 +65,7 @@ async function loadBotGuardVm(
 		if (!response.ok) {
 			throw new Error(`BG script fetch failed with ${response.status}`);
 		}
+		getBotGuardGlobal();
 		Function(await response.text())();
 		return challenge;
 	}
@@ -67,10 +85,11 @@ async function getStreamInstance(): Promise<Innertube> {
 
 	// 2. Generate poToken via BotGuard
 	try {
+		const botGuardGlobal = getBotGuardGlobal();
 		const bgConfig = {
 			fetch: (url: string | URL | Request, options?: RequestInit) =>
 				fetch(url, options),
-			globalObj: globalThis,
+			globalObj: botGuardGlobal,
 			identifier: visitorData,
 			requestKey: "O43z0dpjhgX20SCx4KAo",
 		};
@@ -163,13 +182,20 @@ const YT_DLP_TIMEOUT_MS = 15_000;
 export class YouTubeStreamResolutionError extends Error {}
 
 function getYtDlpErrorDetail(error: unknown) {
-	const commandError = error as { message?: string; stderr?: string | Buffer };
+	const commandError = error as {
+		message?: string;
+		stderr?: string | Buffer;
+		status?: number;
+		signal?: string;
+	};
 	const detail =
-		commandError.stderr?.toString().trim() ??
-		commandError.message ??
+		(commandError.stderr?.toString().trim() || commandError.message) ??
 		"Unknown error";
+	const status =
+		commandError.status !== undefined ? `status ${commandError.status}: ` : "";
+	const signal = commandError.signal ? `signal ${commandError.signal}: ` : "";
 
-	return detail
+	return `${status}${signal}${detail}`
 		.replaceAll(/https?:\/\/\S+/g, "[url]")
 		.replaceAll(/\s+/g, " ")
 		.slice(0, 1_000);
@@ -262,8 +288,18 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 	const cookiesFile = await getCookiesFile();
 	if (cookiesFile) {
 		try {
-			const raw = execSync(
-				`${YT_DLP} --cookies "${cookiesFile}" -f bestaudio -g --no-playlist -- "${videoId}"`,
+			const raw = execFileSync(
+				YT_DLP,
+				[
+					"--cookies",
+					cookiesFile,
+					"-f",
+					"bestaudio",
+					"-g",
+					"--no-playlist",
+					"--",
+					videoId,
+				],
 				{
 					timeout: YT_DLP_TIMEOUT_MS,
 					encoding: "utf8",
@@ -283,8 +319,18 @@ export async function getYouTubeStreamUrl(videoId: string): Promise<{
 	if (!streamUrl && process.env.NODE_ENV !== "production") {
 		for (const browser of ["chrome", "firefox", "safari", "edge"]) {
 			try {
-				const raw = execSync(
-					`${YT_DLP} --cookies-from-browser ${browser} -f bestaudio -g --no-playlist -- "${videoId}"`,
+				const raw = execFileSync(
+					YT_DLP,
+					[
+						"--cookies-from-browser",
+						browser,
+						"-f",
+						"bestaudio",
+						"-g",
+						"--no-playlist",
+						"--",
+						videoId,
+					],
 					{
 						timeout: YT_DLP_TIMEOUT_MS,
 						encoding: "utf8",

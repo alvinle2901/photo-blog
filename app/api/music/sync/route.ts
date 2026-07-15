@@ -4,6 +4,8 @@ import { getIsAdmin } from "@/auth/session";
 import { db } from "@/db/client";
 import { MusicWorkerError, requestMusicWorker } from "@/music/worker-client";
 
+export const maxDuration = 30;
+
 function parsePlaylistId(value: string) {
 	const id = value.match(/playlist\/([A-Za-z0-9]+)/)?.[1] ?? value;
 	return /^[A-Za-z0-9]+$/.test(id) ? id : null;
