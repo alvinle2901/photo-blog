@@ -1,141 +1,106 @@
-import type { AdapterAccountType } from 'next-auth/adapters';
-
 import {
-  boolean,
-  integer,
-  pgTable,
-  primaryKey,
-  real,
-  smallint,
-  text,
-  timestamp,
-  varchar,
-} from 'drizzle-orm/pg-core';
-import { createInsertSchema } from 'drizzle-zod';
+	boolean,
+	doublePrecision,
+	index,
+	integer,
+	json,
+	pgTable,
+	primaryKey,
+	real,
+	smallint,
+	text,
+	timestamp,
+	varchar,
+} from "drizzle-orm/pg-core";
 
-export const users = pgTable('user', {
-  id: text('id')
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text('name'),
-  email: text('email').notNull(),
-  emailVerified: timestamp('emailVerified', { mode: 'date' }),
-  image: text('image'),
-  password: text('password'),
-});
-
-export const accounts = pgTable(
-  'account',
-  {
-    userId: text('userId')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    type: text('type').$type<AdapterAccountType>().notNull(),
-    provider: text('provider').notNull(),
-    providerAccountId: text('providerAccountId').notNull(),
-    refresh_token: text('refresh_token'),
-    access_token: text('access_token'),
-    expires_at: integer('expires_at'),
-    token_type: text('token_type'),
-    scope: text('scope'),
-    id_token: text('id_token'),
-    session_state: text('session_state'),
-  },
-  (account) => ({
-    compoundKey: primaryKey({
-      columns: [account.provider, account.providerAccountId],
-    }),
-  }),
+export const photos = pgTable(
+	"photos",
+	{
+		id: varchar("id", { length: 36 }).primaryKey(),
+		url: text("url").notNull(),
+		extension: varchar("extension", { length: 10 }).notNull(),
+		aspectRatio: real("aspect_ratio").notNull(),
+		blurData: text("blur_data"),
+		colorData: json("color_data"),
+		title: varchar("title", { length: 255 }),
+		caption: text("caption"),
+		semanticDescription: text("semantic_description"),
+		tags: text("tags").array(),
+		takenAt: timestamp("taken_at", { withTimezone: true }),
+		takenAtNaive: varchar("taken_at_naive", { length: 30 }),
+		make: varchar("make", { length: 100 }),
+		model: varchar("model", { length: 100 }),
+		focalLength: smallint("focal_length"),
+		focalLength35mm: smallint("focal_length_35mm_equivalent"),
+		fStop: real("f_number"),
+		iso: smallint("iso"),
+		exposureTime: real("exposure_time"),
+		exposureComp: real("exposure_compensation"),
+		latitude: doublePrecision("latitude"),
+		longitude: doublePrecision("longitude"),
+		locationName: varchar("location_name", { length: 255 }),
+		filmSimulation: varchar("film_simulation", { length: 50 }),
+		recipeTitle: varchar("recipe_title", { length: 255 }),
+		recipeData: json("recipe_data"),
+		hidden: boolean("hidden").notNull().default(false),
+		priorityOrder: real("priority_order"),
+		createdAt: timestamp("created_at").notNull().defaultNow(),
+		updatedAt: timestamp("updated_at").notNull().defaultNow(),
+	},
+	(t) => [
+		index("photos_camera_taken_idx").on(
+			t.make,
+			t.model,
+			t.takenAt.desc().nullsLast(),
+			t.createdAt.desc(),
+		),
+		index("photos_film_taken_idx").on(
+			t.filmSimulation,
+			t.takenAt.desc().nullsLast(),
+			t.createdAt.desc(),
+		),
+		index("photos_taken_created_idx").on(
+			t.takenAt.desc().nullsLast(),
+			t.createdAt.desc(),
+		),
+	],
 );
 
-export const sessions = pgTable('session', {
-  sessionToken: text('sessionToken').primaryKey(),
-  userId: text('userId')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  expires: timestamp('expires', { mode: 'date' }).notNull(),
+export const albums = pgTable("albums", {
+	id: varchar("id", { length: 36 }).primaryKey(),
+	title: varchar("title", { length: 255 }).notNull(),
+	description: text("description"),
+	coverPhotoId: varchar("cover_photo_id", { length: 36 }).references(
+		() => photos.id,
+		{ onDelete: "set null" },
+	),
+	hidden: boolean("hidden").notNull().default(false),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const verificationTokens = pgTable(
-  'verificationToken',
-  {
-    identifier: text('identifier').notNull(),
-    token: text('token').notNull(),
-    expires: timestamp('expires', { mode: 'date' }).notNull(),
-  },
-  (verificationToken) => ({
-    compositePk: primaryKey({
-      columns: [verificationToken.identifier, verificationToken.token],
-    }),
-  }),
+export const filmPhotos = pgTable("film_photos", {
+	id: varchar("id", { length: 36 }).primaryKey(),
+	url: text("url").notNull(),
+	title: varchar("title", { length: 255 }),
+	description: text("description"),
+	width: integer("width").notNull(),
+	height: integer("height").notNull(),
+	film: varchar("film", { length: 100 }),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const albumPhotos = pgTable(
+	"album_photos",
+	{
+		albumId: varchar("album_id", { length: 36 })
+			.notNull()
+			.references(() => albums.id, { onDelete: "cascade" }),
+		photoId: varchar("photo_id", { length: 36 })
+			.notNull()
+			.references(() => photos.id, { onDelete: "cascade" }),
+		order: integer("order").notNull().default(0),
+	},
+	(t) => ({
+		pk: primaryKey({ columns: [t.albumId, t.photoId] }),
+	}),
 );
-
-export const authenticators = pgTable(
-  'authenticator',
-  {
-    credentialID: text('credentialID').notNull().unique(),
-    userId: text('userId')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    providerAccountId: text('providerAccountId').notNull(),
-    credentialPublicKey: text('credentialPublicKey').notNull(),
-    counter: integer('counter').notNull(),
-    credentialDeviceType: text('credentialDeviceType').notNull(),
-    credentialBackedUp: boolean('credentialBackedUp').notNull(),
-    transports: text('transports'),
-  },
-  (authenticator) => ({
-    compositePK: primaryKey({
-      columns: [authenticator.userId, authenticator.credentialID],
-    }),
-  }),
-);
-
-export const photos = pgTable('photos', {
-  id: text('id')
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  url: text('url').notNull(),
-  title: text('title').notNull(),
-  description: text('description').notNull(),
-  isFavorite: boolean('isFavorite').default(false),
-  aspectRatio: real('aspect_ratio').notNull(),
-  width: real('width').notNull(),
-  height: real('height').notNull(),
-  blurData: text('blur_data').notNull(),
-
-  make: varchar('make', { length: 255 }),
-  model: varchar('model', { length: 255 }),
-  lensModel: varchar('lens_model', { length: 255 }),
-  focalLength: real('focal_length'),
-  focalLength35mm: varchar('focal_length_35mm'),
-  fNumber: real('f_number'),
-  iso: smallint('iso'),
-  exposureTime: real('exposure_time'),
-  exposureCompensation: varchar('exposure_compensation'),
-  locationName: varchar('location_name', { length: 255 }),
-  latitude: real('latitude'),
-  longitude: real('longitude'),
-  gpsAltitude: real('gps_altitude'),
-  takeAt: text('take_at'),
-
-  createAt: timestamp('create_at').notNull().defaultNow(),
-  updateAt: timestamp('update_at').$onUpdate(() => new Date()),
-});
-
-export const insertPhotoSchema = createInsertSchema(photos);
-
-export const photos_35mm = pgTable('photos_35mm', {
-  id: text('id')
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  url: text('url').notNull(),
-  film: text('film').notNull(),
-  title: text('title').notNull(),
-  description: text('description').notNull(),
-  width: real('width').notNull(),
-  height: real('height').notNull(),
-  createAt: timestamp('create_at').defaultNow(),
-});
-
-export const insert35mmPhotoSchema = createInsertSchema(photos_35mm);

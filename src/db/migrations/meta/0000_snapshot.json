@@ -1,0 +1,332 @@
+{
+	"id": "f0f92400-70ec-4e86-a5cb-e76c9f0f1546",
+	"prevId": "00000000-0000-0000-0000-000000000000",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"public.album_photos": {
+			"name": "album_photos",
+			"schema": "",
+			"columns": {
+				"album_id": {
+					"name": "album_id",
+					"type": "varchar(36)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"photo_id": {
+					"name": "photo_id",
+					"type": "varchar(36)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"order": {
+					"name": "order",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"album_photos_album_id_albums_id_fk": {
+					"name": "album_photos_album_id_albums_id_fk",
+					"tableFrom": "album_photos",
+					"tableTo": "albums",
+					"columnsFrom": ["album_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"album_photos_photo_id_photos_id_fk": {
+					"name": "album_photos_photo_id_photos_id_fk",
+					"tableFrom": "album_photos",
+					"tableTo": "photos",
+					"columnsFrom": ["photo_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"album_photos_album_id_photo_id_pk": {
+					"name": "album_photos_album_id_photo_id_pk",
+					"columns": ["album_id", "photo_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.albums": {
+			"name": "albums",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(36)",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"title": {
+					"name": "title",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"cover_photo_id": {
+					"name": "cover_photo_id",
+					"type": "varchar(36)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"hidden": {
+					"name": "hidden",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"albums_cover_photo_id_photos_id_fk": {
+					"name": "albums_cover_photo_id_photos_id_fk",
+					"tableFrom": "albums",
+					"tableTo": "photos",
+					"columnsFrom": ["cover_photo_id"],
+					"columnsTo": ["id"],
+					"onDelete": "set null",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.photos": {
+			"name": "photos",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(36)",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"url": {
+					"name": "url",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"extension": {
+					"name": "extension",
+					"type": "varchar(10)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"aspect_ratio": {
+					"name": "aspect_ratio",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"blur_data": {
+					"name": "blur_data",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"color_data": {
+					"name": "color_data",
+					"type": "json",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"title": {
+					"name": "title",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"caption": {
+					"name": "caption",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"semantic_description": {
+					"name": "semantic_description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"tags": {
+					"name": "tags",
+					"type": "text[]",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"taken_at": {
+					"name": "taken_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"taken_at_naive": {
+					"name": "taken_at_naive",
+					"type": "varchar(30)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"make": {
+					"name": "make",
+					"type": "varchar(100)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"model": {
+					"name": "model",
+					"type": "varchar(100)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"focal_length": {
+					"name": "focal_length",
+					"type": "smallint",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"focal_length_35mm_equivalent": {
+					"name": "focal_length_35mm_equivalent",
+					"type": "smallint",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"f_number": {
+					"name": "f_number",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"iso": {
+					"name": "iso",
+					"type": "smallint",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"exposure_time": {
+					"name": "exposure_time",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"exposure_compensation": {
+					"name": "exposure_compensation",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"latitude": {
+					"name": "latitude",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"longitude": {
+					"name": "longitude",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"location_name": {
+					"name": "location_name",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"film_simulation": {
+					"name": "film_simulation",
+					"type": "varchar(50)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"recipe_title": {
+					"name": "recipe_title",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"recipe_data": {
+					"name": "recipe_data",
+					"type": "json",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"hidden": {
+					"name": "hidden",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"priority_order": {
+					"name": "priority_order",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		}
+	},
+	"enums": {},
+	"schemas": {},
+	"sequences": {},
+	"roles": {},
+	"policies": {},
+	"views": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
+}

@@ -1,0 +1,88 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import { Flourish } from "@/components/icons/Flourish";
+import { Flower } from "@/components/icons/Flower";
+import { isPathGrid } from "@/utils/string";
+
+import LinksItem from "./LinksItem";
+import SocialLinks from "./SocialLinks";
+import ViewSwitcher, { type SwitcherSelection } from "./ViewSwitcher";
+
+const Sidebar = () => {
+	const pathname = usePathname();
+
+	const homeRoutes = [
+		{
+			label: "home.",
+			href: "/",
+		},
+		{
+			label: "map.",
+			href: "/map",
+		},
+		{
+			label: "35mm.",
+			href: "/35mm",
+		},
+	];
+
+	const switcherSelectionForPath = (): SwitcherSelection | undefined => {
+		if (pathname === "/") {
+			return "feed";
+		} else if (isPathGrid(pathname)) {
+			return "grid";
+		}
+	};
+
+	return (
+		<div className="hidden w-[20%] shrink-0 md:block">
+			<div
+				className="fixed top-0 flex h-dvh flex-col justify-between px-8 py-8"
+				style={{
+					left: "max(0px, calc((100vw - 1400px) / 2))",
+					width: "min(20vw, 280px)",
+				}}
+			>
+				<div className="flex flex-col gap-6">
+					<div>
+						<Link href={"/"}>
+							<p
+								className="italic text-4xl text-[#18170f] font-light leading-none"
+								style={{ fontFamily: "'Cormorant', serif" }}
+							>
+								momento
+							</p>
+							<p
+								className="text-[#b5b0a8] mt-1 tracking-[0.14em]"
+								style={{ fontFamily: "'DM Mono', monospace" }}
+							>
+								by alv.
+							</p>
+						</Link>
+						{/* Flourish */}
+						<Flourish />
+					</div>
+					<ViewSwitcher currentSelection={switcherSelectionForPath()} />
+					{/* Navs */}
+					<nav className="flex flex-1 flex-col gap-0.5 mt-2">
+						{homeRoutes.map((route) => (
+							<LinksItem
+								label={route.label}
+								href={route.href}
+								key={route.href}
+							></LinksItem>
+						))}
+					</nav>
+				</div>
+				<Flower />
+				{/* Socials */}
+				<SocialLinks />
+			</div>
+		</div>
+	);
+};
+
+export default Sidebar;

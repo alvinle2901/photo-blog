@@ -1,0 +1,15 @@
+export const CACHE_KEYS = {
+	photos: () => "photos",
+	grid: () => "grid",
+	map: () => "map",
+	photo: (id: string) => `photo-${id}`,
+	album: (id: string) => `album-${id}`,
+	albums: () => "albums",
+	tag: (tag: string) => `tag-${tag}`,
+	tags: () => "tags",
+	film: (film: string) => `film-${film}`,
+	camera: (make: string, model: string) => `camera-${make}-${model}`,
+	lens: (make: string, model: string) => `lens-${make}-${model}`,
+	focal: (focal: string) => `focal-${focal}`,
+	year: (year: string) => `year-${year}`,
+} as const;

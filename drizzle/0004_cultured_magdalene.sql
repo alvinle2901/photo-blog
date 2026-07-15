@@ -1,1 +1,0 @@
-ALTER TABLE "photos_35mm" ADD COLUMN "create_at" timestamp DEFAULT now();

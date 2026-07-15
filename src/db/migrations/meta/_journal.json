@@ -1,0 +1,34 @@
+{
+	"version": "7",
+	"dialect": "postgresql",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "7",
+			"when": 1780668386556,
+			"tag": "0000_add_location_name_recipe_title",
+			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "7",
+			"when": 1781813606780,
+			"tag": "0001_keen_stardust",
+			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "7",
+			"when": 1783036408018,
+			"tag": "0002_serious_the_fallen",
+			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "7",
+			"when": 1783036989494,
+			"tag": "0003_marvelous_lionheart",
+			"breakpoints": true
+		}
+	]
+}
