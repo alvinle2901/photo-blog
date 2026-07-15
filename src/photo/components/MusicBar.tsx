@@ -45,6 +45,7 @@ export default function MusicBar() {
 	const [error, setError] = useState<string | null>(null);
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const loadedVideoIdRef = useRef<string | null>(null);
+	const playbackRetryCountRef = useRef(0);
 	const hasAutoplayed = useRef(false);
 	const tracksLengthRef = useRef(0);
 
@@ -90,11 +91,42 @@ export default function MusicBar() {
 		};
 	}, []);
 
+	const resolveAndPlay = useCallback(
+		async (videoId: string, isRetry = false) => {
+			if (!isRetry) playbackRetryCountRef.current = 0;
+			setError(null);
+			setIsLoading(true);
+			try {
+				const res = await fetch(`/api/music/stream/${videoId}`);
+				if (!res.ok) throw new Error(`Stream resolve failed: ${res.status}`);
+				const { url } = (await res.json()) as {
+					url: string;
+				};
+
+				const audio = audioRef.current;
+				if (!audio) return;
+
+				audio.pause();
+				audio.src = url;
+				loadedVideoIdRef.current = videoId;
+				await audio.play();
+			} catch (e) {
+				setError(e instanceof Error ? e.message : "Unable to start playback.");
+			} finally {
+				setIsLoading(false);
+			}
+		},
+		[],
+	);
+
 	// Initialise audio element once
 	useEffect(() => {
 		const audio = new Audio();
 		audio.volume = 0.7;
-		audio.addEventListener("playing", () => setIsPlaying(true));
+		audio.addEventListener("playing", () => {
+			playbackRetryCountRef.current = 0;
+			setIsPlaying(true);
+		});
 		audio.addEventListener("pause", () => setIsPlaying(false));
 		audio.addEventListener("ended", () => {
 			if (tracksLengthRef.current > 0) {
@@ -102,6 +134,14 @@ export default function MusicBar() {
 			}
 		});
 		audio.addEventListener("error", () => {
+			const videoId = loadedVideoIdRef.current;
+			if (videoId && playbackRetryCountRef.current < 1) {
+				playbackRetryCountRef.current += 1;
+				setError("Playback error — retrying.");
+				window.setTimeout(() => void resolveAndPlay(videoId, true), 1500);
+				return;
+			}
+
 			setError("Playback error — skipping track.");
 			if (tracksLengthRef.current > 0) {
 				setActiveIndex((index) => (index + 1) % tracksLengthRef.current);
@@ -112,31 +152,7 @@ export default function MusicBar() {
 			audio.pause();
 			audio.src = "";
 		};
-	}, []);
-
-	const resolveAndPlay = useCallback(async (videoId: string) => {
-		setError(null);
-		setIsLoading(true);
-		try {
-			const res = await fetch(`/api/music/stream/${videoId}`);
-			if (!res.ok) throw new Error(`Stream resolve failed: ${res.status}`);
-			const { url } = (await res.json()) as {
-				url: string;
-			};
-
-			const audio = audioRef.current;
-			if (!audio) return;
-
-			audio.pause();
-			audio.src = url;
-			loadedVideoIdRef.current = videoId;
-			await audio.play();
-		} catch (e) {
-			setError(e instanceof Error ? e.message : "Unable to start playback.");
-		} finally {
-			setIsLoading(false);
-		}
-	}, []);
+	}, [resolveAndPlay]);
 
 	const togglePlayback = useCallback(async () => {
 		if (!track) return;

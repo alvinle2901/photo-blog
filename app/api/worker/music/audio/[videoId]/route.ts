@@ -9,6 +9,21 @@ import {
 
 export const maxDuration = 60;
 
+const AUDIO_RESPONSE_HEADERS = {
+	"Access-Control-Allow-Headers": "Range",
+	"Access-Control-Allow-Methods": "GET, OPTIONS",
+	"Access-Control-Allow-Origin": "*",
+	"Access-Control-Expose-Headers":
+		"Accept-Ranges, Content-Length, Content-Range",
+};
+
+export function OPTIONS() {
+	return new Response(null, {
+		status: 204,
+		headers: AUDIO_RESPONSE_HEADERS,
+	});
+}
+
 export async function GET(
 	request: Request,
 	{ params }: { params: Promise<{ videoId: string }> },
@@ -56,6 +71,7 @@ export async function GET(
 		}
 
 		const headers = new Headers({
+			...AUDIO_RESPONSE_HEADERS,
 			"Accept-Ranges": upstream.headers.get("accept-ranges") ?? "bytes",
 			"Cache-Control": "private, no-store",
 			"Content-Type": upstream.headers.get("content-type") ?? stream.mimeType,
