@@ -266,7 +266,7 @@ const YT_DLP =
 		}
 	}) ??
 	"yt-dlp";
-const YT_DLP_TIMEOUT_MS = 15_000;
+const YT_DLP_TIMEOUT_MS = 45_000;
 
 export class YouTubeStreamResolutionError extends Error {}
 
