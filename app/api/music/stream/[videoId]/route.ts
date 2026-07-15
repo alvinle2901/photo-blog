@@ -2,11 +2,7 @@ import { eq } from "drizzle-orm";
 import { connection } from "next/server";
 
 import { db } from "@/db/client";
-import {
-	createMusicWorkerStreamUrl,
-	MusicWorkerError,
-	requestMusicWorker,
-} from "@/music/worker-client";
+import { createMusicWorkerStreamUrl } from "@/music/worker-client";
 
 export const maxDuration = 30;
 
@@ -28,37 +24,15 @@ export async function GET(
 		return Response.json({ error: "Video not in playlist" }, { status: 403 });
 	}
 
-	try {
-		const workerResponse = await requestMusicWorker(
-			`/api/worker/music/resolve/${videoId}`,
-		);
-		if (!workerResponse.ok) {
-			return Response.json(
-				{ error: "Music worker could not resolve this track." },
-				{ status: 502 },
-			);
-		}
-
-		const stream = (await workerResponse.json()) as {
-			mimeType: string;
-			url: string;
-		};
-		return Response.json(
-			{
-				mimeType: stream.mimeType,
-				url: createMusicWorkerStreamUrl(`/api/worker/music/audio/${videoId}`),
+	return Response.json(
+		{
+			mimeType: "audio/webm",
+			url: createMusicWorkerStreamUrl(`/api/worker/music/audio/${videoId}`),
+		},
+		{
+			headers: {
+				"Cache-Control": "private, no-store",
 			},
-			{
-				headers: {
-					"Cache-Control": "public, s-maxage=18000, stale-while-revalidate=300",
-				},
-			},
-		);
-	} catch (error) {
-		const message =
-			error instanceof MusicWorkerError
-				? error.message
-				: "Music worker is unavailable.";
-		return Response.json({ error: message }, { status: 502 });
-	}
+		},
+	);
 }
