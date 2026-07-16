@@ -42,7 +42,7 @@ const Page35mm = async () => {
 	}));
 
 	return (
-		<div className="p-4 md:py-10 md:pr-12.5">
+		<div className="p-2 md:py-10 md:pr-12.5">
 			<Gallery35mm filmPhotos={galleryPhotos} />
 		</div>
 	);

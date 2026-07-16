@@ -27,7 +27,7 @@ export default function FilmOverview({
 				}
 			/>
 
-			<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 sm:gap-2 md:gap-1 px-2">
+			<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-1 px-2">
 				{photos.map((photo, index) => (
 					<Link
 						key={photo.id}

@@ -1,17 +1,13 @@
 import type { Metadata } from "next/types";
 import { cache } from "react";
 
-import {
-	CAMERA_GRID_INITIAL,
-	decodeCameraParams,
-	generateMetaForCamera,
-} from "@/camera";
+import { decodeCameraParams, generateMetaForCamera } from "@/camera";
 import CameraOverview from "@/camera/CameraOverview";
 import { getPhotosCameraDataCached } from "@/camera/data";
 import { getUniqueCamerasCached } from "@/photo/cache";
 
 const getPhotosCameraDataCachedCached = cache((make: string, model: string) =>
-	getPhotosCameraDataCached({ make, model, limit: CAMERA_GRID_INITIAL }),
+	getPhotosCameraDataCached({ make, model }),
 );
 
 interface CameraProps {

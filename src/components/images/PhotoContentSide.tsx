@@ -61,7 +61,7 @@ export default function PhotoContentSide({
 						onClick={() => router.push(`/p/${photo.id}`)}
 					>
 						<h2
-							className="italic text-2xl text-[#18170f] font-normal leading-tight"
+							className="italic text-lg md:text-2xl text-[#18170f] font-normal leading-tight"
 							style={{ fontFamily: "'Cormorant', serif" }}
 						>
 							{photo.title}
