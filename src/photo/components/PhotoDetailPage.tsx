@@ -93,7 +93,7 @@ export default function PhotoDetailPage({
 
 			{nextPhotos.length > 0 && (
 				<section className="pb-4">
-					<div className="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-5 px-2">
+					<div className="grid grid-cols-2 gap-1 md:grid-cols-4 lg:grid-cols-5 px-2">
 						{nextPhotos.map((next, index) => (
 							<ImageSquare
 								key={next.id}

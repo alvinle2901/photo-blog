@@ -26,7 +26,7 @@ export default function PhotoContentSide({
 	const renderMiniGrid = (children: JSX.Element) => (
 		<div
 			className={cn(
-				"flex gap-y-4",
+				"flex gap-y-3 md:gap-y-4",
 				"flex-col sm:flex-row lg:flex-col",
 				"[&>*]:sm:flex-grow",
 				"pr-2",
@@ -75,10 +75,15 @@ export default function PhotoContentSide({
 						}
 					>
 						<Icons.camera className="h-4 w-4 transition-transform group-hover/camera:-rotate-6" />
-						<div className="uppercase font-medium pl-1 underline-offset-4 group-hover/camera:underline">
+						<div className="uppercase text-sm font-medium pl-1 underline-offset-4 group-hover/camera:underline">
 							{photo.make} {photo.model}
 						</div>
 					</button>
+					{photo.locationName && photo.locationName !== "unknown" ? (
+						<div className="text-gray-500 dark:text-gray-400 lg:hidden">
+							{getShortenLocation(photo.locationName)}
+						</div>
+					) : null}
 				</>,
 			)}
 			{renderMiniGrid(
@@ -129,7 +134,8 @@ export default function PhotoContentSide({
 								"dark:text-gray-400",
 							)}
 						>
-							{formatDate(photo.takenAt)}
+							<span className="lg:hidden">{formatDate(photo.takenAt, false)}</span>
+							<span className="hidden lg:inline">{formatDate(photo.takenAt)}</span>
 						</div>
 					</div>
 				</>,
