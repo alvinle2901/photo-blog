@@ -9,7 +9,7 @@ import LightboxProvider from "@/providers/lightbox/LightboxProvider";
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<LightboxProvider>
-			<main className="mx-auto min-h-dvh overflow-x-hidden bg-[#f7f5f2] md:max-w-[1400px]">
+			<main className="mx-auto min-h-dvh overflow-x-clip bg-[#f7f5f2] md:max-w-[1400px]">
 				<Nav />
 				<div className="flex">
 					<Sidebar />

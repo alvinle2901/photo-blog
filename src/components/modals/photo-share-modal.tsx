@@ -34,7 +34,7 @@ export default function PhotoShareModal() {
 			type="button"
 			aria-label={label}
 			className={cn(
-				"inline-flex h-10 items-center justify-center px-3.5",
+				"inline-flex size-9 items-center justify-center sm:h-10 sm:w-auto sm:px-3.5",
 				embedded ? "border-l" : "border rounded-md",
 				"border-[#ddd5ca] bg-[#fbfaf7] text-[#3b352e] active:bg-[#efe8dd]",
 				"cursor-pointer transition-colors hover:bg-[#f3eee7]",
@@ -68,12 +68,12 @@ export default function PhotoShareModal() {
 				if (!open) handleClose();
 			}}
 		>
-			<DialogContent className="max-h-[92dvh] w-[calc(100vw-1rem)] max-w-[min(720px,calc(100vw-1rem))] overflow-y-auto rounded-lg border-[#d8d0c5] bg-[#f7f5f2] p-3 shadow-xl sm:w-[94vw] sm:p-5">
-				<div className="space-y-3">
+			<DialogContent className="box-border max-h-[90dvh] !w-[calc(100vw-2rem)] !max-w-[min(21.5rem,calc(100vw-2rem))] gap-0 overflow-x-hidden overflow-y-auto rounded-lg border-[#d8d0c5] bg-[#f7f5f2] p-3 shadow-xl sm:!w-[94vw] sm:!max-w-[720px] sm:p-5">
+				<div className="min-w-0 space-y-2 sm:space-y-3">
 					<div className="flex items-center gap-2 pr-8 text-[#18170f]">
 						<TbPhotoShare size={20} />
 						<DialogTitle
-							className="italic text-2xl font-normal leading-tight"
+							className="italic text-xl font-normal leading-tight sm:text-2xl"
 							style={{ fontFamily: "'Cormorant', serif" }}
 						>
 							share photo
@@ -83,7 +83,7 @@ export default function PhotoShareModal() {
 					{showQR ? (
 						<div
 							className={cn(
-								"mx-auto flex aspect-square w-full max-w-[300px] items-center justify-center rounded-lg",
+								"mx-auto flex aspect-square w-full max-w-[240px] items-center justify-center rounded-lg sm:max-w-[300px]",
 								"border border-[#ddd5ca] bg-white p-3 shadow-sm",
 							)}
 						>
@@ -103,17 +103,17 @@ export default function PhotoShareModal() {
 								alt={photo.title || "Shared photo"}
 								width={width}
 								height={height}
-								className="max-h-[62vh] w-auto object-contain"
+								className="max-h-[48dvh] max-w-full object-contain sm:max-h-[62vh]"
 								placeholder={photo.blurData ? "blur" : "empty"}
 								blurDataURL={photo.blurData || undefined}
 							/>
 						</div>
 					)}
 
-					<div className="flex min-w-0 flex-wrap items-stretch gap-2">
+					<div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-stretch gap-2">
 						<div
 							className={cn(
-								"flex h-10 min-w-0 flex-[1_1_220px] items-center overflow-hidden rounded-md",
+								"flex h-9 min-w-0 flex-1 items-center overflow-hidden rounded-md sm:h-10",
 								"border border-[#ddd5ca] bg-[#fbfaf7] text-sm text-[#3b352e]",
 							)}
 							style={{ fontFamily: "'DM Mono', monospace" }}
@@ -135,7 +135,7 @@ export default function PhotoShareModal() {
 							)}
 						</div>
 
-						<div className="flex shrink-0 flex-wrap gap-2">
+						<div className="flex shrink-0 gap-2">
 							{renderIcon(
 								showQR ? <TbPhotoShare size={18} /> : <TbQrcode size={18} />,
 								() => setShowQR((value) => !value),
