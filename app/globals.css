@@ -19,31 +19,6 @@ body,
 	overflow-x: hidden;
 }
 
-/* Firefox */
-* {
-	scrollbar-width: thin;
-	scrollbar-color: var(--secondary) var(--primary);
-}
-
-/* Chrome, Edge, and Safari */
-body::-webkit-scrollbar {
-	width: 17px;
-}
-
-body::-webkit-scrollbar-track {
-	background-color: #e4e4e4;
-	border-radius: 100px;
-}
-
-body::-webkit-scrollbar-thumb {
-	background-color: #d4aa70;
-	border-radius: 100px;
-}
-
-body::-webkit-scrollbar-thumb:hover {
-	background-color: #a8bbbf;
-}
-
 @theme {
   --font-courier-prime: var(--font-mono-fallback);
   --font-ibm-plex-mono: var(--font-mono-fallback);
