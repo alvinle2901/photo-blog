@@ -27,17 +27,37 @@ const SECTIONS = [
 
 export default function AdminDashboard() {
 	return (
-		<div className="space-y-6">
-			<h1 className="text-2xl font-semibold">Dashboard</h1>
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+		<div className="space-y-8 px-5 py-8 sm:px-8">
+			<div>
+				<p
+					className="text-[11px] uppercase tracking-[0.18em] text-[#b5b0a8]"
+					style={{ fontFamily: "'DM Mono', monospace" }}
+				>
+					studio console
+				</p>
+				<h1
+					className="mt-2 text-5xl font-light italic leading-none text-[#18170f]"
+					style={{ fontFamily: "'Cormorant', serif" }}
+				>
+					admin
+				</h1>
+			</div>
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 				{SECTIONS.map((section) => (
 					<Link
 						key={section.href}
 						href={section.href}
-						className="block p-4 border rounded-lg hover:bg-gray-50 transition-colors space-y-1"
+						className="block space-y-2 rounded-sm border border-[#e5e0d9] bg-[#ebe7df] p-4 transition-colors hover:border-[#18170f] hover:bg-[#f7f5f2]"
 					>
-						<div className="font-medium text-sm">{section.label}</div>
-						<div className="text-xs text-gray-500">{section.description}</div>
+						<div
+							className="text-2xl font-light italic text-[#18170f]"
+							style={{ fontFamily: "'Cormorant', serif" }}
+						>
+							{section.label}
+						</div>
+						<div className="text-sm leading-6 text-[#6f675d]">
+							{section.description}
+						</div>
 					</Link>
 				))}
 			</div>

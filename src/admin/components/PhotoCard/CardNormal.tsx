@@ -35,16 +35,16 @@ const PhotoCard = ({
 	return (
 		<div
 			className={cn(
-				"relative rounded-sm transition duration-150",
+				"group relative rounded-sm transition duration-200",
 				isSelected &&
-					"bg-white shadow-[0_0_0_2px_#18170f,0_10px_32px_rgba(0,0,0,0.12)]",
+					"bg-[#ebe7df] shadow-[0_0_0_1px_#18170f,0_14px_34px_rgba(24,23,15,0.16)]",
 			)}
 		>
 			<Button
 				asChild
 				variant="outline"
 				size="icon"
-				className="absolute right-2 top-2 z-10 size-8 rounded-full border-[#d8d1c7] bg-white/95 text-[#18170f] shadow-sm backdrop-blur hover:bg-white"
+				className="absolute right-2 top-2 z-10 size-8 rounded-full border-[#d8d1c7] bg-[#f7f5f2] text-[#18170f] opacity-95 shadow-sm transition-all hover:bg-[#ebe7df] group-hover:opacity-100"
 			>
 				<Link
 					href={`/admin/photos/${photo.id}/edit`}
@@ -56,14 +56,14 @@ const PhotoCard = ({
 
 			<button
 				type="button"
-				className="block w-full cursor-pointer text-left"
+				className="block w-full cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#18170f] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f5f2]"
 				onClick={handlePhotoSelect}
 				aria-pressed={isSelected}
 			>
 				<AspectRatio
 					ratio={4 / 5}
 					className={cn(
-						"overflow-hidden rounded-t-sm bg-muted",
+						"overflow-hidden rounded-t-sm border border-[#e5e0d9] border-b-0 bg-[#ebe7df]",
 						isSelected && "brightness-105",
 					)}
 				>
@@ -73,7 +73,7 @@ const PhotoCard = ({
 						alt={photo.title || "Photo"}
 						placeholder="blur"
 						blurDataURL={photo.blurData}
-						className="object-cover brightness-100 transition-all duration-300 hover:brightness-110"
+						className="object-cover brightness-100 transition duration-300 group-hover:scale-[1.015] group-hover:brightness-105"
 						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 					/>
 				</AspectRatio>
@@ -81,24 +81,24 @@ const PhotoCard = ({
 				<div className="w-full">
 					<div
 						className={cn(
-							"w-full space-y-2 overflow-hidden rounded-b-sm border-b border-l border-r border-[#e5e0d9] bg-[#f7f5f2] p-2 transition duration-150",
-							isSelected && "border-[#18170f] bg-white",
+							"w-full space-y-2 overflow-hidden rounded-b-sm border-b border-l border-r border-[#e5e0d9] bg-[#f7f5f2] p-3 transition duration-150",
+							isSelected && "border-[#18170f] bg-[#ebe7df]",
 						)}
 					>
 						<p
-							className="italic text-lg text-[#18170f] leading-tight truncate"
+							className="truncate text-xl italic leading-tight text-[#18170f]"
 							style={{ fontFamily: "'Cormorant', serif" }}
 						>
-							{photo.title}
+							{photo.title || "untitled"}
 						</p>
 						<p
-							className="text-[12px] text-[#b5b0a8] mt-0.5 tracking-wide truncate"
+							className="mt-0.5 truncate text-[11px] uppercase tracking-[0.12em] text-[#b5b0a8]"
 							style={{ fontFamily: "'DM Mono', monospace" }}
 						>
 							{formatDate(photo.takenAt)}
 						</p>
-						<p className="flex items-center text-[11px] font-light text-muted-foreground">
-							<Icons.mapPin size={12} className="mr-2 text-gray-500" />
+						<p className="flex items-center text-[11px] font-light text-[#777065]">
+							<Icons.mapPin size={12} className="mr-2 text-[#8c857a]" />
 							{convertToCoordination(photo.longitude, photo.latitude)}
 						</p>
 					</div>
