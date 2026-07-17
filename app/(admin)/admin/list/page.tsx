@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { MapProvider } from "react-map-gl/mapbox";
+
 import type { FilmPhoto } from "@/35mm/query";
 import PhotoTabs from "@/admin/components/PhotoTabs";
-import Mapbox from "@/components/map";
+import AdminMap from "@/components/map/AdminMap";
 import type { Photo } from "@/photo";
 import { fetchAllPhotos } from "@/photo/actions";
 
@@ -41,7 +42,7 @@ export default function AdminPhotoListPage() {
 
 				{/* Right Content — stays fixed */}
 				<div className="hidden h-full w-full bg-muted lg:block lg:w-5/12">
-					<Mapbox photos={photos} />
+					<AdminMap photos={photos} />
 				</div>
 			</div>
 		</MapProvider>
