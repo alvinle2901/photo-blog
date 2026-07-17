@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+
 import type { FilmPhoto } from "@/35mm/query";
 import { AspectRatio } from "@/components/ui/AspectRatio";
+import { getOptimizedUrl } from "@/storage/utils";
 
 const PhotoOtherCard = ({ photo }: { photo: FilmPhoto }) => {
 	return (
@@ -12,7 +14,7 @@ const PhotoOtherCard = ({ photo }: { photo: FilmPhoto }) => {
 				className="overflow-hidden rounded-xl bg-muted"
 			>
 				<Image
-					src={photo.url}
+					src={getOptimizedUrl(photo.url, "md")}
 					fill
 					alt={photo.title ?? "35mm photo"}
 					className="object-cover brightness-100 transition-all duration-300 hover:brightness-110"

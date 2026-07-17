@@ -10,9 +10,17 @@ interface Props {
 	photos: Photo[];
 	filmPhotos: FilmPhoto[];
 	isPending: boolean;
+	selectedPhotoId?: string | null;
+	onSelectPhoto?: (photoId: string) => void;
 }
 
-const PhotoTabs = ({ photos, filmPhotos, isPending }: Props) => {
+const PhotoTabs = ({
+	photos,
+	filmPhotos,
+	isPending,
+	selectedPhotoId,
+	onSelectPhoto,
+}: Props) => {
 	return (
 		<Tabs className="flex-col" defaultValue="tab1">
 			<TabList
@@ -40,7 +48,13 @@ const PhotoTabs = ({ photos, filmPhotos, isPending }: Props) => {
         </TabTrigger> */}
 			</TabList>
 			<TabContent value="tab1">
-				<PhotoList type={"digital"} photos={photos} isPending={isPending} />
+				<PhotoList
+					type={"digital"}
+					photos={photos}
+					isPending={isPending}
+					selectedPhotoId={selectedPhotoId}
+					onSelectPhoto={onSelectPhoto}
+				/>
 			</TabContent>
 			<TabContent value="tab2">
 				<PhotoList

@@ -14,6 +14,8 @@ interface Props {
 	photos?: Photo[];
 	filmPhotos?: FilmPhoto[];
 	isPending?: boolean;
+	selectedPhotoId?: string | null;
+	onSelectPhoto?: (photoId: string) => void;
 }
 
 const PhotoList = ({
@@ -21,6 +23,8 @@ const PhotoList = ({
 	photos = [],
 	filmPhotos = [],
 	isPending = false,
+	selectedPhotoId,
+	onSelectPhoto,
 }: Props) => {
 	return (
 		<div className="space-y-4">
@@ -43,7 +47,14 @@ const PhotoList = ({
 				) : (
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
 						{type === "digital"
-							? photos.map((item) => <PhotoCard key={item.id} photo={item} />)
+							? photos.map((item) => (
+									<PhotoCard
+										key={item.id}
+										photo={item}
+										isSelected={item.id === selectedPhotoId}
+										onSelect={onSelectPhoto}
+									/>
+								))
 							: filmPhotos.map((item) => (
 									<PhotoOtherCard key={item.id} photo={item} />
 								))}

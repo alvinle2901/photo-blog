@@ -7,63 +7,84 @@ import { useMap } from "react-map-gl/mapbox";
 import { Icons } from "@/components/icons";
 import { AspectRatio } from "@/components/ui/AspectRatio";
 import { Button } from "@/components/ui/Button";
-
-// import { useEditPhoto } from '@/features/photos/api/use-edit-photo';
-
 import type { Photo } from "@/photo";
+import { getOptimizedUrl } from "@/storage/utils";
+import { cn } from "@/utils/cn";
 import { convertToCoordination } from "@/utils/convert-coordination";
 import { formatDate } from "@/utils/date";
 
-const PhotoCard = ({ photo }: { photo: Photo }) => {
+const PhotoCard = ({
+	photo,
+	isSelected = false,
+	onSelect,
+}: {
+	photo: Photo;
+	isSelected?: boolean;
+	onSelect?: (photoId: string) => void;
+}) => {
 	const { map } = useMap();
-	// const editMutation = useEditPhoto(photo.id);
 
-	const handlePhotoClick = () => {
+	const handlePhotoSelect = () => {
+		onSelect?.(photo.id);
+
 		if (photo.longitude && photo.latitude) {
 			map?.flyTo({ center: [photo.longitude, photo.latitude], zoom: 17 });
 		}
 	};
 
-	const handleHeartClick = () => {
-		// editMutation.mutate(
-		//   {
-		//     isFavorite: !photo.isFavorite,
-		//   },
-		//   {
-		//     onSuccess: () => {},
-		//   },
-		// );
-	};
-
 	return (
-		<div className="relative">
-			<AspectRatio
-				ratio={4 / 5}
-				className="overflow-hidden rounded-t-sm bg-muted"
-			>
-				<Image
-					src={photo.url}
-					fill
-					alt="Image"
-					placeholder="blur"
-					blurDataURL={photo.blurData}
-					className="cursor-pointer object-cover brightness-100 transition-all duration-300 hover:brightness-110"
-					onClick={handlePhotoClick}
-					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-				/>
-			</AspectRatio>
+		<div
+			className={cn(
+				"relative rounded-sm transition duration-150",
+				isSelected &&
+					"bg-white shadow-[0_0_0_2px_#18170f,0_10px_32px_rgba(0,0,0,0.12)]",
+			)}
+		>
 			<Button
+				asChild
 				variant="outline"
 				size="icon"
-				className="absolute right-2 top-2 size-8 rounded-full bg-white"
-				onClick={handleHeartClick}
+				className="absolute right-2 top-2 z-10 size-8 rounded-full border-[#d8d1c7] bg-white/95 text-[#18170f] shadow-sm backdrop-blur hover:bg-white"
 			>
-				<Icons.heart size={18} className="text-muted-foreground" />
+				<Link
+					href={`/admin/photos/${photo.id}/edit`}
+					aria-label={`Edit ${photo.title || photo.id}`}
+				>
+					<Icons.pencil size={15} />
+				</Link>
 			</Button>
 
-			<Link href={`/photos/${photo.id}`} className="group">
+			<button
+				type="button"
+				className="block w-full cursor-pointer text-left"
+				onClick={handlePhotoSelect}
+				aria-pressed={isSelected}
+			>
+				<AspectRatio
+					ratio={4 / 5}
+					className={cn(
+						"overflow-hidden rounded-t-sm bg-muted",
+						isSelected && "brightness-105",
+					)}
+				>
+					<Image
+						src={getOptimizedUrl(photo.url, "md")}
+						fill
+						alt={photo.title || "Photo"}
+						placeholder="blur"
+						blurDataURL={photo.blurData}
+						className="object-cover brightness-100 transition-all duration-300 hover:brightness-110"
+						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+					/>
+				</AspectRatio>
+
 				<div className="w-full">
-					<div className="w-full space-y-2 bg-[#f7f5f2] border-b border-l border-r border-[#e5e0d9] rounded-b-sm overflow-hidden p-2 transition duration-150">
+					<div
+						className={cn(
+							"w-full space-y-2 overflow-hidden rounded-b-sm border-b border-l border-r border-[#e5e0d9] bg-[#f7f5f2] p-2 transition duration-150",
+							isSelected && "border-[#18170f] bg-white",
+						)}
+					>
 						<p
 							className="italic text-lg text-[#18170f] leading-tight truncate"
 							style={{ fontFamily: "'Cormorant', serif" }}
@@ -82,7 +103,7 @@ const PhotoCard = ({ photo }: { photo: Photo }) => {
 						</p>
 					</div>
 				</div>
-			</Link>
+			</button>
 		</div>
 	);
 };

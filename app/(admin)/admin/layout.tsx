@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import { signOut } from "@/auth/actions";
 
 const NAV_LINKS = [
