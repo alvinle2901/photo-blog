@@ -15,7 +15,7 @@ export default function AdminLayout({
 	return (
 		<div className="min-h-dvh bg-[#f7f5f2] text-[#18170f]">
 			<header className="sticky top-0 z-40 border-b border-[#e5e0d9] bg-[#f7f5f2]/95 backdrop-blur">
-				<nav className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+				<nav className="mx-auto flex h-16 w-full max-w-[1400px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
 					<div className="flex min-w-0 items-center gap-6">
 						<Link href="/admin" className="shrink-0">
 							<span
@@ -57,7 +57,7 @@ export default function AdminLayout({
 				</nav>
 			</header>
 
-			<main className="mx-auto max-w-[1400px]">{children}</main>
+			<main className="mx-auto w-full max-w-[1400px]">{children}</main>
 		</div>
 	);
 }
