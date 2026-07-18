@@ -103,8 +103,8 @@ const layerStyle = {
 	id: "country-fill",
 	type: "fill",
 	paint: {
-		"fill-color": "#18170f",
-		"fill-opacity": 0.58,
+		"fill-color": "#9a7656",
+		"fill-opacity": 0.64,
 	},
 } as const;
 
@@ -112,8 +112,9 @@ const lineLayerStyle = {
 	id: "country-outline",
 	type: "line",
 	paint: {
-		"line-color": "#f7f5f2",
-		"line-width": 1.2,
+		"line-color": "#4d5c4f",
+		"line-opacity": 0.72,
+		"line-width": 1.1,
 	},
 } as const;
 
@@ -129,7 +130,6 @@ export default function GeoMap({ countries }: GeoMapProps) {
 				geo map / {countries.length} countries
 			</div>
 			<ReactMap
-				id="dashboard-geo-map"
 				mapboxAccessToken={TOKEN}
 				initialViewState={{
 					longitude: 12,

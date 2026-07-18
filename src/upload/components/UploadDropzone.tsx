@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+
+import { Icons } from "@/components/icons";
 import type { Photo } from "@/photo";
 
 type UploadStatus =
@@ -56,58 +58,73 @@ export function UploadDropzone() {
 		[handleFiles],
 	);
 
+	const openFilePicker = () => inputRef.current?.click();
+
 	return (
-		<div className="space-y-4">
-			{/* Drop zone */}
-			<div
+		<div className="rounded-sm border border-[#e5e0d9] bg-[#f7f5f2] p-4 shadow-sm">
+			<input
+				ref={inputRef}
+				type="file"
+				accept="image/*"
+				className="hidden"
+				onChange={(e) => handleFiles(e.target.files)}
+			/>
+			<button
+				type="button"
 				onDrop={onDrop}
 				onDragOver={(e) => {
 					e.preventDefault();
 					setIsDragOver(true);
 				}}
 				onDragLeave={() => setIsDragOver(false)}
-				onClick={() => inputRef.current?.click()}
+				onClick={openFilePicker}
 				className={[
-					"border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors",
+					"flex min-h-[300px] w-full cursor-pointer flex-col items-center justify-center rounded-sm border border-dashed p-8 text-center transition",
 					isDragOver
-						? "border-black bg-gray-50"
-						: "border-gray-300 hover:border-gray-400",
+						? "border-[#18170f] bg-[#ebe7df]"
+						: "border-[#d8d1c7] bg-[#ebe7df]/60 hover:border-[#9a7656] hover:bg-[#ebe7df]",
 				].join(" ")}
 			>
-				<input
-					ref={inputRef}
-					type="file"
-					accept="image/*"
-					className="hidden"
-					onChange={(e) => handleFiles(e.target.files)}
-				/>
-				<p className="text-sm text-gray-500">
-					Drop a photo here, or{" "}
-					<span className="text-black font-medium">click to browse</span>
+				<div className="flex h-12 w-12 items-center justify-center rounded-sm border border-[#d8d1c7] bg-[#f7f5f2] text-[#6f675d]">
+					<Icons.upload size={20} />
+				</div>
+				<p
+					className="mt-5 text-3xl font-light italic leading-none text-[#18170f]"
+					style={{ fontFamily: "'Cormorant', serif" }}
+				>
+					Drop a digital photo
 				</p>
-				<p className="text-xs text-gray-400 mt-1">
-					JPEG, PNG, HEIC, TIFF, WebP
+				<p className="mt-2 max-w-sm text-sm leading-6 text-[#6f675d]">
+					Click to browse or drag a file here. EXIF, blur placeholder, color
+					palette, and optimized variants are extracted automatically.
 				</p>
-			</div>
+				<p
+					className="mt-5 text-[10px] uppercase tracking-[0.16em] text-[#8c857a]"
+					style={{ fontFamily: "'DM Mono', monospace" }}
+				>
+					JPEG / PNG / HEIC / TIFF / WebP
+				</p>
+			</button>
 
-			{/* Status */}
 			{status.state === "uploading" && (
-				<div className="text-sm text-gray-600 space-y-1">
-					<p>
+				<div className="mt-4 rounded-sm border border-[#d8d1c7] bg-[#ebe7df] p-3 text-sm text-[#6f675d]">
+					<p className="flex items-center gap-2">
+						<Icons.loader className="h-4 w-4 animate-spin" />
 						Uploading <span className="font-medium">{status.fileName}</span>…
 					</p>
-					<p className="text-xs text-gray-400">
+					<p className="mt-1 text-xs text-[#8c857a]">
 						Extracting EXIF, generating blur hash and color palette
 					</p>
 				</div>
 			)}
 
 			{status.state === "error" && (
-				<div className="text-sm text-red-600 flex items-center justify-between">
+				<div className="mt-4 flex items-center justify-between rounded-sm border border-[#d9b8aa] bg-[#fff7f3] p-3 text-sm text-[#9a4d35]">
 					<span>{status.message}</span>
 					<button
+						type="button"
 						onClick={() => setStatus({ state: "idle" })}
-						className="text-xs text-gray-500 hover:text-black"
+						className="text-xs uppercase tracking-[0.12em] text-[#6f675d] hover:text-[#18170f]"
 					>
 						Dismiss
 					</button>
@@ -115,20 +132,22 @@ export function UploadDropzone() {
 			)}
 
 			{status.state === "success" && (
-				<div className="border rounded-lg p-4 flex items-center justify-between">
+				<div className="mt-4 flex items-center justify-between gap-4 rounded-sm border border-[#c8d0c3] bg-[#eef2eb] p-4">
 					<div className="space-y-0.5">
-						<p className="text-sm font-medium text-green-700">
+						<p className="flex items-center gap-2 text-sm font-medium text-[#4d5c4f]">
+							<Icons.check size={16} />
 							Upload complete
 						</p>
-						<p className="text-xs text-gray-500">
+						<p className="text-xs text-[#6f675d]">
 							{status.photo.make && status.photo.model
 								? `${status.photo.make} ${status.photo.model}`
 								: status.photo.id}
 						</p>
 					</div>
 					<button
+						type="button"
 						onClick={() => setStatus({ state: "idle" })}
-						className="text-xs text-gray-500 hover:text-black"
+						className="shrink-0 text-xs uppercase tracking-[0.12em] text-[#6f675d] hover:text-[#18170f]"
 					>
 						Upload another
 					</button>
