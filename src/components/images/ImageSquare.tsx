@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import ImageLinkPendingSpinner from "@/components/images/ImageLinkPendingSpinner";
 import type { Photo } from "@/photo";
 import { getOptimizedUrl } from "@/storage/utils";
 
@@ -31,6 +32,7 @@ export default function ImageSquare({
 				blurDataURL={photo.blurData || undefined}
 				priority={index < 8}
 			/>
+			<ImageLinkPendingSpinner />
 		</Link>
 	);
 }

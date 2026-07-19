@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import Link, { useLinkStatus } from "next/link";
 import type { ReactElement } from "react";
 
 import {
@@ -7,6 +9,22 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/Tooltip";
 import { cn } from "@/utils/cn";
+
+function LinkPendingSpinner() {
+	const { pending } = useLinkStatus();
+
+	return (
+		<span
+			aria-hidden="true"
+			className={cn(
+				"pointer-events-none absolute inset-0 flex items-center justify-center rounded-sm bg-[#f7f5f2]/85 transition-opacity",
+				pending ? "opacity-100" : "opacity-0",
+			)}
+		>
+			<span className="size-4 animate-spin rounded-full border border-[#9a7656] border-t-transparent" />
+		</span>
+	);
+}
 
 const SwitcherItem = ({
 	icon,
@@ -25,9 +43,10 @@ const SwitcherItem = ({
 	active?: boolean;
 	noPadding?: boolean;
 }) => {
+	const showsPendingSpinner = title === "feed" || title === "grid";
 	const className = cn(
 		classNameProp,
-		"py-0.5 px-1.5",
+		"relative py-0.5 px-1.5",
 		"cursor-pointer",
 		"hover:bg-gray-100/60 active:bg-gray-100",
 		active ? "text-black" : "text-gray-400",
@@ -44,8 +63,14 @@ const SwitcherItem = ({
 		);
 
 	const item = href ? (
-		<Link href={href} className={className} aria-label={title}>
+		<Link
+			href={href}
+			className={className}
+			aria-label={title}
+			prefetch={showsPendingSpinner ? false : undefined}
+		>
 			{renderIcon()}
+			{showsPendingSpinner && <LinkPendingSpinner />}
 		</Link>
 	) : (
 		<button

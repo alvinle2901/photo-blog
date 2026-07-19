@@ -3,7 +3,7 @@
 import InfiniteScroll from "react-infinite-scroll-component";
 import useSWRInfinite from "swr/infinite";
 
-import { Icons } from "@/components/icons";
+import IconGrid from "@/components/icons/IconGrid";
 import ImageSquare from "@/components/images/ImageSquare";
 import type { Photo } from "@/photo";
 import {
@@ -139,9 +139,16 @@ export default function InfinitePhotoGrid({
 			next={() => setSize((size) => size + 1)}
 			hasMore={hasMore}
 			loader={
-					<div className="flex justify-center border rounded-full mt-7 py-1 mx-[10%]">
-						<Icons.loader className="animate-spin" size={18} />
+				<div className="my-7 flex justify-center">
+					<div
+						role="status"
+						aria-label="Loading more photos"
+						className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#d8d1c7] bg-[#f7f5f2] text-[#6f675d]"
+					>
+						<span className="absolute inset-1 animate-spin rounded-full border border-[#9a7656] border-t-transparent" />
+						<IconGrid width={21} includeTitle={false} />
 					</div>
+				</div>
 			}
 		>
 			{error ? (
