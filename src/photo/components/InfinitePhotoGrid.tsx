@@ -156,7 +156,7 @@ export default function InfinitePhotoGrid({
 					Could not load more photos.
 				</div>
 			) : null}
-			<div className="grid grid-cols-2 gap-1 px-2 sm:grid-cols-4 md:grid-cols-4">
+			<div className="grid grid-cols-2 gap-1 sm:grid-cols-4 md:grid-cols-4">
 				{photos.map((photo, index) => (
 					<ImageSquare
 						key={photo.id}

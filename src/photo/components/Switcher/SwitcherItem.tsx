@@ -43,7 +43,8 @@ const SwitcherItem = ({
 	active?: boolean;
 	noPadding?: boolean;
 }) => {
-	const showsPendingSpinner = title === "feed" || title === "grid";
+	const showsPendingSpinner =
+		title === "feed" || title === "grid" || title === "map";
 	const className = cn(
 		classNameProp,
 		"relative py-0.5 px-1.5",

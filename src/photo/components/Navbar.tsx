@@ -38,21 +38,21 @@ const Nav = () => {
 	return (
 		<div
 			className={cn(
-				"sticky top-0 z-40 w-full bg-[#f7f5f2] px-5 py-3 transition-transform duration-300 ease-out will-change-transform md:hidden",
+				"sticky top-0 z-40 w-full bg-[#f7f5f2] px-4.5 py-3 transition-transform duration-300 ease-out will-change-transform md:hidden",
 				!isVisible && !detailBackHref && "-translate-y-full",
 			)}
 		>
 			<div className="flex w-full items-center justify-between gap-4">
 				{detailBackHref ? (
-					<div className="flex items-center gap-6">
+					<div className="flex items-center gap-2">
 						<Link
 							href={detailBackHref}
 							aria-label="Back to collection"
-							className="inline-flex h-8 items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-gray-900"
-							style={{ fontFamily: "'DM Mono', monospace" }}
+							className="inline-flex h-8 w-6 border-r border-gray-300 items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-gray-900"
+							// style={{ fontFamily: "'DM Mono', monospace" }}
 						>
 							<ArrowLeft aria-hidden="true" className="h-4 w-4" />
-							<span>back</span>
+							{/* <span>back</span> */}
 						</Link>
 						<ViewSwitcher showSort={false} />
 					</div>

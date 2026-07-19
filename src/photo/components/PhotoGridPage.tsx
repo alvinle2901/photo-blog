@@ -29,7 +29,7 @@ export default function PhotoGridPage({
 	const photoCount = photos.length;
 
 	return (
-		<div className="px-3 py-4 sm:px-4 sm:py-6 lg:px-0 lg:py-8">
+		<div className="px-3 py-4 sm:px-2 sm:py-6 lg:px-0 lg:py-8">
 			<div className="flex flex-col gap-2 lg:flex-row">
 				<div className="min-w-0 flex-1">
 					<InfinitePhotoGrid
