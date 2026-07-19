@@ -8,16 +8,17 @@ import { getOptimizedUrl } from "@/storage/utils";
 
 const PhotoOtherCard = ({ photo }: { photo: FilmPhoto }) => {
 	return (
-		<div className="group relative rounded-sm transition duration-200 hover:shadow-[0_12px_30px_rgba(24,23,15,0.12)]">
+		<div className="group relative rounded-sm transition duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(24,23,15,0.14)]">
 			<AspectRatio
 				ratio={4 / 5}
-				className="overflow-hidden rounded-sm border border-[#e5e0d9] bg-[#ebe7df]"
+				className="overflow-hidden rounded-sm border border-[#e5e0d9] bg-[#ebe7df] transition-colors duration-300 group-hover:border-[#9a7656]"
 			>
+				<span className="pointer-events-none absolute inset-0 z-10 opacity-0 ring-1 ring-inset ring-[#f7f5f2]/80 transition-opacity duration-300 group-hover:opacity-100" />
 				<Image
 					src={getOptimizedUrl(photo.url, "md")}
 					fill
 					alt={photo.title ?? "35mm photo"}
-					className="object-cover brightness-100 transition duration-300 group-hover:scale-[1.015] group-hover:brightness-105"
+					className="object-cover brightness-100 transition duration-500 ease-out group-hover:scale-[1.035] group-hover:brightness-105"
 					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 				/>
 			</AspectRatio>

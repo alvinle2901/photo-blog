@@ -35,7 +35,7 @@ const PhotoCard = ({
 	return (
 		<div
 			className={cn(
-				"group relative rounded-sm transition duration-200",
+				"group relative rounded-sm transition duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(24,23,15,0.14)]",
 				isSelected &&
 					"bg-[#ebe7df] shadow-[0_0_0_1px_#18170f,0_14px_34px_rgba(24,23,15,0.16)]",
 			)}
@@ -63,17 +63,18 @@ const PhotoCard = ({
 				<AspectRatio
 					ratio={4 / 5}
 					className={cn(
-						"overflow-hidden rounded-t-sm border border-[#e5e0d9] border-b-0 bg-[#ebe7df]",
+						"overflow-hidden rounded-t-sm border border-[#e5e0d9] border-b-0 bg-[#ebe7df] transition-colors duration-300 group-hover:border-[#9a7656]",
 						isSelected && "brightness-105",
 					)}
 				>
+					<span className="pointer-events-none absolute inset-0 z-10 opacity-0 ring-1 ring-inset ring-[#f7f5f2]/80 transition-opacity duration-300 group-hover:opacity-100" />
 					<Image
 						src={getOptimizedUrl(photo.url, "md")}
 						fill
 						alt={photo.title || "Photo"}
 						placeholder="blur"
 						blurDataURL={photo.blurData}
-						className="object-cover brightness-100 transition duration-300 group-hover:scale-[1.015] group-hover:brightness-105"
+						className="object-cover brightness-100 transition duration-500 ease-out group-hover:scale-[1.035] group-hover:brightness-105"
 						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 					/>
 				</AspectRatio>

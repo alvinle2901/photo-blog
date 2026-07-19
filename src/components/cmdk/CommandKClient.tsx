@@ -121,15 +121,24 @@ export default function CommandKClient({
 					[
 						{
 							label: "dashboard",
+							keywords: ["dashboard", "admin", "overview"],
 							accessory: <Shield size={15} />,
 							annotation: <BiLockAlt size={13} />,
-							path: "/dashboard",
+							path: "/admin",
 						},
 						{
-							label: "manage photos",
+							label: "photos",
+							keywords: ["manage photos", "photo list", "edit photos"],
 							accessory: <ImageIcon size={15} />,
 							annotation: <BiLockAlt size={13} />,
-							path: "/photos",
+							path: "/admin/photos",
+						},
+						{
+							label: "upload",
+							keywords: ["upload", "normal picture", "35mm upload"],
+							accessory: <Icons.upload size={15} />,
+							annotation: <BiLockAlt size={13} />,
+							path: "/admin/uploads",
 						},
 					] as CommandKItemData[]
 				).concat({

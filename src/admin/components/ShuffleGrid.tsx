@@ -51,18 +51,19 @@ const generateSquares = (squareData: ShuffleGridPhoto[], seed: number) => {
 			key={photo.id}
 			layout
 			transition={{ duration: 0.8, type: "spring", bounce: 0.2 }}
-			className="group relative h-full w-full overflow-hidden rounded-[2px] bg-[#ebe7df]"
+			className="group relative h-full w-full overflow-hidden rounded-[2px] bg-[#ebe7df] transition duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(24,23,15,0.18)]"
 		>
 			<Link
 				href={`/p/${photo.id}`}
 				aria-label={photo.title || `Open photo ${index + 1}`}
 				className="relative block h-full w-full"
 			>
+				<span className="pointer-events-none absolute inset-0 z-10 opacity-0 ring-1 ring-inset ring-[#f7f5f2]/80 transition-opacity duration-300 group-hover:opacity-100" />
 				<Image
 					src={getOptimizedUrl(photo.url, "md")}
 					alt={photo.title || `Photo ${index + 1}`}
 					fill
-					sizes="(max-width: 768px) 25vw, 140px"
+					sizes="(max-width: 640px) 50vw, (max-width: 768px) 25vw, (max-width: 1024px) 33vw, 25vw"
 					placeholder={photo.blurData ? "blur" : "empty"}
 					blurDataURL={photo.blurData || undefined}
 					className="object-cover transition duration-500 group-hover:scale-105 group-hover:brightness-105"
