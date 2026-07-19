@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { count, desc, eq } from "drizzle-orm";
 
 import { db } from "../db/client";
 import { filmPhotos } from "../db/schema";
@@ -15,12 +15,24 @@ export async function getFilmPhotosPaginated(
 	limit: number,
 ): Promise<FilmPhoto[]> {
 	const offset = (page - 1) * limit;
+	return getFilmPhotosPaginatedByOffset(offset, limit);
+}
+
+export async function getFilmPhotosPaginatedByOffset(
+	offset: number,
+	limit: number,
+): Promise<FilmPhoto[]> {
 	return db
 		.select()
 		.from(filmPhotos)
 		.orderBy(desc(filmPhotos.createdAt))
 		.limit(limit)
 		.offset(offset);
+}
+
+export async function getFilmPhotoCount(): Promise<number> {
+	const rows = await db.select({ count: count() }).from(filmPhotos);
+	return rows[0]?.count ?? 0;
 }
 
 export async function getFilmPhotoById(id: string): Promise<FilmPhoto | null> {

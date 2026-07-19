@@ -6,8 +6,10 @@ import CameraOverview from "@/camera/CameraOverview";
 import { getPhotosCameraDataCached } from "@/camera/data";
 import { getUniqueCamerasCached } from "@/photo/cache";
 
+const CAMERA_GRID_INITIAL = 48;
+
 const getPhotosCameraDataCachedCached = cache((make: string, model: string) =>
-	getPhotosCameraDataCached({ make, model }),
+	getPhotosCameraDataCached({ make, model, limit: CAMERA_GRID_INITIAL }),
 );
 
 interface CameraProps {

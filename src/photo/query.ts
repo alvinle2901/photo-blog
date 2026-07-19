@@ -318,6 +318,21 @@ export async function getPhotosByFilm(
 	return rows.map(rowToPhoto);
 }
 
+export async function getPhotosByFilmPaginatedByOffset(
+	film: string,
+	offset: number,
+	limit: number,
+): Promise<Photo[]> {
+	const rows = await db
+		.select()
+		.from(photos)
+		.where(eq(photos.filmSimulation, film))
+		.orderBy(...photosChronologicalOrder)
+		.limit(limit)
+		.offset(offset);
+	return rows.map(rowToPhoto);
+}
+
 export async function getPhotoCountByFilm(film: string): Promise<number> {
 	const rows = await db
 		.select({ count: count() })
@@ -378,6 +393,21 @@ export async function getPhotosByYear(
 
 	const rows =
 		typeof limit === "number" ? await query.limit(limit) : await query;
+	return rows.map(rowToPhoto);
+}
+
+export async function getPhotosByYearPaginatedByOffset(
+	year: string,
+	offset: number,
+	limit: number,
+): Promise<Photo[]> {
+	const rows = await db
+		.select()
+		.from(photos)
+		.where(photosInYear(year))
+		.orderBy(...photosChronologicalOrder)
+		.limit(limit)
+		.offset(offset);
 	return rows.map(rowToPhoto);
 }
 
@@ -448,6 +478,22 @@ export async function getPhotosByCamera(
 
 	const rows =
 		typeof limit === "number" ? await query.limit(limit) : await query;
+	return rows.map(rowToPhoto);
+}
+
+export async function getPhotosByCameraPaginatedByOffset(
+	make: string,
+	model: string,
+	offset: number,
+	limit: number,
+): Promise<Photo[]> {
+	const rows = await db
+		.select()
+		.from(photos)
+		.where(and(eq(photos.make, make), eq(photos.model, model)))
+		.orderBy(...photosChronologicalOrder)
+		.limit(limit)
+		.offset(offset);
 	return rows.map(rowToPhoto);
 }
 

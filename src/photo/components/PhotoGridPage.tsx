@@ -1,12 +1,15 @@
-import ImageSquare from "@/components/images/ImageSquare";
 import type { Photo } from "@/photo";
 import GridFilterSidebar from "@/photo/components/GridFilterSidebar";
+import InfinitePhotoGrid from "@/photo/components/InfinitePhotoGrid";
 import type { SortOrder, SortType } from "@/photo/sort";
 
 type Props = {
 	photos: Photo[];
+	hasMore: boolean;
+	nextOffset: number;
 	sortType: SortType;
 	sortOrder: SortOrder;
+	seed?: string;
 	years: Array<{ year: string; count: number }>;
 	cameras: Array<{ make: string; model: string; count: number }>;
 	films: Array<{ film: string; count: number }>;
@@ -14,8 +17,11 @@ type Props = {
 
 export default function PhotoGridPage({
 	photos,
+	hasMore,
+	nextOffset,
 	sortType,
 	sortOrder,
+	seed,
 	years,
 	cameras,
 	films,
@@ -26,11 +32,14 @@ export default function PhotoGridPage({
 		<div className="px-3 py-4 sm:px-4 sm:py-6 lg:px-0 lg:py-8">
 			<div className="flex flex-col gap-2 lg:flex-row">
 				<div className="min-w-0 flex-1">
-					<div className="grid grid-cols-2 gap-1 sm:grid-cols-4 sm:gap-1 md:grid-cols-4">
-						{photos.map((photo, index) => (
-							<ImageSquare key={photo.id} photo={photo} index={index} />
-						))}
-					</div>
+					<InfinitePhotoGrid
+						initialPhotos={photos}
+						initialHasMore={hasMore}
+						initialNextOffset={nextOffset}
+						sortType={sortType}
+						sortOrder={sortOrder}
+						seed={seed}
+					/>
 				</div>
 
 				<div className="order-first lg:order-0 lg:shrink-0 lg:sticky lg:top-8 lg:self-start">

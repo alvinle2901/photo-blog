@@ -26,6 +26,8 @@ export default async function GridSortedPage({
 
 	const {
 		photos: sortedPhotos,
+		hasMore,
+		nextOffset,
 		years,
 		cameras,
 		films,
@@ -34,6 +36,8 @@ export default async function GridSortedPage({
 	return (
 		<PhotoGridPage
 			photos={sortedPhotos}
+			hasMore={hasMore}
+			nextOffset={nextOffset}
 			sortType={sortType as SortType}
 			sortOrder={sortOrder as SortOrder}
 			years={years}

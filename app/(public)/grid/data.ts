@@ -1,8 +1,5 @@
-import { createHash } from "node:crypto";
-
-import type { Photo } from "@/photo";
 import {
-	getGridPhotosCached,
+	getPhotosPaginatedCached,
 	getUniqueCamerasCached,
 	getUniqueFilmsCached,
 	getUniqueYearsCached,
@@ -25,56 +22,7 @@ export {
 	VALID_SORT_TYPES,
 };
 
-function randomValue(id: string, seed: string) {
-	return createHash("md5").update(`${id}${seed}`).digest("hex");
-}
-
-function sortPhotos(
-	photos: Photo[],
-	sortType: SortType,
-	sortOrder: SortOrder,
-	seed = DEFAULT_RANDOM_SEED,
-): Photo[] {
-	const sorted = [...photos];
-
-	sorted.sort((a, b) => {
-		if (sortType === "random") {
-			const aValue = randomValue(a.id, seed);
-			const bValue = randomValue(b.id, seed);
-
-			if (aValue < bValue) return -1;
-			if (aValue > bValue) return 1;
-
-			return b.id.localeCompare(a.id);
-		}
-
-		let aValue: string | number | Date | null = null;
-		let bValue: string | number | Date | null = null;
-
-		if (sortType === "createdAt") {
-			aValue = a.createdAt;
-			bValue = b.createdAt;
-		}
-
-		if (sortType === "takenAt") {
-			aValue = a.takenAt;
-			bValue = b.takenAt;
-		}
-
-		if (aValue == null && bValue == null) return 0;
-		if (aValue == null) return 1;
-		if (bValue == null) return -1;
-
-		const aComparable = aValue instanceof Date ? aValue.getTime() : aValue;
-		const bComparable = bValue instanceof Date ? bValue.getTime() : bValue;
-
-		if (aComparable < bComparable) return sortOrder === "asc" ? -1 : 1;
-		if (aComparable > bComparable) return sortOrder === "asc" ? 1 : -1;
-		return 0;
-	});
-
-	return sorted;
-}
+export const GRID_INITIAL_LIMIT = 48;
 
 export async function getGridPageData(
 	sortType: SortType = DEFAULT_SORT_TYPE,
@@ -82,14 +30,22 @@ export async function getGridPageData(
 	seed = DEFAULT_RANDOM_SEED,
 ) {
 	const [photos, years, cameras, films] = await Promise.all([
-		getGridPhotosCached(),
+		getPhotosPaginatedCached(
+			0,
+			GRID_INITIAL_LIMIT + 1,
+			sortType,
+			sortOrder,
+			seed,
+		),
 		getUniqueYearsCached(),
 		getUniqueCamerasCached(),
 		getUniqueFilmsCached(),
 	]);
 
 	return {
-		photos: sortPhotos(photos, sortType, sortOrder, seed),
+		photos: photos.slice(0, GRID_INITIAL_LIMIT),
+		hasMore: photos.length > GRID_INITIAL_LIMIT,
+		nextOffset: GRID_INITIAL_LIMIT,
 		years,
 		cameras,
 		films,
