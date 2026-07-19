@@ -102,6 +102,77 @@ export async function getMapPhotos(): Promise<Photo[]> {
 	return rows.map(rowToPhoto);
 }
 
+export type PhotoDashboardSummary = {
+	cityCounts: Array<{ city: string; count: number }>;
+	countries: string[];
+	photos: Array<{
+		id: string;
+		url: string;
+		title: string | null;
+		blurData: string | null;
+	}>;
+	yearRange: string | null;
+};
+
+function locationParts(locationName: string | null) {
+	if (!locationName || locationName === "unknown") return [];
+
+	return locationName
+		.split(",")
+		.map((part) => part.trim())
+		.filter(Boolean);
+}
+
+export async function getPhotoDashboardSummary(): Promise<PhotoDashboardSummary> {
+	const allPhotos = await getPhotos();
+	const cityCounts = new Map<string, number>();
+	const countries = new Set<string>();
+	const years = new Set<number>();
+
+	for (const photo of allPhotos) {
+		const parts = locationParts(photo.locationName);
+		const city = parts[0];
+		const country = parts.at(-1);
+
+		if (city) {
+			cityCounts.set(city, (cityCounts.get(city) ?? 0) + 1);
+		}
+
+		if (country) {
+			countries.add(country);
+		}
+
+		const year = photo.takenAt?.getFullYear() ?? photo.createdAt.getFullYear();
+		if (Number.isFinite(year)) {
+			years.add(year);
+		}
+	}
+
+	const sortedYears = [...years].sort((a, b) => a - b);
+	const firstYear = sortedYears[0];
+	const lastYear = sortedYears.at(-1);
+	const yearRange =
+		firstYear == null || lastYear == null
+			? null
+			: firstYear === lastYear
+				? String(firstYear)
+				: `${firstYear}-${lastYear}`;
+
+	return {
+		cityCounts: [...cityCounts.entries()]
+			.map(([city, count]) => ({ city, count }))
+			.sort((a, b) => b.count - a.count || a.city.localeCompare(b.city)),
+		countries: [...countries].sort((a, b) => a.localeCompare(b)),
+		photos: allPhotos.slice(0, 48).map((photo) => ({
+			id: photo.id,
+			url: photo.url,
+			title: photo.title,
+			blurData: photo.blurData,
+		})),
+		yearRange,
+	};
+}
+
 export async function getPhotosPaginated(
 	page: number,
 	limit: number,
@@ -247,6 +318,21 @@ export async function getPhotosByFilm(
 	return rows.map(rowToPhoto);
 }
 
+export async function getPhotosByFilmPaginatedByOffset(
+	film: string,
+	offset: number,
+	limit: number,
+): Promise<Photo[]> {
+	const rows = await db
+		.select()
+		.from(photos)
+		.where(eq(photos.filmSimulation, film))
+		.orderBy(...photosChronologicalOrder)
+		.limit(limit)
+		.offset(offset);
+	return rows.map(rowToPhoto);
+}
+
 export async function getPhotoCountByFilm(film: string): Promise<number> {
 	const rows = await db
 		.select({ count: count() })
@@ -307,6 +393,21 @@ export async function getPhotosByYear(
 
 	const rows =
 		typeof limit === "number" ? await query.limit(limit) : await query;
+	return rows.map(rowToPhoto);
+}
+
+export async function getPhotosByYearPaginatedByOffset(
+	year: string,
+	offset: number,
+	limit: number,
+): Promise<Photo[]> {
+	const rows = await db
+		.select()
+		.from(photos)
+		.where(photosInYear(year))
+		.orderBy(...photosChronologicalOrder)
+		.limit(limit)
+		.offset(offset);
 	return rows.map(rowToPhoto);
 }
 
@@ -377,6 +478,22 @@ export async function getPhotosByCamera(
 
 	const rows =
 		typeof limit === "number" ? await query.limit(limit) : await query;
+	return rows.map(rowToPhoto);
+}
+
+export async function getPhotosByCameraPaginatedByOffset(
+	make: string,
+	model: string,
+	offset: number,
+	limit: number,
+): Promise<Photo[]> {
+	const rows = await db
+		.select()
+		.from(photos)
+		.where(and(eq(photos.make, make), eq(photos.model, model)))
+		.orderBy(...photosChronologicalOrder)
+		.limit(limit)
+		.offset(offset);
 	return rows.map(rowToPhoto);
 }
 

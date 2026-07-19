@@ -1,45 +1,34 @@
-import Link from "next/link";
+import { CityCountChart } from "@/admin/components/CityCountChart";
+import GeoMap from "@/admin/components/GeoMap";
+import ShuffleGrid from "@/admin/components/ShuffleGrid";
+import { getPhotoDashboardSummary } from "@/photo/query";
 
-const SECTIONS = [
-	{
-		href: "/admin/photos",
-		label: "Photos",
-		description: "View and manage all photos",
-	},
-	{ href: "/admin/uploads", label: "Upload", description: "Upload new photos" },
-	{
-		href: "/admin/albums",
-		label: "Albums",
-		description: "Organize photos into albums",
-	},
-	{ href: "/admin/tags", label: "Tags", description: "Manage photo tags" },
-	{
-		href: "/admin/storage",
-		label: "Storage",
-		description: "Review storage usage",
-	},
-	{
-		href: "/admin/configuration",
-		label: "Configuration",
-		description: "Site settings",
-	},
-];
+export default async function AdminDashboard() {
+	const summary = await getPhotoDashboardSummary();
 
-export default function AdminDashboard() {
 	return (
-		<div className="space-y-6">
-			<h1 className="text-2xl font-semibold">Dashboard</h1>
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-				{SECTIONS.map((section) => (
-					<Link
-						key={section.href}
-						href={section.href}
-						className="block p-4 border rounded-lg hover:bg-gray-50 transition-colors space-y-1"
-					>
-						<div className="font-medium text-sm">{section.label}</div>
-						<div className="text-xs text-gray-500">{section.description}</div>
-					</Link>
-				))}
+		<div className="space-y-4 px-5 py-4 sm:px-8">
+			<div>
+				<h1
+					className="mt-2 text-4xl font-light italic leading-none text-[#18170f]"
+					style={{ fontFamily: "'Cormorant', serif" }}
+				>
+					dashboard
+				</h1>
+			</div>
+			<div className="mx-auto grid h-full w-full grid-cols-1 items-stretch gap-5 overflow-x-hidden py-2 lg:grid-cols-12">
+				<div className="flex lg:col-span-4">
+					<CityCountChart
+						cityCounts={summary.cityCounts}
+						yearRange={summary.yearRange}
+					/>
+				</div>
+				<div className="flex lg:col-span-8">
+					<ShuffleGrid photos={summary.photos} />
+				</div>
+				<div className="h-[520px] overflow-hidden lg:col-span-12">
+					<GeoMap countries={summary.countries} />
+				</div>
 			</div>
 		</div>
 	);

@@ -49,6 +49,7 @@ export default function PhotoContentSide({
 				"text-sm",
 				"grid grid-cols-2 lg:grid-cols-1",
 				"gap-y-4",
+				"gap-x-4",
 				className,
 			)}
 			style={{ fontFamily: "'DM Mono', monospace" }}

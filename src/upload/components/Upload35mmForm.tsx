@@ -1,7 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
+
 import type { FilmPhoto } from "@/35mm/query";
+import { Icons } from "@/components/icons";
 
 type UploadStatus =
 	| { state: "idle" }
@@ -100,138 +103,178 @@ export function Upload35mmForm() {
 		if (inputRef.current) inputRef.current.value = "";
 	};
 
+	const openFilePicker = () => inputRef.current?.click();
+
 	return (
-		<form onSubmit={handleSubmit} className="space-y-6">
-			{/* Drop zone */}
-			<div
-				onDrop={onDrop}
-				onDragOver={(e) => {
-					e.preventDefault();
-					setIsDragOver(true);
-				}}
-				onDragLeave={() => setIsDragOver(false)}
-				onClick={() => inputRef.current?.click()}
-				className={[
-					"border-2 border-dashed rounded-lg cursor-pointer transition-colors overflow-hidden",
-					isDragOver
-						? "border-black bg-gray-50"
-						: "border-gray-300 hover:border-gray-400",
-					preview ? "p-0" : "p-12 text-center",
-				].join(" ")}
-			>
-				<input
-					ref={inputRef}
-					type="file"
-					accept="image/*"
-					className="hidden"
-					onChange={(e) => handleFiles(e.target.files)}
-				/>
-				{preview ? (
-					// biome-ignore lint/a11y/useKeyWithClickEvents: wrapper handles click
-					<div className="relative w-full" onClick={(e) => e.stopPropagation()}>
-						{/* eslint-disable-next-line @next/next/no-img-element */}
-						<img
-							src={preview}
-							alt="Preview"
-							className="w-full max-h-80 object-contain bg-gray-100"
-						/>
+		<form
+			onSubmit={handleSubmit}
+			className="rounded-sm border border-[#e5e0d9] bg-[#f7f5f2] p-4 shadow-sm"
+		>
+			<div className="grid gap-5 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)]">
+				<div className="relative">
+					<input
+						ref={inputRef}
+						type="file"
+						accept="image/*"
+						className="hidden"
+						onChange={(e) => handleFiles(e.target.files)}
+					/>
+					<button
+						type="button"
+						onDrop={onDrop}
+						onDragOver={(e) => {
+							e.preventDefault();
+							setIsDragOver(true);
+						}}
+						onDragLeave={() => setIsDragOver(false)}
+						onClick={openFilePicker}
+						className={[
+							"min-h-[420px] w-full cursor-pointer overflow-hidden rounded-sm border border-dashed transition",
+							isDragOver
+								? "border-[#18170f] bg-[#ebe7df]"
+								: "border-[#d8d1c7] bg-[#ebe7df]/60 hover:border-[#9a7656] hover:bg-[#ebe7df]",
+							preview
+								? "p-0"
+								: "flex items-center justify-center p-8 text-center",
+						].join(" ")}
+					>
+						{preview ? (
+							<div className="relative flex h-full min-h-[420px] w-full items-center justify-center bg-[#18170f]">
+								<Image
+									src={preview}
+									alt="Selected 35mm scan preview"
+									fill
+									unoptimized
+									sizes="(max-width: 1024px) 100vw, 620px"
+									className="object-contain"
+								/>
+							</div>
+						) : (
+							<div className="max-w-sm">
+								<div className="mx-auto flex h-12 w-12 items-center justify-center rounded-sm border border-[#d8d1c7] bg-[#f7f5f2] text-[#6f675d]">
+									<Icons.photos size={20} />
+								</div>
+								<p
+									className="mt-5 text-3xl font-light italic leading-none text-[#18170f]"
+									style={{ fontFamily: "'Cormorant', serif" }}
+								>
+									Drop a 35mm scan
+								</p>
+								<p className="mt-2 text-sm leading-6 text-[#6f675d]">
+									Use this for scanned film frames that need title, stock, and
+									notes entered by hand.
+								</p>
+								<p
+									className="mt-5 text-[10px] uppercase tracking-[0.16em] text-[#8c857a]"
+									style={{ fontFamily: "'DM Mono', monospace" }}
+								>
+									JPEG / PNG / HEIC / TIFF / WebP
+								</p>
+							</div>
+						)}
+					</button>
+					{preview && (
 						<button
 							type="button"
-							onClick={(e) => {
-								e.stopPropagation();
-								reset();
-							}}
-							className="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-700 rounded-full w-7 h-7 flex items-center justify-center text-sm font-medium shadow"
+							onClick={reset}
+							className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-sm border border-[#d8d1c7] bg-[#f7f5f2] text-[#6f675d] shadow-sm transition hover:text-[#18170f]"
+							aria-label="Remove selected photo"
 						>
-							✕
+							<Icons.x size={16} />
+						</button>
+					)}
+				</div>
+
+				<div className="flex flex-col rounded-sm border border-[#e5e0d9] bg-[#ebe7df] p-4">
+					<div className="space-y-4">
+						<div>
+							<label
+								htmlFor="title"
+								className="mb-1 block text-[10px] uppercase tracking-[0.16em] text-[#8c857a]"
+								style={{ fontFamily: "'DM Mono', monospace" }}
+							>
+								Title
+							</label>
+							<input
+								id="title"
+								type="text"
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
+								placeholder="Golden Hour"
+								className="w-full rounded-sm border border-[#d8d1c7] bg-[#f7f5f2] px-3 py-2.5 text-sm text-[#18170f] outline-none transition placeholder:text-[#b5b0a8] focus:border-[#18170f]"
+							/>
+						</div>
+
+						<div>
+							<label
+								htmlFor="film"
+								className="mb-1 block text-[10px] uppercase tracking-[0.16em] text-[#8c857a]"
+								style={{ fontFamily: "'DM Mono', monospace" }}
+							>
+								Film stock
+							</label>
+							<input
+								id="film"
+								type="text"
+								value={film}
+								onChange={(e) => setFilm(e.target.value)}
+								placeholder="Kodak Portra 400"
+								className="w-full rounded-sm border border-[#d8d1c7] bg-[#f7f5f2] px-3 py-2.5 text-sm text-[#18170f] outline-none transition placeholder:text-[#b5b0a8] focus:border-[#18170f]"
+							/>
+						</div>
+
+						<div>
+							<label
+								htmlFor="description"
+								className="mb-1 block text-[10px] uppercase tracking-[0.16em] text-[#8c857a]"
+								style={{ fontFamily: "'DM Mono', monospace" }}
+							>
+								Description
+							</label>
+							<textarea
+								id="description"
+								value={description}
+								onChange={(e) => setDescription(e.target.value)}
+								placeholder="Optional notes about this frame..."
+								rows={7}
+								className="w-full resize-none rounded-sm border border-[#d8d1c7] bg-[#f7f5f2] px-3 py-2.5 text-sm leading-6 text-[#18170f] outline-none transition placeholder:text-[#b5b0a8] focus:border-[#18170f]"
+							/>
+						</div>
+					</div>
+
+					<div className="mt-auto space-y-3 pt-5">
+						{status.state === "error" && (
+							<div className="rounded-sm border border-[#d9b8aa] bg-[#fff7f3] p-3 text-sm text-[#9a4d35]">
+								{status.message}
+							</div>
+						)}
+						{status.state === "success" && (
+							<div className="rounded-sm border border-[#c8d0c3] bg-[#eef2eb] p-3 text-sm text-[#4d5c4f]">
+								Photo uploaded successfully
+								{status.photo.title ? `: "${status.photo.title}"` : ""}.
+							</div>
+						)}
+
+						<button
+							type="submit"
+							disabled={!selectedFile || status.state === "uploading"}
+							className="flex h-11 w-full items-center justify-center gap-2 rounded-sm bg-[#18170f] px-4 text-sm font-medium text-[#f7f5f2] transition hover:bg-[#2a281f] disabled:cursor-not-allowed disabled:opacity-45"
+						>
+							{status.state === "uploading" ? (
+								<>
+									<Icons.loader className="h-4 w-4 animate-spin" />
+									Uploading {status.fileName}
+								</>
+							) : (
+								<>
+									<Icons.upload size={16} />
+									Upload 35mm photo
+								</>
+							)}
 						</button>
 					</div>
-				) : (
-					<>
-						<p className="text-sm text-gray-500">
-							Drop a photo here, or{" "}
-							<span className="text-black font-medium">click to browse</span>
-						</p>
-						<p className="text-xs text-gray-400 mt-1">
-							JPEG, PNG, HEIC, TIFF, WebP
-						</p>
-					</>
-				)}
-			</div>
-
-			{/* Metadata fields */}
-			<div className="space-y-4">
-				<div>
-					<label
-						htmlFor="title"
-						className="block text-sm font-medium text-gray-700 mb-1"
-					>
-						Title
-					</label>
-					<input
-						id="title"
-						type="text"
-						value={title}
-						onChange={(e) => setTitle(e.target.value)}
-						placeholder="e.g. Golden Hour"
-						className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
-					/>
-				</div>
-
-				<div>
-					<label
-						htmlFor="film"
-						className="block text-sm font-medium text-gray-700 mb-1"
-					>
-						Film Stock
-					</label>
-					<input
-						id="film"
-						type="text"
-						value={film}
-						onChange={(e) => setFilm(e.target.value)}
-						placeholder="e.g. Kodak Portra 400"
-						className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
-					/>
-				</div>
-
-				<div>
-					<label
-						htmlFor="description"
-						className="block text-sm font-medium text-gray-700 mb-1"
-					>
-						Description
-					</label>
-					<textarea
-						id="description"
-						value={description}
-						onChange={(e) => setDescription(e.target.value)}
-						placeholder="Optional notes about this photo…"
-						rows={3}
-						className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black resize-none"
-					/>
 				</div>
 			</div>
-
-			{/* Status messages */}
-			{status.state === "error" && (
-				<p className="text-sm text-red-600">{status.message}</p>
-			)}
-			{status.state === "success" && (
-				<div className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2">
-					Photo uploaded successfully
-					{status.photo.title ? `: "${status.photo.title}"` : ""}.
-				</div>
-			)}
-
-			{/* Submit */}
-			<button
-				type="submit"
-				disabled={!selectedFile || status.state === "uploading"}
-				className="w-full bg-black text-white text-sm font-medium py-2.5 rounded-md hover:bg-black/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-			>
-				{status.state === "uploading" ? "Uploading…" : "Upload 35mm Photo"}
-			</button>
 		</form>
 	);
 }

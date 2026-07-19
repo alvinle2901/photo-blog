@@ -1,3 +1,4 @@
+import type { Icon as LucidIcon } from "lucide-react";
 import {
 	ArrowUpRight,
 	Camera,
@@ -14,8 +15,8 @@ import {
 	List,
 	Loader2,
 	LogOut,
-	type Icon as LucidIcon,
 	MapPin,
+	Pencil,
 	Save,
 	Search,
 	Settings,
@@ -42,6 +43,7 @@ export const Icons = {
 	user: User,
 	heart: Heart,
 	mapPin: MapPin,
+	pencil: Pencil,
 	loader: Loader2,
 	search: Search,
 	layoutGrid: LayoutGrid,

@@ -93,6 +93,13 @@ const ViewSwitcher = ({
 					active={currentSelection === "grid"}
 					noPadding
 				/>
+				<SwitcherItem
+					icon={<Icons.mapPin size={17} strokeWidth={1.8} />}
+					href="/map"
+					title="map"
+					active={pathname === "/map"}
+					className="md:hidden"
+				/>
 			</Switcher>
 			{showSort && pathname === "/" && (
 				<PhotoSortDropdown

@@ -14,8 +14,11 @@ import {
 	getPhotoPageDataByFilm,
 	getPhotoPageDataByYear,
 	getPhotosByCamera,
+	getPhotosByCameraPaginatedByOffset,
 	getPhotosByFilm,
+	getPhotosByFilmPaginatedByOffset,
 	getPhotosByYear,
+	getPhotosByYearPaginatedByOffset,
 	getPhotosPaginatedByOffset,
 	getUniqueCameras,
 	getUniqueFilms,
@@ -75,6 +78,17 @@ export const getPhotosByFilmCached = (film: string, limit?: number) =>
 		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.film(film)] },
 	)();
 
+export const getPhotosByFilmPaginatedCached = (
+	film: string,
+	offset: number,
+	limit: number,
+) =>
+	unstable_cache(
+		() => getPhotosByFilmPaginatedByOffset(film, offset, limit),
+		[CACHE_KEYS.film(film), `paginated-${offset}-${limit}`],
+		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.film(film)] },
+	)();
+
 export const getPhotoCountByFilmCached = (film: string) =>
 	unstable_cache(
 		() => getPhotoCountByFilm(film),
@@ -108,6 +122,17 @@ export const getPhotosByYearCached = (year: string, limit?: number) =>
 			CACHE_KEYS.year(year),
 			`limit-${typeof limit === "number" ? limit : "all"}`,
 		],
+		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.year(year)] },
+	)();
+
+export const getPhotosByYearPaginatedCached = (
+	year: string,
+	offset: number,
+	limit: number,
+) =>
+	unstable_cache(
+		() => getPhotosByYearPaginatedByOffset(year, offset, limit),
+		[CACHE_KEYS.year(year), `paginated-${offset}-${limit}`],
 		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.year(year)] },
 	)();
 
@@ -148,6 +173,18 @@ export const getPhotosByCameraCached = (
 			CACHE_KEYS.camera(make, model),
 			`limit-${typeof limit === "number" ? limit : "all"}`,
 		],
+		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.camera(make, model)] },
+	)();
+
+export const getPhotosByCameraPaginatedCached = (
+	make: string,
+	model: string,
+	offset: number,
+	limit: number,
+) =>
+	unstable_cache(
+		() => getPhotosByCameraPaginatedByOffset(make, model, offset, limit),
+		[CACHE_KEYS.camera(make, model), `paginated-${offset}-${limit}`],
 		{ tags: [CACHE_KEYS.photos(), CACHE_KEYS.camera(make, model)] },
 	)();
 

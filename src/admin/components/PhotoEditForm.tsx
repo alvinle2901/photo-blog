@@ -8,6 +8,7 @@ import type { Photo } from "@/photo";
 import { updatePhoto } from "@/photo/actions";
 import GeocoderControl from "./editMap/geocoder-control";
 import EditMap from "./editMap/map";
+import { getOptimizedUrl } from "@/storage/utils";
 
 type Props = {
 	photo: Photo;
@@ -121,7 +122,7 @@ export function PhotoEditForm({ photo }: Props) {
 					>
 						<AspectRatio ratio={displayAspectRatio < 1 ? 3 / 4 : 4 / 3}>
 							<Image
-								src={photo.url}
+								src={getOptimizedUrl(photo.url, "lg")}
 								alt={photo.caption ?? photo.title ?? "Photo"}
 								layout="fill"
 								className="rounded-lg object-cover border"
