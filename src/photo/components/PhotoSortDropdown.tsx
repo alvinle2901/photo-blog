@@ -70,7 +70,7 @@ export default function PhotoSortDropdown({
 			sortOrder: "desc",
 			seed: Date.now().toString(36),
 		});
-		router.push(`${basePath}?${params.toString()}`);
+		router.push(`${basePath}?${params.toString()}`, { scroll: false });
 	};
 
 	const trigger = (
@@ -115,6 +115,7 @@ export default function PhotoSortDropdown({
 						<DropdownMenuItem key={option.sortOrder} asChild>
 							<Link
 								href={getSortHref(basePath, sortTypeForOrder, option.sortOrder)}
+								scroll={false}
 								aria-current={isActive ? "page" : undefined}
 								className={cn(
 									itemClassName,
@@ -135,6 +136,7 @@ export default function PhotoSortDropdown({
 						<DropdownMenuItem key={option.sortType} asChild>
 							<Link
 								href={getSortHref(basePath, option.sortType, sortOrder)}
+								scroll={false}
 								aria-current={isActive ? "page" : undefined}
 								className={cn(
 									itemClassName,
@@ -151,6 +153,7 @@ export default function PhotoSortDropdown({
 				<DropdownMenuItem asChild>
 					<Link
 						href={`${basePath}?sortType=random&sortOrder=desc`}
+						scroll={false}
 						onClick={handleRandomSort}
 						aria-current={sortType === "random" ? "page" : undefined}
 						className={cn(

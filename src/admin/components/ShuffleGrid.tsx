@@ -114,7 +114,7 @@ export default function ShuffleGrid({ photos }: ShuffleGridProps) {
 
 	return (
 		<section className="flex h-full min-h-[450px] w-full flex-col overflow-hidden rounded-sm border border-[#e5e0d9] bg-[#f7f5f2] p-2 shadow-sm">
-			<div className="grid min-h-0 flex-1 grid-cols-4 grid-rows-4 gap-1">
+			<div className="grid min-h-0 flex-1 grid-cols-3 grid-rows-4 md:grid-cols-4 md:grid-rows-4 gap-1">
 				{squares}
 			</div>
 		</section>

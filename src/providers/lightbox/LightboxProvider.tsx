@@ -77,15 +77,13 @@ export default function LightboxProvider({
 					<AnimatePresence>
 						{open && (
 							<Dialog.Portal forceMount>
-								<Dialog.Overlay asChild forceMount>
-									<motion.div
-										className="fixed inset-0 z-50 bg-black/95"
-										initial={prefersReducedMotion ? false : { opacity: 0 }}
-										animate={{ opacity: 1 }}
-										exit={{ opacity: 0 }}
-										transition={{ duration: 0.2, ease: "easeOut" }}
-									/>
-								</Dialog.Overlay>
+								<motion.div
+									className="fixed inset-0 z-50 bg-black/95"
+									initial={prefersReducedMotion ? false : { opacity: 0 }}
+									animate={{ opacity: 1 }}
+									exit={{ opacity: 0 }}
+									transition={{ duration: 0.2, ease: "easeOut" }}
+								/>
 								<Dialog.Content
 									asChild
 									forceMount
