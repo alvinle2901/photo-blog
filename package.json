@@ -15,7 +15,9 @@
 		"db:push": "drizzle-kit push",
 		"db:studio": "drizzle-kit studio",
 		"db:generate": "drizzle-kit generate",
-		"db:migrate": "drizzle-kit migrate"
+		"db:migrate": "drizzle-kit migrate",
+		"storage:audit": "node scripts/audit-r2-images.mjs",
+		"storage:delete-unused": "node scripts/audit-r2-images.mjs --delete-unused --yes"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.1056.0",

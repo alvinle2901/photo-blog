@@ -5,6 +5,7 @@ import type { SortOrder, SortType } from "@/photo/sort";
 
 type Props = {
 	photos: Photo[];
+	photoCount: number;
 	hasMore: boolean;
 	nextOffset: number;
 	sortType: SortType;
@@ -17,6 +18,7 @@ type Props = {
 
 export default function PhotoGridPage({
 	photos,
+	photoCount,
 	hasMore,
 	nextOffset,
 	sortType,
@@ -26,8 +28,6 @@ export default function PhotoGridPage({
 	cameras,
 	films,
 }: Props) {
-	const photoCount = photos.length;
-
 	return (
 		<div className="py-4 sm:py-6 lg:py-8">
 			<div className="flex flex-col gap-2 lg:flex-row">

@@ -16,12 +16,13 @@ export default async function GridPage({
 	const sortType = parseSortType(params.sortType);
 	const sortOrder = parseSortOrder(params.sortOrder);
 	const seed = parseSortSeed(params.seed);
-	const { photos, hasMore, nextOffset, years, cameras, films } =
+	const { photos, photoCount, hasMore, nextOffset, years, cameras, films } =
 		await getGridPageData(sortType, sortOrder, seed);
 
 	return (
 		<PhotoGridPage
 			photos={photos}
+			photoCount={photoCount}
 			hasMore={hasMore}
 			nextOffset={nextOffset}
 			sortType={sortType}

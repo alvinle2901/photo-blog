@@ -197,6 +197,11 @@ export async function getPhotosPaginatedByOffset(
 	return rows.map(rowToPhoto);
 }
 
+export async function getPhotoCount(): Promise<number> {
+	const rows = await db.select({ count: count() }).from(photos);
+	return rows[0]?.count ?? 0;
+}
+
 export async function getPhotoById(id: string): Promise<Photo | null> {
 	const rows = await db.select().from(photos).where(eq(photos.id, id)).limit(1);
 	return rows[0] ? rowToPhoto(rows[0]) : null;

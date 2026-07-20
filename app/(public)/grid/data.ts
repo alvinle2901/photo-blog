@@ -1,4 +1,5 @@
 import {
+	getPhotoCountCached,
 	getPhotosPaginatedCached,
 	getUniqueCamerasCached,
 	getUniqueFilmsCached,
@@ -29,7 +30,7 @@ export async function getGridPageData(
 	sortOrder: SortOrder = DEFAULT_SORT_ORDER,
 	seed = DEFAULT_RANDOM_SEED,
 ) {
-	const [photos, years, cameras, films] = await Promise.all([
+	const [photos, photoCount, years, cameras, films] = await Promise.all([
 		getPhotosPaginatedCached(
 			0,
 			GRID_INITIAL_LIMIT + 1,
@@ -37,6 +38,7 @@ export async function getGridPageData(
 			sortOrder,
 			seed,
 		),
+		getPhotoCountCached(),
 		getUniqueYearsCached(),
 		getUniqueCamerasCached(),
 		getUniqueFilmsCached(),
@@ -44,6 +46,7 @@ export async function getGridPageData(
 
 	return {
 		photos: photos.slice(0, GRID_INITIAL_LIMIT),
+		photoCount,
 		hasMore: photos.length > GRID_INITIAL_LIMIT,
 		nextOffset: GRID_INITIAL_LIMIT,
 		years,

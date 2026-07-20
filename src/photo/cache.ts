@@ -6,6 +6,7 @@ import {
 	getGridPhotos,
 	getMapPhotos,
 	getPhotoById,
+	getPhotoCount,
 	getPhotoCountByCamera,
 	getPhotoCountByFilm,
 	getPhotoCountByYear,
@@ -55,6 +56,12 @@ export const getPhotosPaginatedCached = (
 	)();
 
 export const getGridPhotosCached = cache(getGridPhotos);
+
+export const getPhotoCountCached = unstable_cache(
+	getPhotoCount,
+	[CACHE_KEYS.photos(), "count"],
+	{ tags: [CACHE_KEYS.photos()] },
+);
 
 export const getMapPhotosCached = unstable_cache(
 	getMapPhotos,
