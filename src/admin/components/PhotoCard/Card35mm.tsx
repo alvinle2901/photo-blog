@@ -6,9 +6,22 @@ import type { FilmPhoto } from "@/35mm/query";
 import { AspectRatio } from "@/components/ui/AspectRatio";
 import { getOptimizedUrl } from "@/storage/utils";
 
-const PhotoOtherCard = ({ photo }: { photo: FilmPhoto }) => {
+import { PhotoCardActions } from "./PhotoCardActions";
+
+const PhotoOtherCard = ({
+	photo,
+	onDelete,
+}: {
+	photo: FilmPhoto;
+	onDelete?: (photoId: string) => void;
+}) => {
 	return (
 		<div className="group relative rounded-sm transition duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(24,23,15,0.14)]">
+			<PhotoCardActions
+				id={photo.id}
+				deleteType="35mm"
+				onDeleted={onDelete}
+			/>
 			<AspectRatio
 				ratio={4 / 5}
 				className="overflow-hidden rounded-sm border border-[#e5e0d9] bg-[#ebe7df] transition-colors duration-300 group-hover:border-[#9a7656]"

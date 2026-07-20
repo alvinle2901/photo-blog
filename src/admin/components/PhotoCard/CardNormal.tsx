@@ -1,26 +1,28 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useMap } from "react-map-gl/mapbox";
 
 import { Icons } from "@/components/icons";
 import { AspectRatio } from "@/components/ui/AspectRatio";
-import { Button } from "@/components/ui/Button";
 import type { Photo } from "@/photo";
 import { getOptimizedUrl } from "@/storage/utils";
 import { cn } from "@/utils/cn";
 import { convertToCoordination } from "@/utils/convert-coordination";
 import { formatDate } from "@/utils/date";
 
+import { PhotoCardActions } from "./PhotoCardActions";
+
 const PhotoCard = ({
 	photo,
 	isSelected = false,
 	onSelect,
+	onDelete,
 }: {
 	photo: Photo;
 	isSelected?: boolean;
 	onSelect?: (photoId: string) => void;
+	onDelete?: (photoId: string) => void;
 }) => {
 	const { map } = useMap();
 
@@ -40,19 +42,11 @@ const PhotoCard = ({
 					"bg-[#ebe7df] shadow-[0_0_0_1px_#18170f,0_14px_34px_rgba(24,23,15,0.16)]",
 			)}
 		>
-			<Button
-				asChild
-				variant="outline"
-				size="icon"
-				className="absolute right-2 top-2 z-10 size-8 rounded-full border-[#d8d1c7] bg-[#f7f5f2] text-[#18170f] opacity-95 shadow-sm transition-all hover:bg-[#ebe7df] group-hover:opacity-100"
-			>
-				<Link
-					href={`/admin/photos/${photo.id}/edit`}
-					aria-label={`Edit ${photo.title || photo.id}`}
-				>
-					<Icons.pencil size={15} />
-				</Link>
-			</Button>
+			<PhotoCardActions
+				id={photo.id}
+				editHref={`/admin/photos/${photo.id}/edit`}
+				onDeleted={onDelete}
+			/>
 
 			<button
 				type="button"

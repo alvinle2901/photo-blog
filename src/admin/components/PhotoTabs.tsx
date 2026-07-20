@@ -12,6 +12,8 @@ interface Props {
 	isPending: boolean;
 	selectedPhotoId?: string | null;
 	onSelectPhoto?: (photoId: string) => void;
+	onDeletePhoto?: (photoId: string) => void;
+	onDeleteFilmPhoto?: (photoId: string) => void;
 }
 
 const PhotoTabs = ({
@@ -20,6 +22,8 @@ const PhotoTabs = ({
 	isPending,
 	selectedPhotoId,
 	onSelectPhoto,
+	onDeletePhoto,
+	onDeleteFilmPhoto,
 }: Props) => {
 	return (
 		<Tabs className="flex-col" defaultValue="tab1">
@@ -48,6 +52,7 @@ const PhotoTabs = ({
 					isPending={isPending}
 					selectedPhotoId={selectedPhotoId}
 					onSelectPhoto={onSelectPhoto}
+					onDeletePhoto={onDeletePhoto}
 				/>
 			</TabContent>
 			<TabContent value="tab2">
@@ -55,6 +60,7 @@ const PhotoTabs = ({
 					type={"35mm"}
 					filmPhotos={filmPhotos}
 					isPending={isPending}
+					onDeleteFilmPhoto={onDeleteFilmPhoto}
 				/>
 			</TabContent>
 		</Tabs>

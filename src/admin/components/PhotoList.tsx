@@ -16,6 +16,8 @@ interface Props {
 	isPending?: boolean;
 	selectedPhotoId?: string | null;
 	onSelectPhoto?: (photoId: string) => void;
+	onDeletePhoto?: (photoId: string) => void;
+	onDeleteFilmPhoto?: (photoId: string) => void;
 }
 
 const PhotoList = ({
@@ -25,6 +27,8 @@ const PhotoList = ({
 	isPending = false,
 	selectedPhotoId,
 	onSelectPhoto,
+	onDeletePhoto,
+	onDeleteFilmPhoto,
 }: Props) => {
 	const count = type === "digital" ? photos.length : filmPhotos.length;
 	const label = type === "digital" ? "digital frames" : "35mm scans";
@@ -60,10 +64,15 @@ const PhotoList = ({
 										photo={item}
 										isSelected={item.id === selectedPhotoId}
 										onSelect={onSelectPhoto}
+										onDelete={onDeletePhoto}
 									/>
 								))
 							: filmPhotos.map((item) => (
-									<PhotoOtherCard key={item.id} photo={item} />
+									<PhotoOtherCard
+										key={item.id}
+										photo={item}
+										onDelete={onDeleteFilmPhoto}
+									/>
 								))}
 					</div>
 				)}

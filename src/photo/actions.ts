@@ -9,6 +9,7 @@ import { CACHE_KEYS } from "../cache/keys";
 import { db } from "../db/client";
 import { photos } from "../db/schema";
 import { storage } from "../storage";
+import { getImageStorageKeys } from "../storage/utils";
 import type { Photo } from ".";
 import { getPhotos, getPhotosPaginated } from "./query";
 
@@ -61,12 +62,13 @@ export async function deletePhoto(id: string) {
 
 	if (!rows[0]) return;
 
-	// Delete from storage — extract the key from the URL
-	const url = new URL(rows[0].url);
-	const key = url.pathname.replace(/^\//, "");
-	await storage.delete(key).catch(() => {
-		// Best-effort — don't fail the DB delete if storage delete fails
-	});
+	await Promise.all(
+		getImageStorageKeys(rows[0].url).map((key) =>
+			storage.delete(key).catch(() => {
+				// Best-effort — don't fail the DB delete if storage delete fails
+			}),
+		),
+	);
 
 	await db.delete(photos).where(eq(photos.id, id));
 

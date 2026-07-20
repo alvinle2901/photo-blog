@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { MapProvider } from "react-map-gl/mapbox";
 
+import { fetchAllFilmPhotos } from "@/35mm/actions";
 import type { FilmPhoto } from "@/35mm/query";
 import PhotoTabs from "@/admin/components/PhotoTabs";
 import AdminMap from "@/components/map/AdminMap";
@@ -16,6 +17,17 @@ export default function AdminPhotoListPage() {
 	const [isPending, setIsPending] = useState(true);
 	const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null);
 
+	const handleDeletePhoto = (photoId: string) => {
+		setPhotos((current) => current.filter((photo) => photo.id !== photoId));
+		setSelectedPhotoId((current) => (current === photoId ? null : current));
+	};
+
+	const handleDeleteFilmPhoto = (photoId: string) => {
+		setFilmPhotos((current) =>
+			current.filter((photo) => photo.id !== photoId),
+		);
+	};
+
 	useLayoutEffect(() => {
 		return () => {
 			setMapKey((current) => current + 1);
@@ -23,12 +35,7 @@ export default function AdminPhotoListPage() {
 	}, []);
 
 	useEffect(() => {
-		Promise.all([
-			fetchAllPhotos(),
-			fetch("/api/photos/35mm")
-				.then((r) => r.json() as Promise<FilmPhoto[]>)
-				.catch(() => [] as FilmPhoto[]),
-		])
+		Promise.all([fetchAllPhotos(), fetchAllFilmPhotos().catch(() => [])])
 			.then(([digitalPhotos, film]) => {
 				setPhotos(digitalPhotos);
 				setFilmPhotos(film);
@@ -74,6 +81,8 @@ export default function AdminPhotoListPage() {
 						isPending={isPending}
 						selectedPhotoId={selectedPhotoId}
 						onSelectPhoto={setSelectedPhotoId}
+						onDeletePhoto={handleDeletePhoto}
+						onDeleteFilmPhoto={handleDeleteFilmPhoto}
 					/>
 				</div>
 
