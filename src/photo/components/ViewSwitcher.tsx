@@ -64,7 +64,7 @@ const ViewSwitcher = ({
 						<Icons.search size={18} />
 					</button>
 				</TooltipTrigger>
-				<TooltipContent>
+				<TooltipContent className="border-0">
 					<span className="inline-flex items-center gap-1.5">
 						<span>search</span>
 						{["Cmd", "K"].map((key) => (
@@ -78,29 +78,48 @@ const ViewSwitcher = ({
 					</span>
 				</TooltipContent>
 			</Tooltip>
-			<Switcher>
-				<SwitcherItem
-					icon={<IconFeed />}
-					href={getViewHref("/")}
-					title="feed"
-					active={currentSelection === "feed"}
-					noPadding
-				/>
-				<SwitcherItem
-					icon={<IconGrid />}
-					href={getViewHref("/grid")}
-					title="grid"
-					active={currentSelection === "grid"}
-					noPadding
-				/>
-				<SwitcherItem
-					icon={<Icons.mapPin size={17} strokeWidth={1.8} />}
-					href="/map"
-					title="map"
-					active={pathname === "/map"}
-					className="md:hidden"
-				/>
-			</Switcher>
+			<div className="hidden md:block">
+				<Switcher>
+					<SwitcherItem
+						icon={<IconFeed />}
+						href={getViewHref("/")}
+						title="feed"
+						active={currentSelection === "feed"}
+						noPadding
+					/>
+					<SwitcherItem
+						icon={<IconGrid />}
+						href={getViewHref("/grid")}
+						title="grid"
+						active={currentSelection === "grid"}
+						noPadding
+					/>
+				</Switcher>
+			</div>
+			<div className="md:hidden">
+				<Switcher>
+					<SwitcherItem
+						icon={<IconFeed />}
+						href={getViewHref("/")}
+						title="feed"
+						active={currentSelection === "feed"}
+						noPadding
+					/>
+					<SwitcherItem
+						icon={<IconGrid />}
+						href={getViewHref("/grid")}
+						title="grid"
+						active={currentSelection === "grid"}
+						noPadding
+					/>
+					<SwitcherItem
+						icon={<Icons.mapPin size={17} strokeWidth={1.8} />}
+						href="/map"
+						title="map"
+						active={pathname === "/map"}
+					/>
+				</Switcher>
+			</div>
 			{showSort && pathname === "/" && (
 				<PhotoSortDropdown
 					basePath="/"

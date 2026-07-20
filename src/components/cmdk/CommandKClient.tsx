@@ -175,7 +175,7 @@ export default function CommandKClient({
 		<Dialog open={isOpen} onOpenChange={handleOpenChange}>
 			<DialogContent
 				className={cn(
-					"top-[45dvh] w-[90%] max-w-lg gap-0 overflow-hidden p-0 md:top-[40%]",
+					"top-[35dvh] w-[90%] max-w-lg gap-0 overflow-hidden p-0 md:top-[40%]",
 					"rounded-lg border-[#e5ddd2] bg-[#fbfaf7] shadow-2xl shadow-black/20",
 					"data-[state=open]:slide-in-from-top-8 data-[state=closed]:slide-out-to-top-8",
 					"[&>button]:right-3.5 [&>button]:top-3.5 [&>button]:text-[#8b8175]",

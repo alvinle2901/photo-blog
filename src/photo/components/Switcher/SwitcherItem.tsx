@@ -89,7 +89,7 @@ const SwitcherItem = ({
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>{item}</TooltipTrigger>
-			<TooltipContent>{title}</TooltipContent>
+			<TooltipContent className="border-0">{title}</TooltipContent>
 		</Tooltip>
 	);
 };
